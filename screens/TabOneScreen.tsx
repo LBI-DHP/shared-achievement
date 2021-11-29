@@ -9,6 +9,8 @@ import StepCounter from "../components/StepCounter";
 
 import { Button } from "react-native-paper";
 
+
+
 export default function TabOneScreen({
   navigation,
 }: RootTabScreenProps<"TabOne">) {
@@ -22,9 +24,9 @@ export default function TabOneScreen({
         darkColor="rgba(255,255,255,0.1)"
       />
       <EditScreenInfo path="/screens/TabOneScreen.tsx" />
-	  <Button icon="camera" mode="contained"
+	  <Button icon="camera" mode="contained" onPress={() => console.log('Pressed')}>
         Press me
-	  />
+	  </Button>
     </View>
   );
 }

@@ -38,3 +38,5 @@ To test the application on your mobile phone, download the Expo app ([Android](h
 error: digital envelope routines::unsupported ERR_OSSL_EVP_UNSUPPORTED
 ```
 Running `export NODE_OPTIONS=--openssl-legacy-provider` in the Git Bash before starting the project solved the problem for me.
+
+If you are using the windows command line (CMD), then the run "set NODE_OPTIONS=--openssl-legacy-provider" before running "npm start" instead.

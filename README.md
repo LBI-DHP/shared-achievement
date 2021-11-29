@@ -12,6 +12,12 @@ Install the Expo CLI command line utility via npm:
 npm install -g expo-cli
 ```
 
+Install react native paper (UI framework) via npm:
+```bash
+npm install react-native-paper
+```
+
+
 ## Installation
 
 Run the following command in the project directory to install the project dependencies.

@@ -4,7 +4,7 @@ import * as React from "react";
 import { View, Image } from "react-native";
 import { style } from "../constants/Styles";
 
-export default function ChallengeScreen({ navigation }) {
+export default function ChallengeScreen() {
   return (
     <View style={style.container}>
       <Image

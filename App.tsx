@@ -1,23 +1,25 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { StatusBar } from "expo-status-bar";
+import React from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import useCachedResources from './hooks/useCachedResources';
-import useColorScheme from './hooks/useColorScheme';
-import Navigation from './navigation';
+import useCachedResources from "./hooks/useCachedResources";
+import useColorScheme from "./hooks/useColorScheme";
+import Navigation from "./components/SABottomNavigation";
 
-import { AppRegistry } from 'react-native';
-import { name as appName } from './app.json';
+import { AppRegistry } from "react-native";
+import appJson from "./app.json";
+import ChallengeScreen from "./screens/ChallengeScreen";
+import Header from "./components/Header";
 
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 
 const theme = {
   ...DefaultTheme,
   roundness: 2,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#004A99',
-    accent: '#F6D960',
+    primary: "#004A99",
+    accent: "#F6D960",
   },
 };
 
@@ -31,7 +33,9 @@ export default function App() {
     return (
       <SafeAreaProvider>
         <PaperProvider theme={theme}>
-          <Navigation colorScheme={colorScheme} />
+          <Header />
+          <ChallengeScreen />
+          <Navigation />
           <StatusBar />
         </PaperProvider>
       </SafeAreaProvider>
@@ -39,4 +43,4 @@ export default function App() {
   }
 }
 
-AppRegistry.registerComponent(appName, () => App);
+AppRegistry.registerComponent(appJson.expo.name, () => App);

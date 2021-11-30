@@ -1,8 +1,7 @@
 // https://snack.expo.dev/@yoobit0616/pedometer-functional
 
 import React, { useState, useEffect } from "react";
-import { StyleSheet } from "react-native";
-import { Text, View } from "../components/Themed";
+import { Text } from "../components/Themed";
 import { Pedometer } from "expo-sensors";
 
 export default function StepCounter() {
@@ -56,18 +55,9 @@ export default function StepCounter() {
   }
 
   return (
-    <View style={styles.container}>
+    <>
       <Text>Steps taken in the last 24 hours: {pastStepCount}</Text>
       <Text>Walk! And watch this go up: {currentStepCount}</Text>
-    </View>
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: 15,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

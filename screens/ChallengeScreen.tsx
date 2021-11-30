@@ -1,8 +1,8 @@
 import "react-native-gesture-handler";
 import * as React from "react";
 
-import { View, Text, StyleSheet, Image } from "react-native";
-import { Button } from "react-native-paper";
+import { View, Image } from "react-native";
+import { style } from "../constants/Styles";
 
 export default function ChallengeScreen({ navigation }) {
   return (
@@ -22,20 +22,3 @@ export default function ChallengeScreen({ navigation }) {
     </View>
   );
 }
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  heading: {
-    fontWeight: "bold",
-    padding: 10,
-  },
-  titleImage: {
-    alignItems: "center",
-    textAlign: "center",
-    resizeMode: "center",
-    width: "100%",
-  },
-});

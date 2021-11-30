@@ -1,10 +1,10 @@
 import "react-native-gesture-handler";
 import * as React from "react";
 
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 
-import {style} from "../constants/Styles";
+import { style } from "../constants/Styles";
 
 export default function GroupScreen() {
   const [groupname, setText] = React.useState("");

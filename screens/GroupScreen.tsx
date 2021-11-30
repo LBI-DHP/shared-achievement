@@ -4,6 +4,8 @@ import * as React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 
+import {style} from "../constants/Styles";
+
 export default function GroupScreen() {
   const [groupname, setText] = React.useState("");
   const [btnJoin, setbtnJoin] = React.useState(true);
@@ -63,21 +65,3 @@ export default function GroupScreen() {
     </View>
   );
 }
-
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  heading: {
-    fontWeight: "bold",
-    padding: 10,
-  },
-  titleImage: {
-    alignItems: "center",
-    textAlign: "center",
-    resizeMode: "center",
-    width: "100%",
-  },
-});

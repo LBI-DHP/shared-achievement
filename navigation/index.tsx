@@ -10,7 +10,7 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/
 //import { createStackNavigator } from '@react-navigation/stack';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ColorSchemeName, Pressable } from 'react-native';
+import { ColorSchemeName, KeyboardAvoidingView, Pressable } from 'react-native';
 
 //import HomeScreen from '../screens/HomeScreen';
 //import DetailsScreen from '../screens/DetailsScreen';
@@ -24,8 +24,8 @@ import TabTwoScreen from '../screens/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
-import {View, Text, StyleSheet} from 'react-native';
-import { Button, Appbar, TextInput, BottomNavigation } from "react-native-paper";
+import {View, Text, StyleSheet, Image} from 'react-native';
+import {Button, Appbar, Avatar, TextInput, BottomNavigation, HelperText} from "react-native-paper";
 
 const Stack = createNativeStackNavigator();
 
@@ -48,10 +48,10 @@ export default function App() {
 function HomeScreen({ navigation }) {
   return (
     <View style={style.container}>
-      <Text>Home Screen</Text>
-      <Button icon="camera" mode="contained" onPress={() => navigation.navigate('Details')}>
-        Details
-	    </Button>
+      <Image
+        style={style.titleImage}
+        source={require('../assets/images/aaa-untersberg-100_1920x1080.jpg')}
+     	/>
     </View>
   );
 }
@@ -70,14 +70,26 @@ const style = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  heading: {
+    fontWeight: 'bold',
+    padding: 10,
+  },
+  titleImage:{
+    alignItems: "center",
+    textAlign: "center",
+    resizeMode: "center",
+    width: "100%",
+  }, 
 });
 
 function CustomNavigationBar({ navigation, back }) {
   return (
-    <Appbar.Header>
-      {back ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
-      <Appbar.Action icon="trophy-award" onPress={() => navigation.navigate('Home')} />
-      <Appbar.Content title="togather" subtitle="Shared Achievements" />
+    <Appbar.Header style={{margin: 10}}>
+      <Avatar.Image
+          size={40}
+          source={require('../assets/images/grafik.png')}
+      />
+      <Appbar.Content title="Untersberg Challenge" subtitle="Shared Achievements" />
       
     </Appbar.Header>
   );
@@ -88,18 +100,61 @@ function CustomNavigationBar({ navigation, back }) {
 const text = "enter group name"
 
 function GroupScene( ) {
+
+  const [groupname, setText] = React.useState('');
+  const [btnJoin, setbtnJoin] = React.useState(true);
+  const [btnCreate, setbtnCreate] = React.useState(true);
+
+  // TODO replace with implemented functions
+  const checkIfGroupNameExists = (name) => {return name == 'exists'}
+  const joinGroup = () => { console.log('Join: group ' + groupname) }
+  const createGroup = () => { console.log('Create group: ' + groupname) }
+
+  const changeText = (text) => {
+    setText(text.toLowerCase()) // TODO allows only lowercase
+    if (text.length == 0) {
+      setbtnCreate(true);
+      setbtnJoin(true)
+    } else {
+      if ( checkIfGroupNameExists(text) ) {
+        setbtnJoin(false)
+        setbtnCreate(true)
+      } else {
+        setbtnJoin(true)
+        setbtnCreate(false)
+      }
+    }
+  };
+
   return (
     <View style={style.container}>
-      <Text>Group name:</Text>
-      <TextInput
-      label="GroupName"
-      />
-      <Button mode="contained" onPress={() => console.log('Pressed')}>
-        Join Group
-	    </Button>
-      <Button mode="contained" onPress={() => console.log('Pressed')}>
-        Create Group
-	    </Button>
+      <Text style={style.heading}>Join/create a team to face the challenge</Text>
+      <View style={{flexDirection: 'row'}}>
+        <Text>Team Name:</Text>
+        <View>
+          <TextInput
+            value={groupname}
+            multiline={false}
+            placeholder="Enter a team name"
+            onChangeText={changeText}
+            autoComplete={false}
+          />
+          <View style={{flexDirection: 'row'}}>
+            <Button 
+              mode="contained"
+              disabled={btnJoin}
+              onPress={joinGroup}>
+              Join Group
+            </Button>
+            <Button 
+              mode="contained" 
+              disabled={btnCreate}
+              onPress={createGroup}>
+              Create Group
+            </Button>
+          </View>
+        </View>
+      </View>
     </View>
   );
 }

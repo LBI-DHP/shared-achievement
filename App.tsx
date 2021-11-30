@@ -7,8 +7,19 @@ import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
 
 import { AppRegistry } from 'react-native';
-import { Provider as PaperProvider } from 'react-native-paper';
 import { name as appName } from './app.json';
+
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+
+const theme = {
+  ...DefaultTheme,
+  roundness: 2,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#004A99',
+    accent: '#F6D960',
+  },
+};
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -19,10 +30,10 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
-		<PaperProvider>
-			<Navigation colorScheme={colorScheme} />
-			<StatusBar />
-		</PaperProvider>
+        <PaperProvider theme={theme}>
+          <Navigation colorScheme={colorScheme} />
+          <StatusBar />
+        </PaperProvider>
       </SafeAreaProvider>
     );
   }

@@ -17,7 +17,6 @@ Install react native paper (UI framework) via npm:
 npm install react-native-paper
 ```
 
-
 ## Installation
 
 Run the following command in the project directory to install the project dependencies.

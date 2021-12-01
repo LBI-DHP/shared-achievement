@@ -7,7 +7,7 @@ import { Button, TextInput } from "react-native-paper";
 
 import { style } from "../constants/Styles";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'; 
 
 import configJSON from "../config.json";
 

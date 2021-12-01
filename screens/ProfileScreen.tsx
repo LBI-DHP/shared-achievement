@@ -3,19 +3,21 @@ import * as React from "react";
 
 import { View, Text, Platform } from "react-native";
 import { Button } from "react-native-paper";
+import "../components/StepCounter";
 
 import { style } from "../constants/Styles";
+import StepCounter from "../components/StepCounter";
 
 export default function ProfileScreen() {
 
   const [username] = React.useState("Isabel"); //TODO
-  const [stepcount] = React.useState("100"); //TODO
-  const [verticalcount] = React.useState("30"); //TODO
+  const [stepcount, setStepcount] = React.useState(100); //TODO
+  const [verticalcount] = React.useState(30); //TODO
 
   const [teamname] = React.useState("A"); //TODO
-  const [teamstepcount] = React.useState("90000"); //TODO
-  const [teamverticalcount] = React.useState("1130"); //TODO
-  const [teampercent] = React.useState("80"); //TODO
+  const [teamstepcount] = React.useState(90000); //TODO
+  const [teamverticalcount] = React.useState(1130); //TODO
+  const [teampercent] = React.useState(80); //TODO
 
   const addSteps = () => {
     //TODO donate steps
@@ -23,8 +25,9 @@ export default function ProfileScreen() {
   };
 
   const fakeSteps = () => {
-    //TODO donate steps
-    console.log("add my steps pressed")
+    const delta = 100
+    setStepcount(stepcount+100)
+    console.log("fake steps pressed (add "+delta.toString()+" steps)")
   };
 
   return (

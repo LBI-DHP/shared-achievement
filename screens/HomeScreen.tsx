@@ -13,8 +13,9 @@ import configJSON from "../config.json";
 
 export default function HomeScreen() {
   const [username, setName] = React.useState(""); // TODO replace with active username
-
   const [userid, setUserID] = React.useState("123456789");
+  const [userteam, setUserTeam] = React.useState("");
+  const [teamSteps, setTeamSteps] = React.useState("");
 
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
@@ -22,6 +23,11 @@ export default function HomeScreen() {
   useEffect(() => {
     getUserName();
   }, []);
+
+  useEffect(() => {
+    console.log("fechting team steps...");
+    getTeamStepsRequest();
+  }, [userteam]);
 
   const getUserName = async () => {
     try {
@@ -33,15 +39,36 @@ export default function HomeScreen() {
        }
      });
      const json = await response.json();
-     console.log("server response: " + json);
+     console.log("server response on get user name: " + json);
      setName(json.name);
-   } catch (error) {
-     console.log("error on get name:" + error);
-   } finally {
-     setLoading(false);
-     console.log("done with get name request");
-   }
- }
+     setUserTeam(json.teamName);
+    } catch (error) {
+      console.log("error on get name:" + error);
+    } finally {
+      setLoading(false);
+      console.log("done with get name request");
+    }
+  }
+
+  const getTeamStepsRequest = async () => {
+    try {
+     const response = await fetch(configJSON.serverConfig.root + '/team/stepCountToday?name=' + userteam.toString(), {
+       method: 'GET',
+       headers: {
+         Accept: 'application/json',
+         'Content-Type': 'application/json'
+       }
+     });
+     const json = await response.json();
+     console.log("server response to team steps request: " + json.steps);
+     setTeamSteps(json.steps);
+    } catch (error) {
+      console.log("error on get team steps:" + error);
+    } finally {
+      setLoading(false);
+      console.log("done with get team steps request");
+    }
+  }
 
   const setUserNameRequest = async () => {
      try {
@@ -93,6 +120,8 @@ export default function HomeScreen() {
           </Button>
         </View>
       </View>
+      <Text>Team: {userteam}</Text>
+      <Text>Team steps today: {teamSteps}</Text>
       <StepCounter />
     </View>
   );

@@ -41,6 +41,11 @@ export default function ProfileScreen() {
     getUserStepsRequest();
   }, [userteam]);
 
+  useEffect(() => {
+    console.log("fechting team steps...");
+    getTeamStepsRequest();
+  }, [stepcount]);
+
   const getUserName = async () => {
     try {
      const response = await fetch(configJSON.serverConfig.root + '/person/find?id=' + userid.toString(), {

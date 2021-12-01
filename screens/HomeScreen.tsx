@@ -9,6 +9,8 @@ import { style } from "../constants/Styles";
 
 import { useEffect, useState } from 'react';
 
+import configJSON from "../config.json";
+
 export default function HomeScreen() {
   const [username, setName] = React.useState(""); // TODO replace with active username
 
@@ -17,7 +19,7 @@ export default function HomeScreen() {
 
   const getMovies = async () => {
      try {
-      const response = await fetch('http://192.168.0.146:8080/person/add', {
+      const response = await fetch(configJSON.serverConfig.root + '/person/add', {
         method: 'POST',
         headers: {
           Accept: 'application/json',

@@ -7,11 +7,43 @@ import { Button, TextInput } from "react-native-paper";
 
 import { style } from "../constants/Styles";
 
+import { useEffect, useState } from 'react';
+
 export default function HomeScreen() {
   const [username, setName] = React.useState(""); // TODO replace with active username
 
+  const [isLoading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+
+  const getMovies = async () => {
+     try {
+      const response = await fetch('http://192.168.0.146:8080/person/add', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: '123456789',
+          name: username,
+          teamName: 'LBI'
+        })
+      });
+      const json = await response;
+      setData(json);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+      console.log("done with set name request");
+    }
+  }
+
   // TODO replace with implemented functions
   const setUserName = () => {
+    console.log("setting user name...");
+    getMovies();
     console.log("savce username: " + username);
   };
 

@@ -1,7 +1,7 @@
 import "react-native-gesture-handler";
 import * as React from "react";
 
-import { View, Text } from "react-native";
+import { View, Text, Platform } from "react-native";
 import { Button } from "react-native-paper";
 
 import { style } from "../constants/Styles";
@@ -22,6 +22,11 @@ export default function ProfileScreen() {
     console.log("add my steps pressed")
   };
 
+  const fakeSteps = () => {
+    //TODO donate steps
+    console.log("add my steps pressed")
+  };
+
   return (
     <View style={style.container}>
       <View style={{ flexDirection: "row", 
@@ -34,6 +39,11 @@ export default function ProfileScreen() {
           <Button mode="contained" onPress={addSteps} /*TODO integrate icon_add-steps.png */>
             Add my steps
           </Button>
+
+          <Button mode="contained" onPress={fakeSteps} /*TODO remove this button once stepcount for android is implemented */>
+            Fake some steps
+          </Button>
+          
         </View>
         <View>
           <Text /*TODO sry for that, quick fix to space the elements out*/>       </Text>

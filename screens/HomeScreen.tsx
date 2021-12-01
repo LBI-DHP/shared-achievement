@@ -6,6 +6,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 
 import { style } from "../constants/Styles";
+import dataManager from "../components/DataManager"
 
 import { useEffect, useState } from 'react';
 
@@ -14,7 +15,15 @@ import configJSON from "../config.json";
 export default function HomeScreen() {
   const [username, setName] = React.useState(""); // TODO replace with active username
 
-  const [userid, setUserID] = React.useState("123456789");
+  const [userid, setUserID] = React.useState(null);
+  dataManager.getUserId().then(
+      (id) => {
+        setUserID(id)
+        console.log("UserId is: " + id)
+      })
+    .catch(
+      (e) => console.log("error")
+  )
 
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);

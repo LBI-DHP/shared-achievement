@@ -1,24 +1,64 @@
 import "react-native-gesture-handler";
 import * as React from "react";
-
-import { View, Image } from "react-native";
-import { style } from "../constants/Styles";
+import { StyleSheet, View, Image } from "react-native";
 
 export default function ChallengeScreen() {
+  const [Progress, setProgress] = React.useState(1);
+
   return (
     <View style={style.container}>
-      <Image
-        style={style.titleImage}
-        source={require("../assets/images/aaa-untersberg-100_1920x1080.jpg")}
-      />
-      {/* <Text>Challenge Screen</Text>
-      <Button
-        icon="camera"
-        mode="contained"
-        onPress={() => navigation.navigate("Details")}
-      >
-        Details
-      </Button> */}
+      <View style={style.backgroundContainer}>
+        <Image
+          source={require("../assets/images/Untersberg.png")}
+          resizeMode="cover"
+          style={style.backgroundImage}
+        />
+      </View>
+      <View style={style.overlayContainer}>
+        <Image
+          resizeMode="cover"
+          style={{
+            marginLeft: 110,
+            width: 200,
+            height: 325 * Progress,
+            bottom: 0,
+          }}
+          source={require("../assets/images/UntersbergPath.png")}
+        />
+      </View>
     </View>
   );
 }
+
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    height: 350,
+  },
+  backgroundContainer: {
+    position: "absolute",
+    height: 350,
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  overlayContainer: {
+    position: "absolute",
+    height: 350,
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
+  backgroundImage: {
+    width: "100%",
+    height: "100%",
+    flex: 1,
+    flexDirection: "column",
+  },
+});

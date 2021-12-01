@@ -10,9 +10,4 @@ export const style = StyleSheet.create({
     fontWeight: "bold",
     padding: 10,
   },
-  titleImage: {
-    alignItems: "center",
-    resizeMode: "center",
-    width: "100%",
-  },
 });

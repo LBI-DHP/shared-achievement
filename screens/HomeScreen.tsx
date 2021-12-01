@@ -17,7 +17,7 @@ export default function HomeScreen() {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
-  const getMovies = async () => {
+  const setUserNameRequest = async () => {
      try {
       const response = await fetch(configJSON.serverConfig.root + '/person/add', {
         method: 'POST',
@@ -31,11 +31,11 @@ export default function HomeScreen() {
           teamName: 'LBI'
         })
       });
-      const json = await response;
-      setData(json);
-      console.log(response);
+      const ok = await response.status;
+      console.log("server response: " + ok);
+      setData([ok.toString()]);
     } catch (error) {
-      console.log(error);
+      console.log("error on set name:" + error);
     } finally {
       setLoading(false);
       console.log("done with set name request");
@@ -45,7 +45,7 @@ export default function HomeScreen() {
   // TODO replace with implemented functions
   const setUserName = () => {
     console.log("setting user name...");
-    getMovies();
+    setUserNameRequest();
     console.log("savce username: " + username);
   };
 

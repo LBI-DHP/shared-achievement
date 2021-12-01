@@ -1,9 +1,39 @@
 import "react-native-gesture-handler";
 import * as React from "react";
 import { StyleSheet, View, Image } from "react-native";
+import configJSON from "../config.json";
 
 export default function ChallengeScreen() {
-  const [Progress, setProgress] = React.useState(1);
+  const [Progress, setProgress] = React.useState(0);
+
+  React.useEffect(() => {
+    getTeamStepsRequest();
+  }, []);
+
+  const getTeamStepsRequest = async () => {
+    try {
+      const response = await fetch(
+        configJSON.serverConfig.root +
+          "/team/relativeStepCountOfTeamTodayOfChallengeInPercent?name=LBI",
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const json = await response.json();
+      console.log(
+        "server response relative team steps request: " + json.relativeSteps
+      );
+      setProgress(json.relativeSteps / 100);
+    } catch (error) {
+      console.log("server response relative team steps request:" + error);
+    } finally {
+      console.log("server response relative team steps request.");
+    }
+  };
 
   return (
     <View style={style.container}>

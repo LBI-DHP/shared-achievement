@@ -10,7 +10,7 @@ import StepCounter from "../components/StepCounter";
 
 export default function ProfileScreen() {
 
-  const [username] = React.useState("Isabel"); //TODO
+  const [username] = React.useState(""); //TODO
   const [stepcount, setStepcount] = React.useState(100); //TODO
   const [verticalcount] = React.useState(30); //TODO
 

@@ -17,7 +17,7 @@ export default function HomeScreen() {
   const [userteam, setUserTeam] = React.useState("");
   const [teamSteps, setTeamSteps] = React.useState("");
 
-  const [userid, setUserID] = React.useState(null);
+  const [userid, setUserID] = React.useState("123456789");
   dataManager.getUserId().then(
       (id) => {
         setUserID(id)

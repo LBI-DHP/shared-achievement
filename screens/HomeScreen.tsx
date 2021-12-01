@@ -29,6 +29,11 @@ export default function HomeScreen() {
     getTeamStepsRequest();
   }, [userteam]);
 
+  useEffect(() => {
+    console.log("fechting team steps...");
+    getTeamStepsRequest();
+  }, [username]);
+
   const getUserName = async () => {
     try {
      const response = await fetch(configJSON.serverConfig.root + '/person/find?id=' + userid.toString(), {

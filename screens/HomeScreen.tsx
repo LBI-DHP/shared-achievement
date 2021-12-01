@@ -14,8 +14,34 @@ import configJSON from "../config.json";
 export default function HomeScreen() {
   const [username, setName] = React.useState(""); // TODO replace with active username
 
+  const [userid, setUserID] = React.useState("123456789");
+
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+
+  useEffect(() => {
+    getUserName();
+  }, []);
+
+  const getUserName = async () => {
+    try {
+     const response = await fetch(configJSON.serverConfig.root + '/person/find?id=' + userid.toString(), {
+       method: 'GET',
+       headers: {
+         Accept: 'application/json',
+         'Content-Type': 'application/json'
+       }
+     });
+     const json = await response.json();
+     console.log("server response: " + json);
+     setName(json.name);
+   } catch (error) {
+     console.log("error on get name:" + error);
+   } finally {
+     setLoading(false);
+     console.log("done with get name request");
+   }
+ }
 
   const setUserNameRequest = async () => {
      try {
@@ -26,7 +52,7 @@ export default function HomeScreen() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          id: '123456789',
+          id: userid,
           name: username,
           teamName: 'LBI'
         })

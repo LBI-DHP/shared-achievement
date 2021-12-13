@@ -1,7 +1,6 @@
 import "react-native-gesture-handler";
-import React, { useContext, useState, useEffect } from "react";
-import StepCounter from "../components/StepCounter";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useContext, useState } from "react";
+import { View, Text } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { style } from "../constants/Styles";
 import dataManager from "../components/DataManager";
@@ -9,8 +8,8 @@ import { AppStateContext } from "../components/AppStateProvider";
 
 export default function Welcome() {
   const { userData, setUserData } = useContext(AppStateContext);
-  const [userName, setUserName] = React.useState("");
-  const [error, setError] = React.useState(false);
+  const [userName, setUserName] = useState("");
+  const [error, setError] = useState(false);
 
   return (
     <View style={style.container}>
@@ -37,9 +36,7 @@ export default function Welcome() {
           };
 
           dataManager.addUser(newUserData).then((responseStatus) => {
-            console.log("responseStatus:", responseStatus);
             if (responseStatus === 201) {
-              console.log("set");
               setUserData(newUserData);
             } else {
               setError(true);

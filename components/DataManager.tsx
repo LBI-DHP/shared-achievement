@@ -42,6 +42,7 @@ export default class dataManager {
       console.log("done with get user data request");
     }
   };
+
   static addUser = async (userData) => {
     try {
       const response = await fetch(
@@ -60,9 +61,78 @@ export default class dataManager {
       return responseStatus;
     } catch (error) {
       console.log("error on add user:" + error);
-      return false;
     } finally {
       console.log("done with add user request");
+    }
+  };
+
+  static getUserStepCountOfToday = async (userid) => {
+    try {
+      const response = await fetch(
+        configJSON.serverConfig.root +
+          "/stepcount/findByPersonIdForToday?personId=" +
+          userid,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const userStepCount = await response.json();
+      console.log(userStepCount);
+      return userStepCount.steps;
+    } catch (error) {
+      console.log("error on get user step count:" + error);
+    } finally {
+      console.log("done with get user step count request");
+    }
+  };
+
+  static pushStepCountofToday = async (stepCountData) => {
+    try {
+      const response = await fetch(
+        configJSON.serverConfig.root + "/stepcount/push",
+        {
+          method: "PUT",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(stepCountData),
+        }
+      );
+      const responseStatus = await response.status;
+      console.log("server response: " + responseStatus);
+      return responseStatus;
+    } catch (error) {
+      console.log("error on add step count:" + error);
+    } finally {
+      console.log("done with add step count request");
+    }
+  };
+
+  static updateStepCount = async (stepCountData) => {
+    try {
+      const response = await fetch(
+        configJSON.serverConfig.root + "/stepcount/update",
+        {
+          method: "PUT",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(stepCountData),
+        }
+      );
+      const responseStatus = await response.status;
+      console.log("server response: " + responseStatus);
+      return responseStatus;
+    } catch (error) {
+      console.log("error on add step count:" + error);
+    } finally {
+      console.log("done with add step count request");
     }
   };
 }

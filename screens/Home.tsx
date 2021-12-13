@@ -7,7 +7,7 @@ import { style } from "../constants/Styles";
 import dataManager from "../components/DataManager";
 import { AppStateContext } from "../components/AppStateProvider";
 
-export default function HomeScreen() {
+export default function Home() {
   const { userData, setUserData } = useContext(AppStateContext);
   const [isUserNameSet, setIsUserNameSet] = useState(false);
 
@@ -56,23 +56,7 @@ export default function HomeScreen() {
 
   return (
     <View style={style.container}>
-      <Text style={style.heading}>Hey there!</Text>
-      <Text style={style.heading}>Set a user name to face the challenge</Text>
-      <View style={{ flexDirection: "row" }}>
-        <Text>User Name:</Text>
-        <View>
-          <TextInput
-            value={username}
-            multiline={false}
-            placeholder="Enter a user name"
-            autoComplete={false}
-            onChangeText={(text) => setName(text)}
-          />
-          <Button mode="contained" onPress={setUserName}>
-            Set user name
-          </Button>
-        </View>
-      </View>
+      <Text style={style.heading}>Hey {userData.name}!</Text>
       <Text>Team: {userteam}</Text>
       <Text>Team steps today: {teamSteps}</Text>
       <StepCounter />

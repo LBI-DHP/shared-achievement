@@ -2,7 +2,8 @@ import React, { useContext, useState, useEffect } from "react";
 import Header from "./Header";
 import Navigation from "./SABottomNavigation";
 import { StatusBar } from "expo-status-bar";
-import ChallengeScreen from "../screens/ChallengeScreen";
+import ChallengeScreen from "../screens/Challenge";
+import WelcomeScreen from "../screens/Welcome";
 import { AppStateContext } from "./AppStateProvider";
 
 export default function AppView() {
@@ -13,14 +14,17 @@ export default function AppView() {
     if (userData.name !== null) {
       setIsUserNameSet(true);
     }
-  }, []);
+  }, [userData]);
 
-  return (
-    <>
-      <Header />
-      <ChallengeScreen />
-      <Navigation />
-      <StatusBar />
-    </>
-  );
+  if (isUserNameSet) {
+    return (
+      <>
+        <Header />
+        <ChallengeScreen />
+        <Navigation />
+        <StatusBar />
+      </>
+    );
+  }
+  return <WelcomeScreen />;
 }

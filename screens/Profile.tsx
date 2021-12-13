@@ -9,9 +9,9 @@ import { style } from "../constants/Styles";
 import { useEffect, useState } from "react";
 
 import configJSON from "../config.json";
-import HomeScreen from "./HomeScreen";
+import HomeScreen from "./Home";
 
-export default function ProfileScreen() {
+export default function Profile() {
   const [username, setName] = React.useState(""); // TODO replace with active username
   const [stepcount, setStepCount] = React.useState(100); //TODO
   const [verticalcount] = React.useState("30"); //TODO

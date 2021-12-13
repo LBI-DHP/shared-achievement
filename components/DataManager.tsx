@@ -42,7 +42,7 @@ export default class dataManager {
       console.log("done with get user data request");
     }
   };
-  setUserNameRequest = async (userData) => {
+  static addUser = async (userData) => {
     try {
       const response = await fetch(
         configJSON.serverConfig.root + "/person/add",
@@ -55,14 +55,14 @@ export default class dataManager {
           body: JSON.stringify(userData),
         }
       );
-      const ok = await response.status;
-      console.log("server response: " + ok);
-      //   setData([ok.toString()]);
+      const responseStatus = await response.status;
+      console.log("server response: " + responseStatus);
+      return responseStatus;
     } catch (error) {
-      console.log("error on set name:" + error);
+      console.log("error on add user:" + error);
+      return false;
     } finally {
-      //   setLoading(false);
-      console.log("done with set name request");
+      console.log("done with add user request");
     }
   };
 }

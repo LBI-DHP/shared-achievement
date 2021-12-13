@@ -1,8 +1,8 @@
 import "react-native-gesture-handler";
 import * as React from "react";
-import GroupScreen from "../screens/GroupScreen";
-import HomeScreen from "../screens/HomeScreen";
-import ProfileScreen from "../screens/ProfileScreen";
+import GroupScreen from "../screens/Group";
+import HomeScreen from "../screens/Home";
+import ProfileScreen from "../screens/Profile";
 import { BottomNavigation } from "react-native-paper";
 
 export default function SABottomNavigation() {

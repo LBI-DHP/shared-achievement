@@ -6,7 +6,7 @@ import { Button, TextInput } from "react-native-paper";
 
 import { style } from "../constants/Styles";
 
-export default function GroupScreen() {
+export default function Group() {
   const [groupname, setText] = React.useState("");
   const [btnJoin, setbtnJoin] = React.useState(true);
   const [btnCreate, setbtnCreate] = React.useState(true);

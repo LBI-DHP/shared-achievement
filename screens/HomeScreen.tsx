@@ -1,124 +1,62 @@
 import "react-native-gesture-handler";
-import * as React from "react";
+import React, { useContext, useState, useEffect } from "react";
 import StepCounter from "../components/StepCounter";
-
 import { View, Text, StyleSheet } from "react-native";
 import { Button, TextInput } from "react-native-paper";
-
 import { style } from "../constants/Styles";
-import dataManager from "../components/DataManager"
-
-import { useEffect, useState } from 'react';
-
-import configJSON from "../config.json";
+import dataManager from "../components/DataManager";
+import { AppStateContext } from "../components/AppStateProvider";
 
 export default function HomeScreen() {
+  const { userData, setUserData } = useContext(AppStateContext);
+  const [isUserNameSet, setIsUserNameSet] = useState(false);
+
+  useEffect(() => {
+    if (userData.name !== null) {
+      setIsUserNameSet(true);
+    }
+  }, []);
+
   const [username, setName] = React.useState(""); // TODO replace with active username
   const [userteam, setUserTeam] = React.useState("");
   const [teamSteps, setTeamSteps] = React.useState("");
 
   const [userid, setUserID] = React.useState("123456789");
-  dataManager.getUserId().then(
-      (id) => {
-        setUserID(id)
-        console.log("UserId is: " + id)
-      })
-    .catch(
-      (e) => console.log("error")
-  )
+  dataManager
+    .getUserId()
+    .then((id) => {
+      setUserID(id);
+      // console.log("UserId is: " + id);
+    })
+    .catch((e) => console.log("error"));
 
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    getUserName();
+    // getUserName();
   }, []);
 
   useEffect(() => {
-    console.log("fechting team steps...");
-    getTeamStepsRequest();
+    // console.log("fechting team steps...");
+    // getTeamStepsRequest();
   }, [userteam]);
 
   useEffect(() => {
-    console.log("fechting team steps...");
-    getTeamStepsRequest();
+    // console.log("fechting team steps...");
+    // getTeamStepsRequest();
   }, [username]);
-
-  const getUserName = async () => {
-    try {
-     const response = await fetch(configJSON.serverConfig.root + '/person/find?id=' + userid.toString(), {
-       method: 'GET',
-       headers: {
-         Accept: 'application/json',
-         'Content-Type': 'application/json'
-       }
-     });
-     const json = await response.json();
-     console.log("server response on get user name: " + json);
-     setName(json.name);
-     setUserTeam(json.teamName);
-    } catch (error) {
-      console.log("error on get name:" + error);
-    } finally {
-      setLoading(false);
-      console.log("done with get name request");
-    }
-  }
-
-  const getTeamStepsRequest = async () => {
-    try {
-     const response = await fetch(configJSON.serverConfig.root + '/team/stepCountToday?name=' + userteam.toString(), {
-       method: 'GET',
-       headers: {
-         Accept: 'application/json',
-         'Content-Type': 'application/json'
-       }
-     });
-     const json = await response.json();
-     console.log("server response to team steps request: " + json.steps);
-     setTeamSteps(json.steps);
-    } catch (error) {
-      console.log("error on get team steps:" + error);
-    } finally {
-      setLoading(false);
-      console.log("done with get team steps request");
-    }
-  }
-
-  const setUserNameRequest = async () => {
-     try {
-      const response = await fetch(configJSON.serverConfig.root + '/person/add', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          id: userid,
-          name: username,
-          teamName: 'LBI'
-        })
-      });
-      const ok = await response.status;
-      console.log("server response: " + ok);
-      setData([ok.toString()]);
-    } catch (error) {
-      console.log("error on set name:" + error);
-    } finally {
-      setLoading(false);
-      console.log("done with set name request");
-    }
-  }
 
   // TODO replace with implemented functions
   const setUserName = () => {
     console.log("setting user name...");
-    setUserNameRequest();
+    // setUserNameRequest();
     console.log("savce username: " + username);
   };
 
   return (
     <View style={style.container}>
+      <Text style={style.heading}>Hey there!</Text>
       <Text style={style.heading}>Set a user name to face the challenge</Text>
       <View style={{ flexDirection: "row" }}>
         <Text>User Name:</Text>

@@ -7,33 +7,33 @@ export default function ChallengeScreen() {
   const [Progress, setProgress] = React.useState(0);
 
   React.useEffect(() => {
-    getTeamStepsRequest();
+    // getTeamStepsRequest();
   }, []);
 
-  const getTeamStepsRequest = async () => {
-    try {
-      const response = await fetch(
-        configJSON.serverConfig.root +
-          "/team/relativeStepCountOfTeamTodayOfChallengeInPercent?name=LBI",
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const json = await response.json();
-      console.log(
-        "server response relative team steps request: " + json.relativeSteps
-      );
-      setProgress(json.relativeSteps / 100);
-    } catch (error) {
-      console.log("server response relative team steps request:" + error);
-    } finally {
-      console.log("server response relative team steps request.");
-    }
-  };
+  // const getTeamStepsRequest = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       configJSON.serverConfig.root +
+  //         "/team/relativeStepCountOfTeamTodayOfChallengeInPercent?name=LBI",
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           Accept: "application/json",
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+  //     const json = await response.json();
+  //     console.log(
+  //       "server response relative team steps request: " + json.relativeSteps
+  //     );
+  //     setProgress(json.relativeSteps / 100);
+  //   } catch (error) {
+  //     console.log("server response relative team steps request:" + error);
+  //   } finally {
+  //     console.log("server response relative team steps request.");
+  //   }
+  // };
 
   return (
     <View style={style.container}>

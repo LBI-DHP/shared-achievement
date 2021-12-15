@@ -197,23 +197,49 @@ export default class dataManager {
     }
   };
 
-  // const getTeamStepsRequest = async () => {
-  //   try {
-  //    const response = await fetch(configJSON.serverConfig.root + '/team/stepCountToday?name=' + userteam.toString(), {
-  //      method: 'GET',
-  //      headers: {
-  //        Accept: 'application/json',
-  //        'Content-Type': 'application/json'
-  //      }
-  //    });
-  //    const json = await response.json();
-  //    console.log("server response to team steps request: " + json.steps);
-  //    setTeamSteps(json.steps);
-  //   } catch (error) {
-  //     console.log("error on get team steps:" + error);
-  //   } finally {
-  //     setLoading(false);
-  //     console.log("done with get team steps request");
-  //   }
-  // }
+  static getTeamStepCountToday = async (teamName) => {
+    try {
+      const response = await fetch(
+        configJSON.serverConfig.root +
+          "/team/stepCountToday?name=" +
+          teamName.toString(),
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const stepCount = await response.json();
+      return stepCount.steps;
+    } catch (error) {
+      console.log("error on get team step count:" + error);
+    } finally {
+      console.log("done with get team step count request");
+    }
+  };
+
+  static getRelativeTeamStepCountOfToday = async (teamName) => {
+    try {
+      const response = await fetch(
+        configJSON.serverConfig.root +
+          "/team/relativeStepCountOfTeamTodayOfChallengeInPercent?name=" +
+          teamName.toString(),
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const relativeSteps = await response.json();
+      return relativeSteps.relativeSteps;
+    } catch (error) {
+      console.log("error on get team step count:" + error);
+    } finally {
+      console.log("done with get team step count request");
+    }
+  };
 }

@@ -23,8 +23,8 @@ export const AppStateProvider = (props) => {
             setUserData({ id: id, name: null, teamName: null });
           } else {
             setUserData(data);
+            console.log("User data:", data);
           }
-          console.log("User data:", userData);
         });
       })
       .catch((e) => console.log("Error:", e));

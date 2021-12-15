@@ -13,19 +13,24 @@ export default function StepCounter() {
   const [stepCountToday, setStepCountToday] = useState(0);
   const [currentStepCount, setCurrentStepCount] = useState(0);
   const [currentStepCountAdded, setCurrentStepCountAdded] = useState(0);
+  const [contributedSteps, setContributedSteps] = useState(0);
   const [newSteps, setNewSteps] = useState(0);
-  const { userData, setUserData } = useContext(AppStateContext);
+  const { userData } = useContext(AppStateContext);
   const [error, setError] = useState(false);
 
   let _subscription: any;
 
   useEffect(() => {
     _subscribe();
-    dataManager.getUserStepCountOfToday(userData.id).then((userStepCount) => {
-      setNewSteps(stepCountToday - userStepCount);
-    });
     return () => _unsubscribe();
   }, []);
+
+  useEffect(() => {
+    dataManager.getUserStepCountOfToday(userData.id).then((userStepCount) => {
+      setNewSteps(stepCountToday - userStepCount);
+      setContributedSteps(userStepCount);
+    });
+  }, [stepCountToday]);
 
   const _subscribe = () => {
     _subscription = Pedometer.watchStepCount((result) => {
@@ -62,6 +67,14 @@ export default function StepCounter() {
     _subscription = null;
   };
 
+  const resetStepsAfterContribution = () => {
+    setContributedSteps(
+      stepCountToday + currentStepCount - currentStepCountAdded
+    );
+    setNewSteps(0);
+    setCurrentStepCountAdded(currentStepCount);
+  };
+
   if (!isPedometerAvailable) {
     return <Text>Sorry, step counter is not available.</Text>;
   }
@@ -74,15 +87,20 @@ export default function StepCounter() {
           {stepCountToday + currentStepCount}
         </Text>
       </Text>
+      <Text style={{ paddingBottom: 10 }}>
+        Already contributed steps:{" "}
+        <Text style={style.subheading}>{contributedSteps}</Text>
+      </Text>
       <Text style={{ paddingBottom: 20 }}>
         New steps since the last contribution:{" "}
         <Text style={style.subheading}>
-          {console.log(newSteps, currentStepCount, currentStepCountAdded)}
           {newSteps + currentStepCount - currentStepCountAdded}
         </Text>
       </Text>
       <Button
-        disabled={newSteps === 0 && currentStepCount === 0}
+        disabled={
+          newSteps === 0 && currentStepCount - currentStepCountAdded === 0
+        }
         mode="contained"
         onPress={() => {
           if (newSteps === stepCountToday) {
@@ -93,12 +111,9 @@ export default function StepCounter() {
                   stepCountToday + currentStepCount - currentStepCountAdded,
               })
               .then((responseStatus) => {
-                if (responseStatus === 201 || responseStatus === 200) {
-                  setNewSteps(0);
-                  setCurrentStepCountAdded(currentStepCount);
-                } else {
-                  setError(true);
-                }
+                if (responseStatus === 201 || responseStatus === 200)
+                  resetStepsAfterContribution();
+                else setError(true);
               });
           } else {
             const newDate = new Date();
@@ -119,12 +134,9 @@ export default function StepCounter() {
                   stepCountToday + currentStepCount - currentStepCountAdded,
               })
               .then((responseStatus) => {
-                if (responseStatus === 201 || responseStatus === 200) {
-                  setNewSteps(0);
-                  setCurrentStepCountAdded(currentStepCount);
-                } else {
-                  setError(true);
-                }
+                if (responseStatus === 201 || responseStatus === 200)
+                  resetStepsAfterContribution();
+                else setError(true);
               });
           }
         }}

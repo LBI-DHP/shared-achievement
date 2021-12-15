@@ -3,10 +3,10 @@ import React, { useContext, useState, useEffect } from "react";
 import StepCounter from "../components/StepCounter";
 import { View, Text } from "react-native";
 import { style } from "../constants/Styles";
-import { AppStateContext } from "../components/AppStateProvider";
+import { UserDataContext } from "../components/UserDataProvider";
 
 export default function Home() {
-  const { userData, setUserData } = useContext(AppStateContext);
+  const { userData, setUserData } = useContext(UserDataContext);
 
   return (
     <View style={style.container}>

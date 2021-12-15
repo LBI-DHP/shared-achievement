@@ -4,7 +4,7 @@ import useCachedResources from "./hooks/useCachedResources";
 import { AppRegistry } from "react-native";
 import appJson from "./app.json";
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
-import { AppStateProvider } from "./components/AppStateProvider";
+import { UserDataProvider } from "./components/UserDataProvider";
 import AppView from "./components/AppView";
 
 const theme = {
@@ -24,13 +24,13 @@ export default function App() {
     return null;
   } else {
     return (
-      <AppStateProvider>
+      <UserDataProvider>
         <SafeAreaProvider>
           <PaperProvider theme={theme}>
             <AppView />
           </PaperProvider>
         </SafeAreaProvider>
-      </AppStateProvider>
+      </UserDataProvider>
     );
   }
 }

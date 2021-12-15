@@ -4,10 +4,10 @@ import Navigation from "./SABottomNavigation";
 import { StatusBar } from "expo-status-bar";
 import ChallengeScreen from "../screens/Challenge";
 import WelcomeScreen from "../screens/Welcome";
-import { AppStateContext } from "./AppStateProvider";
+import { UserDataContext } from "./UserDataProvider";
 
 export default function AppView() {
-  const { userData, setUserData } = useContext(AppStateContext);
+  const { userData, setUserData } = useContext(UserDataContext);
   const [isUserNameSet, setIsUserNameSet] = useState(false);
 
   useEffect(() => {

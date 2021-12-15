@@ -4,10 +4,10 @@ import { View, Text } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { style } from "../constants/Styles";
 import dataManager from "../components/DataManager";
-import { AppStateContext } from "../components/AppStateProvider";
+import { UserDataContext } from "../components/UserDataProvider";
 
 export default function Welcome() {
-  const { userData, setUserData } = useContext(AppStateContext);
+  const { userData, setUserData } = useContext(UserDataContext);
   const [userName, setUserName] = useState("");
   const [error, setError] = useState(false);
 

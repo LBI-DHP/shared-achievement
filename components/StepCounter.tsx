@@ -5,7 +5,7 @@ import { Text } from "../components/Themed";
 import { Button } from "react-native-paper";
 import { Pedometer } from "expo-sensors";
 import dataManager from "./DataManager";
-import { AppStateContext } from "./AppStateProvider";
+import { UserDataContext } from "./UserDataProvider";
 import { style } from "../constants/Styles";
 
 export default function StepCounter() {
@@ -15,7 +15,7 @@ export default function StepCounter() {
   const [currentStepCountAdded, setCurrentStepCountAdded] = useState(0);
   const [contributedSteps, setContributedSteps] = useState(0);
   const [newSteps, setNewSteps] = useState(0);
-  const { userData } = useContext(AppStateContext);
+  const { userData } = useContext(UserDataContext);
   const [error, setError] = useState(false);
 
   let _subscription: any;

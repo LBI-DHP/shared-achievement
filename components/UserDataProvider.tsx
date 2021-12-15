@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import dataManager from "../components/DataManager";
 
-export const AppStateContext = React.createContext({
+export const UserDataContext = React.createContext({
   userData: { id: null, name: null, teamName: null },
   setUserData: ({}) => {},
 });
 
-export const AppStateProvider = (props) => {
+export const UserDataProvider = (props) => {
   const [userData, setUserData] = React.useState({
     id: null,
     name: null,
@@ -31,8 +31,8 @@ export const AppStateProvider = (props) => {
   }, []);
 
   return (
-    <AppStateContext.Provider value={{ userData, setUserData }}>
+    <UserDataContext.Provider value={{ userData, setUserData }}>
       {props.children}
-    </AppStateContext.Provider>
+    </UserDataContext.Provider>
   );
 };

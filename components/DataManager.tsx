@@ -66,6 +66,29 @@ export default class dataManager {
     }
   };
 
+  static updateUser = async (userData) => {
+    try {
+      const response = await fetch(
+        configJSON.serverConfig.root + "/person/update",
+        {
+          method: "PUT",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData),
+        }
+      );
+      const responseStatus = await response.status;
+      console.log("server response: " + responseStatus);
+      return responseStatus;
+    } catch (error) {
+      console.log("error on update user data:" + error);
+    } finally {
+      console.log("done with update user data request");
+    }
+  };
+
   static getUserStepCountOfToday = async (userid) => {
     try {
       const response = await fetch(
@@ -107,9 +130,9 @@ export default class dataManager {
       console.log("server response: " + responseStatus);
       return responseStatus;
     } catch (error) {
-      console.log("error on add step count:" + error);
+      console.log("error on push step count:" + error);
     } finally {
-      console.log("done with add step count request");
+      console.log("done with push step count request");
     }
   };
 
@@ -130,29 +153,67 @@ export default class dataManager {
       console.log("server response: " + responseStatus);
       return responseStatus;
     } catch (error) {
-      console.log("error on add step count:" + error);
+      console.log("error on update step count:" + error);
     } finally {
-      console.log("done with add step count request");
+      console.log("done with update step count request");
     }
   };
-}
 
-// const getTeamStepsRequest = async () => {
-//   try {
-//    const response = await fetch(configJSON.serverConfig.root + '/team/stepCountToday?name=' + userteam.toString(), {
-//      method: 'GET',
-//      headers: {
-//        Accept: 'application/json',
-//        'Content-Type': 'application/json'
-//      }
-//    });
-//    const json = await response.json();
-//    console.log("server response to team steps request: " + json.steps);
-//    setTeamSteps(json.steps);
-//   } catch (error) {
-//     console.log("error on get team steps:" + error);
-//   } finally {
-//     setLoading(false);
-//     console.log("done with get team steps request");
-//   }
-// }
+  static getAllTeams = async () => {
+    try {
+      const response = await fetch(configJSON.serverConfig.root + "/team/all", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      const allTeams = await response.json();
+      return allTeams;
+    } catch (error) {
+      console.log("error on get all teams" + error);
+    } finally {
+      console.log("done with get all teams request");
+    }
+  };
+
+  static addTeam = async (teamData) => {
+    try {
+      const response = await fetch(configJSON.serverConfig.root + "/team/add", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(teamData),
+      });
+      const responseStatus = await response.status;
+      console.log("server response: " + responseStatus);
+      return responseStatus;
+    } catch (error) {
+      console.log("error on add team:" + error);
+    } finally {
+      console.log("done with add team request");
+    }
+  };
+
+  // const getTeamStepsRequest = async () => {
+  //   try {
+  //    const response = await fetch(configJSON.serverConfig.root + '/team/stepCountToday?name=' + userteam.toString(), {
+  //      method: 'GET',
+  //      headers: {
+  //        Accept: 'application/json',
+  //        'Content-Type': 'application/json'
+  //      }
+  //    });
+  //    const json = await response.json();
+  //    console.log("server response to team steps request: " + json.steps);
+  //    setTeamSteps(json.steps);
+  //   } catch (error) {
+  //     console.log("error on get team steps:" + error);
+  //   } finally {
+  //     setLoading(false);
+  //     console.log("done with get team steps request");
+  //   }
+  // }
+}

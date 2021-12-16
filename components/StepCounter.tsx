@@ -15,7 +15,8 @@ export default function StepCounter() {
   const [currentStepCountAdded, setCurrentStepCountAdded] = useState(0);
   const [contributedSteps, setContributedSteps] = useState(0);
   const [newSteps, setNewSteps] = useState(0);
-  const { userData } = useContext(UserDataContext);
+  const { userData, updatedSteps, setUpdatedSteps } =
+    useContext(UserDataContext);
   const [error, setError] = useState(false);
 
   let _subscription: any;
@@ -103,6 +104,7 @@ export default function StepCounter() {
         }
         mode="contained"
         onPress={() => {
+          setUpdatedSteps(!updatedSteps);
           if (newSteps === stepCountToday) {
             dataManager
               .pushStepCountofToday({

@@ -9,9 +9,8 @@ export default function Team() {
   const [isUserInATeam, setIsUserInATeam] = useState(false);
 
   useEffect(() => {
-    if (userData.teamName !== null) {
-      setIsUserInATeam(true);
-    }
+    if (userData.teamName === null) setIsUserInATeam(false);
+    else setIsUserInATeam(true);
   }, [userData]);
 
   if (isUserInATeam) {

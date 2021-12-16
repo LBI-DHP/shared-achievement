@@ -7,13 +7,16 @@ import { UserDataContext } from "../components/UserDataProvider";
 import dataManager from "../components/DataManager";
 
 export default function TeamStatistics() {
-  const { userData } = useContext(UserDataContext);
+  const { userData, updatedSteps } = useContext(UserDataContext);
   const [teamStepCountToday, setTeamStepCountToday] = useState(0);
   const [teamRelativeStepCountToday, setTeamRelativeStepCountToday] =
     useState(0);
 
-  //TO DO: update when user pushes new steps
   useEffect(() => {
+    updateTeamProgress();
+  }, [updatedSteps]);
+
+  const updateTeamProgress = () => {
     dataManager.getTeamStepCountToday(userData.teamName).then((stepCount) => {
       setTeamStepCountToday(stepCount);
     });
@@ -22,20 +25,23 @@ export default function TeamStatistics() {
       .then((relativeStepCount) => {
         setTeamRelativeStepCountToday(relativeStepCount);
       });
-  }, []);
+  };
 
   return (
     <View style={style.container}>
-      <Text style={style.heading}>Go team {userData.teamName}!</Text>
+      <Text style={style.subheading}>Go team {userData.teamName}!</Text>
       <Text style={{ paddingBottom: 10 }}>
         Total steps taken today:{" "}
         <Text style={style.subheading}>{teamStepCountToday}</Text>
       </Text>
-      <Text style={style.subheading}>
+      <Text style={{ paddingBottom: 10 }}>
         You have already completed{" "}
         <Text style={style.subheading}>{teamRelativeStepCountToday + "%"}</Text>{" "}
         of the "Untersberg Hike" challenge. Keep it up! 🥾👣⛰️
       </Text>
+      <Button mode="contained" onPress={() => updateTeamProgress()}>
+        🔄 Refresh
+      </Button>
     </View>
   );
 }

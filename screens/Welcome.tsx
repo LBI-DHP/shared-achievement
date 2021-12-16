@@ -12,7 +12,7 @@ export default function Welcome() {
   const [error, setError] = useState(false);
 
   return (
-    <View style={style.container}>
+    <View style={style.containerCenter}>
       <Text style={style.heading}>Hey there! 👋</Text>
       <Text style={style.subheading}>
         We are excited that you want to face the Untersberg challenge. But

@@ -2,7 +2,7 @@ import "react-native-gesture-handler";
 import * as React from "react";
 import TeamScreen from "../screens/Team";
 import HomeScreen from "../screens/Home";
-import ProfileScreen from "../screens/Profile";
+import SettingsScreen from "../screens/Settings";
 import { BottomNavigation } from "react-native-paper";
 
 export default function SABottomNavigation() {
@@ -10,13 +10,13 @@ export default function SABottomNavigation() {
   const [routes] = React.useState([
     { key: "home", title: "Home", icon: "home" },
     { key: "team", title: "Team", icon: "account-group" },
-    { key: "profile", title: "Profile", icon: "account-details" },
+    { key: "settings", title: "Settings", icon: "cog" },
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
     home: HomeScreen,
     team: TeamScreen,
-    profile: ProfileScreen,
+    settings: SettingsScreen,
   });
 
   return (

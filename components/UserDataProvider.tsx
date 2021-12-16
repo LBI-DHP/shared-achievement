@@ -1,17 +1,21 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import dataManager from "../components/DataManager";
 
 export const UserDataContext = React.createContext({
   userData: { id: null, name: null, teamName: null },
   setUserData: ({}) => {},
+  updatedSteps: false,
+  setUpdatedSteps: ({}) => {},
 });
 
 export const UserDataProvider = (props) => {
-  const [userData, setUserData] = React.useState({
+  const [userData, setUserData] = useState({
     id: null,
     name: null,
     teamName: null,
   });
+
+  const [updatedSteps, setUpdatedSteps] = useState(false);
 
   useEffect(() => {
     dataManager
@@ -31,7 +35,9 @@ export const UserDataProvider = (props) => {
   }, []);
 
   return (
-    <UserDataContext.Provider value={{ userData, setUserData }}>
+    <UserDataContext.Provider
+      value={{ userData, setUserData, updatedSteps, setUpdatedSteps }}
+    >
       {props.children}
     </UserDataContext.Provider>
   );

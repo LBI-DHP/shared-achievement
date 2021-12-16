@@ -18,20 +18,24 @@ export const UserDataProvider = (props) => {
   const [updatedSteps, setUpdatedSteps] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
     dataManager
       .getUserId()
       .then((id) => {
         console.log("UserId: " + id);
         dataManager.getUserData(id).then((data) => {
           if (data.error) {
-            setUserData({ id: id, name: null, teamName: null });
+            if (mounted) setUserData({ id: id, name: null, teamName: null });
           } else {
-            setUserData(data);
+            if (mounted) setUserData(data);
             console.log("User data:", data);
           }
         });
       })
       .catch((e) => console.log("Error:", e));
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   return (

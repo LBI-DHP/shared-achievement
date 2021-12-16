@@ -22,20 +22,30 @@ export default function StepCounter() {
   let _subscription: any;
 
   useEffect(() => {
-    _subscribe();
-    return () => _unsubscribe();
+    let mounted = true;
+    _subscribe(mounted);
+    return () => {
+      mounted = false;
+      _unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
+    let mounted = true;
     dataManager.getUserStepCountOfToday(userData.id).then((userStepCount) => {
-      setNewSteps(stepCountToday - userStepCount);
-      setContributedSteps(userStepCount);
+      if (mounted) {
+        setNewSteps(stepCountToday - userStepCount);
+        setContributedSteps(userStepCount);
+      }
     });
+    return () => {
+      mounted = false;
+    };
   }, [stepCountToday]);
 
-  const _subscribe = () => {
+  const _subscribe = (mounted) => {
     _subscription = Pedometer.watchStepCount((result) => {
-      setCurrentStepCount(result.steps);
+      if (mounted) setCurrentStepCount(result.steps);
     });
 
     Pedometer.isAvailableAsync().then(
@@ -49,7 +59,7 @@ export default function StepCounter() {
 
           Pedometer.getStepCountAsync(start, end).then(
             (result) => {
-              setStepCountToday(result.steps);
+              if (mounted) setStepCountToday(result.steps);
             },
             (error) => {
               console.log(error);

@@ -13,8 +13,5 @@ export default function Team() {
     else setIsUserInATeam(true);
   }, [userData]);
 
-  if (isUserInATeam) {
-    return <TeamStatistics />;
-  }
-  return <JoinOrCreateTeam />;
+  return isUserInATeam ? <TeamStatistics /> : <JoinOrCreateTeam />;
 }

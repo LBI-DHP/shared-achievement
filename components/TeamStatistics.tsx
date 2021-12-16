@@ -13,17 +13,21 @@ export default function TeamStatistics() {
     useState(0);
 
   useEffect(() => {
-    updateTeamProgress();
+    let mounted = true;
+    updateTeamProgress(mounted);
+    return () => {
+      mounted = false;
+    };
   }, [updatedSteps]);
 
-  const updateTeamProgress = () => {
+  const updateTeamProgress = (mounted) => {
     dataManager.getTeamStepCountToday(userData.teamName).then((stepCount) => {
-      setTeamStepCountToday(stepCount);
+      if (mounted) setTeamStepCountToday(stepCount);
     });
     dataManager
       .getRelativeTeamStepCountOfToday(userData.teamName)
       .then((relativeStepCount) => {
-        setTeamRelativeStepCountToday(relativeStepCount);
+        if (mounted) setTeamRelativeStepCountToday(relativeStepCount);
       });
   };
 
@@ -39,7 +43,7 @@ export default function TeamStatistics() {
         <Text style={style.subheading}>{teamRelativeStepCountToday + "%"}</Text>{" "}
         of the "Untersberg Hike" challenge. Keep it up! 🥾👣⛰️
       </Text>
-      <Button mode="contained" onPress={() => updateTeamProgress()}>
+      <Button mode="contained" onPress={() => updateTeamProgress(true)}>
         🔄 Refresh
       </Button>
     </View>

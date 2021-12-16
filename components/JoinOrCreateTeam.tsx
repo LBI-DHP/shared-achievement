@@ -14,20 +14,20 @@ export default function JoinOrCreateTeam() {
   const [teamExists, setTeamExists] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
     dataManager.getAllTeams().then((response) => {
-      response;
-      setAllTeams(response);
+      if (mounted) setAllTeams(response);
     });
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   useEffect(() => {
     setTeamExists(false);
     allTeams.forEach((element) => {
-      console.log(element.name, teamName);
-      console.log(element.name === teamName);
       if (element.name === teamName) setTeamExists(true);
     });
-    console.log(teamExists);
   }, [teamName]);
 
   return (

@@ -6,7 +6,7 @@ import { style } from "../constants/Styles";
 import { UserDataContext } from "../components/UserDataProvider";
 
 export default function Home() {
-  const { userData, setUserData } = useContext(UserDataContext);
+  const { userData } = useContext(UserDataContext);
 
   return (
     <View style={style.container}>

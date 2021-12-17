@@ -24,11 +24,10 @@ export const UserDataProvider = (props) => {
       .then((id) => {
         console.log("UserId: " + id);
         dataManager.getUserData(id).then((data) => {
-          if (data.error) {
+          if (data && data.error) {
             if (mounted) setUserData({ id: id, name: null, teamName: null });
           } else {
             if (mounted) setUserData(data);
-            console.log("User data:", data);
           }
         });
       })

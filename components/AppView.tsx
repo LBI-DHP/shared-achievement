@@ -2,7 +2,6 @@ import React, { useContext, useState, useEffect } from "react";
 import Header from "./Header";
 import Navigation from "./SABottomNavigation";
 import { StatusBar } from "expo-status-bar";
-import ChallengeScreen from "../screens/Challenge";
 import WelcomeScreen from "../screens/Welcome";
 import { UserDataContext } from "./UserDataProvider";
 import { Keyboard } from "react-native";
@@ -15,7 +14,7 @@ export default function AppView() {
     return _unsubscribe();
   }, []);
 
-  let _subscription: any;
+  let _subscription;
 
   const _subscribe = () => {
     // this.keyboardDidShowListener = Keyboard.addListener(
@@ -38,7 +37,6 @@ export default function AppView() {
     return (
       <>
         <Header />
-        <ChallengeScreen />
         <Navigation />
         <StatusBar />
       </>

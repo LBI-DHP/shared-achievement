@@ -19,7 +19,7 @@ export default function StepCounter() {
     useContext(UserDataContext);
   const [error, setError] = useState(false);
 
-  let _subscription: any;
+  let _subscription;
 
   useEffect(() => {
     let mounted = true;
@@ -49,7 +49,7 @@ export default function StepCounter() {
     });
 
     Pedometer.isAvailableAsync().then(
-      (result: any) => {
+      (result) => {
         setIsPedometerAvailable(result);
 
         if (result === true) {

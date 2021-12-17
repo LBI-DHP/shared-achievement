@@ -5,6 +5,7 @@ import { Button, TextInput } from "react-native-paper";
 import { style } from "../constants/Styles";
 import { UserDataContext } from "../components/UserDataProvider";
 import dataManager from "../components/DataManager";
+import Challenge from "./Challenge";
 
 export default function TeamStatistics() {
   const { userData, updatedSteps } = useContext(UserDataContext);
@@ -33,6 +34,7 @@ export default function TeamStatistics() {
 
   return (
     <View style={style.container}>
+      <Challenge></Challenge>
       <Text style={style.subheading}>Go team {userData.teamName}!</Text>
       <Text style={{ paddingBottom: 10 }}>
         Total steps taken today:{" "}

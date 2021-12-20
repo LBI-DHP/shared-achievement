@@ -1,5 +1,5 @@
 import * as React from "react";
-import Svg, { Polygon, Path, Polyline, Circle, Mask } from "react-native-svg";
+import Svg, { Polygon, Path, Polyline, Circle, Text } from "react-native-svg";
 import Trees from "./Trees";
 
 export default function Untersberg(props) {
@@ -12,6 +12,42 @@ export default function Untersberg(props) {
     progressPercent,
   } = props;
 
+  const lineFirstQuarter = { x1: 219.754, y1: 247, x2: 336.5, y2: 184.5 };
+  const lineSecondQuarter = { x1: 336.5, y1: 184.5, x2: 179.5, y2: 123.5 };
+  const lineThirdQuarter = { x1: 179.5, y1: 123.5, x2: 256.5, y2: 61.5 };
+  const lineFourthQuarter = { x1: 256.5, y1: 61.5, x2: 209, y2: 7 };
+
+  const lineProgress = {
+    x1: 0,
+    y1: progressPosition,
+    x2: svgViewBoxWidth,
+    y2: progressPosition,
+  };
+
+  let point;
+  let lineStart;
+
+  if (progressPercent <= 0.25) {
+    point = lineIntersect(lineFirstQuarter, lineProgress);
+    lineStart = { x: lineFirstQuarter.x1, y: lineFirstQuarter.y1 };
+  } else if (progressPercent <= 0.5) {
+    point = lineIntersect(lineSecondQuarter, lineProgress);
+    lineStart = { x: lineSecondQuarter.x1, y: lineSecondQuarter.y1 };
+  } else if (progressPercent <= 0.75) {
+    point = lineIntersect(lineThirdQuarter, lineProgress);
+    lineStart = { x: lineThirdQuarter.x1, y: lineThirdQuarter.y1 };
+  } else {
+    point = lineIntersect(lineFourthQuarter, lineProgress);
+    lineStart = { x: lineFourthQuarter.x1, y: lineFourthQuarter.y1 };
+    if (point.y < 10) {
+      point.y = 7;
+      point.x = 209;
+      lineProgress.y1 = 7;
+    }
+  }
+
+  console.log(point.x, point.y);
+
   return (
     <Svg
       height={svgHeight}
@@ -22,14 +58,6 @@ export default function Untersberg(props) {
         fill="#979797"
         points="547 247 439.26 91 412.64 86 404.32 71 314.06 53 299.08 61 277.24 53 271.63 41 250.41 26 244.59 31 207.99 0 198 31 173.04 65 155.57 54 150.69 65.24 145.59 77 133.11 88 91.82 144.5 87.35 154 76.95 150 0 247 547 247"
       />
-      <Polygon
-        fill="#e0e0e0"
-        points="283 55 287 73 299 81 306 64 315 78 332.88 88 345.92 88 352 79 365.9 88 388 84 402 93 409 91 426 96 435.05 90.21 412.64 86 404.32 71 314.06 53 299.08 61 283 55"
-      />
-      <Path
-        fill="#e0e0e0"
-        d="M198,31s9,6,11,7,6-13,6-13l14.54,6.53L237,34l9.64,2.8L250,29l6.36,1.2-6-4.2-5.82,5L208,0Z"
-      />
       <Path
         fill="#7e7e7e"
         d="M150.69,65.24C152,69,166,91,166,91l5,25,11.92-20H198l16,12,16-51,16.64,36.36,9.72-1.83L298,130l-4.1-36.5L299,81l7-17,9,14,51,73V128l7-3,20.41,30.4L419,176l-1.74-20.6-16.05-38.9L398,96l31.64,32,5.41-37.79,4.21.79,92.19,133.49L547,247H0l77-97,10.4,4,58.24-77Z"
@@ -38,61 +66,181 @@ export default function Untersberg(props) {
         fill="#666666"
         points="0 247 54 178 73 212 115.05 173 142 146 156 185 166 218 177.87 139.5 215 179 236 176 246.64 144 257.67 128 273.5 144 296 158.5 332 168.57 373.69 187.5 413.24 187.5 478 212 531.45 224.49 547 247 0 247"
       />
-      <Path
-        d={
-          "M0 " +
-          progressPosition +
-          "H " +
-          svgViewBoxWidth +
-          " V " +
-          svgViewBoxWidth +
-          " H 0 L 0 " +
-          progressPosition
-        }
-        fill="rgb(255, 255, 255, 0.2)"
+      <Polygon
+        fill="#e0e0e0"
+        points="283 55 287 73 299 81 306 64 315 78 332.88 88 345.92 88 352 79 365.9 88 388 84 402 93 409 91 426 96 435.05 90.21 412.64 86 404.32 71 314.06 53 299.08 61 283 55"
       />
       <Path
-        d={
-          "M0 " +
-          progressPosition +
-          " " +
-          svgViewBoxWidth +
-          " " +
-          progressPosition
-        }
-        strokeWidth="3"
-        stroke="black"
-      ></Path>
+        fill="#e0e0e0"
+        d="M198,31s9,6,11,7,6-13,6-13l14.54,6.53L237,34l9.64,2.8L250,29l6.36,1.2-6-4.2-5.82,5L208,0Z"
+      />
       <Trees />
       <Polyline
-        stroke="black"
-        strokeDasharray="10, 10"
-        strokeWidth={2}
-        points="256.5 61.5 207.99 0"
+        stroke={"black"}
+        strokeDasharray={progressPercent >= 1 ? "" : "10, 10"}
+        strokeWidth={2.5}
+        points={
+          lineFourthQuarter.x1 +
+          " " +
+          lineFourthQuarter.y1 +
+          " " +
+          lineFourthQuarter.x2 +
+          " " +
+          lineFourthQuarter.y2
+        }
       />
       <Polyline
-        stroke="black"
-        strokeDasharray="10, 10"
-        strokeWidth={2}
-        points="179.5 123.5 256.5 61.5"
+        stroke={"black"}
+        strokeDasharray={progressPercent >= 0.75 ? "" : "10, 10"}
+        strokeWidth={2.5}
+        points={
+          lineThirdQuarter.x1 +
+          " " +
+          lineThirdQuarter.y1 +
+          " " +
+          lineThirdQuarter.x2 +
+          " " +
+          lineThirdQuarter.y2
+        }
       />
       <Polyline
-        stroke="black"
-        strokeDasharray="10, 10"
-        strokeWidth={2}
-        points="336.5 184.5 179.5 123.5"
+        stroke={"black"}
+        strokeDasharray={progressPercent >= 0.5 ? "" : "10, 10"}
+        strokeWidth={2.5}
+        points={
+          lineSecondQuarter.x1 +
+          " " +
+          lineSecondQuarter.y1 +
+          " " +
+          lineSecondQuarter.x2 +
+          " " +
+          lineSecondQuarter.y2
+        }
       />
       <Polyline
-        stroke="black"
-        strokeDasharray="10, 10"
-        strokeWidth={2}
-        points="237.5 246.5 336.5 184.5"
+        stroke={"black"}
+        strokeDasharray={progressPercent >= 0.25 ? "" : "10, 10"}
+        strokeWidth={2.5}
+        points={
+          lineFirstQuarter.x1 +
+          " " +
+          lineFirstQuarter.y1 +
+          " " +
+          lineFirstQuarter.x2 +
+          " " +
+          lineFirstQuarter.y2
+        }
       />
-      <Circle fill="black" cx="210.27" cy="5.5" r="5.5" />
-      <Circle fill="black" cx="336.5" cy="184.5" r="5.5" />
-      <Circle fill="black" cx="256.5" cy="61.5" r="5.5" />
-      <Circle fill="black" cx="179.5" cy="123.5" r="5.5" />
-      <Circle fill="black" cx="240" cy="241" r="5.5" />
+      <Polyline
+        stroke={"black"}
+        strokeWidth={2.5}
+        points={lineStart.x + " " + lineStart.y + " " + point.x + " " + point.y}
+      />
+      <Text
+        fontSize={20}
+        fontWeight="bold"
+        fill={progressPercent === 1 ? "none" : "white"}
+        x={25}
+        y={
+          progressPercent <= 0.85
+            ? progressPosition - 10
+            : progressPosition + 25
+        }
+      >
+        {progressPercent * 100}%
+      </Text>
+      <Circle
+        fill={progressPercent >= 1 ? "black" : "#e0e0e0"}
+        stroke={"black"}
+        strokeWidth="2.5"
+        cx="209"
+        cy="7"
+        r="5.5"
+      />
+      <Circle
+        fill={progressPercent >= 0.75 ? "black" : "#979797"}
+        stroke={"black"}
+        strokeWidth="2.5"
+        cx="256.189"
+        cy="61.75"
+        r="5.5"
+      />
+      <Circle
+        fill={progressPercent >= 0.5 ? "black" : "#7e7e7e"}
+        stroke={"black"}
+        strokeWidth="2.5"
+        cx="179.5"
+        cy="123.5"
+        r="5.5"
+      />
+      <Circle
+        fill={progressPercent >= 0.25 ? "black" : "#666666"}
+        stroke={"black"}
+        strokeWidth="2.5"
+        cx="335.099"
+        cy="185.25"
+        r="5.5"
+      />
+      <Circle
+        fill="black"
+        stroke={"black"}
+        strokeWidth="2.5"
+        cx="219.754"
+        cy="247"
+        r="5.5"
+      />
+      <Polyline
+        stroke={progressPercent != 1 ? "white" : "none"}
+        strokeWidth={2.5}
+        points={
+          lineProgress.x1 +
+          " " +
+          lineProgress.y1 +
+          " " +
+          lineProgress.x2 +
+          " " +
+          lineProgress.y2
+        }
+      />
+      <Circle
+        fill={progressPercent != 1 ? "#a12b2b" : "none"}
+        stroke={progressPercent != 1 ? "white" : "none"}
+        strokeWidth="2.5"
+        cx={point.x}
+        cy={point.y}
+        r="6"
+      />
     </Svg>
   );
+}
+
+function lineIntersect(line1, line2) {
+  console.log(line1.x1);
+  return lineIntersectPoints(
+    line1.x1,
+    line1.y1,
+    line1.x2,
+    line1.y2,
+    line2.x1,
+    line2.y1,
+    line2.x2,
+    line2.y2
+  );
+}
+
+function lineIntersectPoints(x1, y1, x2, y2, x3, y3, x4, y4) {
+  var ua,
+    ub,
+    denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
+  if (denom == 0) {
+    return null;
+  }
+  ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denom;
+  ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denom;
+  return {
+    x: x1 + ua * (x2 - x1),
+    y: y1 + ua * (y2 - y1),
+    seg1: ua >= 0 && ua <= 1,
+    seg2: ub >= 0 && ub <= 1,
+  };
 }

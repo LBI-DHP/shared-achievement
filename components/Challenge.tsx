@@ -7,7 +7,6 @@ import FlagTop from "./FlagTop";
 import { useWindowDimensions } from "react-native";
 import { UserDataContext } from "./UserDataProvider";
 import dataManager from "./DataManager";
-import { Text } from "react-native";
 
 export default function Challenge() {
   const { userData } = useContext(UserDataContext);
@@ -69,6 +68,7 @@ export default function Challenge() {
         svgHeight={flagSvgHeight}
         svgViewBoxWidth={untersbergSvgViewBoxWidth}
         svgViewBoxHeight={flagSvgViewBoxHeight}
+        progressPercent={progress}
       />
       <Untersberg
         svgWidth={untersbergSvgWidth}
@@ -87,7 +87,7 @@ const style = StyleSheet.create({
     paddingTop: 10,
     width: "100%",
     alignItems: "center",
-    backgroundColor: "#bce0f0",
+    backgroundColor: "#99bfcf",
     marginBottom: 10,
     justifyContent: "flex-end",
   },

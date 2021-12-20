@@ -32,9 +32,11 @@ export default function TeamStatistics() {
       });
   };
 
+  console.log("teamRelativeStepCountToday", teamRelativeStepCountToday / 100);
+
   return (
     <View style={style.container}>
-      <Challenge></Challenge>
+      <Challenge />
       <Text style={style.subheading}>Go team {userData.teamName}!</Text>
       <Text style={{ paddingBottom: 10 }}>
         Total steps taken today:{" "}

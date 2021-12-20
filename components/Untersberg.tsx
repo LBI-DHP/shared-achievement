@@ -2,13 +2,10 @@ import * as React from "react";
 import Svg, { Polygon } from "react-native-svg";
 
 export default function SvgComponent(props) {
+  const { svgWidth, svgHeight } = props;
+
   return (
-    <Svg
-      height="247"
-      width="547"
-      viewBox="0 0 547 247"
-      style={{ backgroundColor: "red", aspectRatio: 2.3238 }}
-    >
+    <Svg height={svgHeight} width={svgWidth} viewBox="0 0 547 247">
       <Polygon
         fill="grey"
         stroke="none"

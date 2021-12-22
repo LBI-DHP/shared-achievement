@@ -3,6 +3,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { UserDataContext } from "../components/UserDataProvider";
 import JoinOrCreateTeam from "../components/JoinOrCreateTeam";
 import TeamStatistics from "../components/TeamStatistics";
+import Challenge from "../components/Challenge";
+import { View } from "react-native";
+import { style } from "../constants/Styles";
 
 export default function Team() {
   const { userData } = useContext(UserDataContext);
@@ -13,5 +16,10 @@ export default function Team() {
     else setIsUserInATeam(true);
   }, [userData]);
 
-  return isUserInATeam ? <TeamStatistics /> : <JoinOrCreateTeam />;
+  return (
+    <View style={style.container}>
+      <Challenge />
+      {isUserInATeam ? <TeamStatistics /> : <JoinOrCreateTeam />}
+    </View>
+  );
 }

@@ -1,15 +1,15 @@
 import "react-native-gesture-handler";
 import React, { useState, useEffect, useContext } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text, useWindowDimensions } from "react-native";
 import Untersberg from "./Untersberg";
+import UntersbergHidden from "./UntersbergHidden";
 import Clouds from "./Clouds";
 import FlagTop from "./FlagTop";
-import { useWindowDimensions } from "react-native";
 import { UserDataContext } from "./UserDataProvider";
 import dataManager from "./DataManager";
 
 export default function Challenge() {
-  const { userData, updatedSteps } = useContext(UserDataContext);
+  const { userData, updated } = useContext(UserDataContext);
   const [teamRelativeStepCountToday, setTeamRelativeStepCountToday] =
     useState(0);
 
@@ -18,12 +18,16 @@ export default function Challenge() {
     dataManager
       .getRelativeTeamStepCountOfToday(userData.teamName)
       .then((relativeStepCount) => {
-        if (mounted) setTeamRelativeStepCountToday(relativeStepCount / 100);
+        if (userData.teamName != null && mounted)
+          setTeamRelativeStepCountToday(relativeStepCount / 100);
+      })
+      .catch((error) => {
+        console.log(error);
       });
     return () => {
       mounted = false;
     };
-  }, [updatedSteps]);
+  }, [updated, userData.teamName]);
 
   const progress = teamRelativeStepCountToday;
   const { height, width } = useWindowDimensions();
@@ -56,6 +60,37 @@ export default function Challenge() {
     untersbergSvgViewBoxHeight -
     10 -
     (untersbergSvgViewBoxHeight - 10 - 7.5) * progress;
+
+  if (userData.teamName === null) {
+    return (
+      <View
+        style={{
+          paddingTop: 10,
+          height:
+            untersbergSvgHeight +
+            untersbergSvgHeight / 3.5 +
+            flagSvgHeight +
+            10,
+          backgroundColor: "#99bfcf",
+          marginBottom: 10,
+          justifyContent: "flex-end",
+        }}
+      >
+        <UntersbergHidden
+          svgWidth={untersbergSvgWidth}
+          svgHeight={untersbergSvgHeight}
+          svgViewBoxWidth={untersbergSvgViewBoxWidth}
+          svgViewBoxHeight={untersbergSvgViewBoxHeight}
+        />
+        <View style={style.containerAbsolute}>
+          <Text style={style.bigText}>?</Text>
+          <Text style={style.smallText}>
+            Join a team to reveal the challenge.
+          </Text>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={style.container}>
@@ -92,5 +127,22 @@ const style = StyleSheet.create({
     backgroundColor: "#99bfcf",
     marginBottom: 10,
     justifyContent: "flex-end",
+  },
+  containerAbsolute: {
+    width: "100%",
+
+    paddingBottom: 10,
+    position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  bigText: {
+    fontSize: 40,
+    color: "white",
+    fontWeight: "bold",
+  },
+  smallText: {
+    color: "white",
+    fontWeight: "bold",
   },
 });

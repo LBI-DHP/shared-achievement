@@ -31,7 +31,7 @@ export default function JoinOrCreateTeam() {
   }, [teamName]);
 
   return (
-    <View style={style.container}>
+    <>
       <Text style={style.subheading}>
         Great challenges are easier to accomplish when you tackle them as a
         team. 💪
@@ -84,6 +84,6 @@ export default function JoinOrCreateTeam() {
         {teamExists ? "Join team" : "Create and join team"}
       </Button>
       {error && <Text>Error!</Text>}
-    </View>
+    </>
   );
 }

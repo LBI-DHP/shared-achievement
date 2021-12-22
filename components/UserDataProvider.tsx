@@ -4,8 +4,8 @@ import dataManager from "../components/DataManager";
 export const UserDataContext = React.createContext({
   userData: { id: null, name: null, teamName: null },
   setUserData: ({}) => {},
-  updatedSteps: false,
-  setUpdatedSteps: ({}) => {},
+  updated: false,
+  setUpdated: ({}) => {},
 });
 
 export const UserDataProvider = (props) => {
@@ -15,7 +15,7 @@ export const UserDataProvider = (props) => {
     teamName: null,
   });
 
-  const [updatedSteps, setUpdatedSteps] = useState(false);
+  const [updated, setUpdated] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -39,7 +39,7 @@ export const UserDataProvider = (props) => {
 
   return (
     <UserDataContext.Provider
-      value={{ userData, setUserData, updatedSteps, setUpdatedSteps }}
+      value={{ userData, setUserData, updated, setUpdated }}
     >
       {props.children}
     </UserDataContext.Provider>

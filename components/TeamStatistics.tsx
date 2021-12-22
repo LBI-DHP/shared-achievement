@@ -1,14 +1,13 @@
 import "react-native-gesture-handler";
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text } from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import { Text } from "react-native";
+import { Button } from "react-native-paper";
 import { style } from "../constants/Styles";
 import { UserDataContext } from "../components/UserDataProvider";
 import dataManager from "../components/DataManager";
-import Challenge from "./Challenge";
 
 export default function TeamStatistics() {
-  const { userData, updatedSteps } = useContext(UserDataContext);
+  const { userData, updated, setUpdated } = useContext(UserDataContext);
   const [teamStepCountToday, setTeamStepCountToday] = useState(0);
   const [teamRelativeStepCountToday, setTeamRelativeStepCountToday] =
     useState(0);
@@ -19,7 +18,7 @@ export default function TeamStatistics() {
     return () => {
       mounted = false;
     };
-  }, [updatedSteps]);
+  }, [updated]);
 
   const updateTeamProgress = (mounted) => {
     dataManager.getTeamStepCountToday(userData.teamName).then((stepCount) => {
@@ -35,8 +34,7 @@ export default function TeamStatistics() {
   console.log("teamRelativeStepCountToday", teamRelativeStepCountToday / 100);
 
   return (
-    <View style={style.container}>
-      <Challenge />
+    <>
       <Text style={style.subheading}>Go team {userData.teamName}!</Text>
       <Text style={{ paddingBottom: 10 }}>
         Total steps taken today:{" "}
@@ -47,9 +45,9 @@ export default function TeamStatistics() {
         <Text style={style.subheading}>{teamRelativeStepCountToday + "%"}</Text>{" "}
         of the "Untersberg Hike" challenge. Keep it up! 🥾👣⛰️
       </Text>
-      <Button mode="contained" onPress={() => updateTeamProgress(true)}>
+      <Button mode="contained" onPress={() => setUpdated(!updated)}>
         🔄 Refresh
       </Button>
-    </View>
+    </>
   );
 }

@@ -9,7 +9,7 @@ import { UserDataContext } from "./UserDataProvider";
 import dataManager from "./DataManager";
 
 export default function Challenge() {
-  const { userData } = useContext(UserDataContext);
+  const { userData, updatedSteps } = useContext(UserDataContext);
   const [teamRelativeStepCountToday, setTeamRelativeStepCountToday] =
     useState(0);
 
@@ -23,7 +23,7 @@ export default function Challenge() {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [updatedSteps]);
 
   const progress = teamRelativeStepCountToday;
   const { height, width } = useWindowDimensions();
@@ -53,7 +53,9 @@ export default function Challenge() {
   }
 
   const progressPosition =
-    untersbergSvgViewBoxHeight - untersbergSvgViewBoxHeight * progress;
+    untersbergSvgViewBoxHeight -
+    10 -
+    (untersbergSvgViewBoxHeight - 10 - 7.5) * progress;
 
   return (
     <View style={style.container}>

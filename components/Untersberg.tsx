@@ -12,10 +12,36 @@ export default function Untersberg(props) {
     progressPercent,
   } = props;
 
-  const lineFirstQuarter = { x1: 219.754, y1: 247, x2: 336.5, y2: 184.5 };
-  const lineSecondQuarter = { x1: 336.5, y1: 184.5, x2: 179.5, y2: 123.5 };
-  const lineThirdQuarter = { x1: 179.5, y1: 123.5, x2: 256.5, y2: 61.5 };
-  const lineFourthQuarter = { x1: 256.5, y1: 61.5, x2: 209, y2: 7 };
+  const startPoint = { x: 217, y: 237 };
+  const pointFirstQuarter = { x: 140, y: 179.6 };
+  const pointSecondQuarter = { x: 164.2, y: 122.25 };
+  const pointThirdQuarter = { x: 255, y: 64.9 };
+  const pointFourthQuarter = { x: 209.5, y: 7.5 };
+
+  const lineFirstQuarter = {
+    x1: startPoint.x,
+    y1: startPoint.y,
+    x2: pointFirstQuarter.x,
+    y2: pointFirstQuarter.y,
+  };
+  const lineSecondQuarter = {
+    x1: pointFirstQuarter.x,
+    y1: pointFirstQuarter.y,
+    x2: pointSecondQuarter.x,
+    y2: pointSecondQuarter.y,
+  };
+  const lineThirdQuarter = {
+    x1: pointSecondQuarter.x,
+    y1: pointSecondQuarter.y,
+    x2: pointThirdQuarter.x,
+    y2: pointThirdQuarter.y,
+  };
+  const lineFourthQuarter = {
+    x1: pointThirdQuarter.x,
+    y1: pointThirdQuarter.y,
+    x2: pointFourthQuarter.x,
+    y2: pointFourthQuarter.y,
+  };
 
   const lineProgress = {
     x1: 0,
@@ -39,15 +65,7 @@ export default function Untersberg(props) {
   } else {
     point = lineIntersect(lineFourthQuarter, lineProgress);
     lineStart = { x: lineFourthQuarter.x1, y: lineFourthQuarter.y1 };
-    if (point.y < 10) {
-      point.y = 7;
-      point.x = 209;
-      lineProgress.y1 = 7;
-    }
   }
-
-  console.log(point.x, point.y);
-
   return (
     <Svg
       height={svgHeight}
@@ -74,7 +92,6 @@ export default function Untersberg(props) {
         fill="#e0e0e0"
         d="M198,31s9,6,11,7,6-13,6-13l14.54,6.53L237,34l9.64,2.8L250,29l6.36,1.2-6-4.2-5.82,5L208,0Z"
       />
-      <Trees />
       <Polyline
         stroke={"black"}
         strokeDasharray={progressPercent >= 1 ? "" : "10, 10"}
@@ -136,6 +153,60 @@ export default function Untersberg(props) {
         strokeWidth={2.5}
         points={lineStart.x + " " + lineStart.y + " " + point.x + " " + point.y}
       />
+      <Circle
+        fill={progressPercent >= 1 ? "black" : "#e0e0e0"}
+        stroke={"black"}
+        strokeWidth="2.5"
+        cx={pointFourthQuarter.x}
+        cy={pointFourthQuarter.y}
+        r="5.5"
+      />
+      <Circle
+        fill={progressPercent >= 0.75 ? "black" : "#979797"}
+        stroke={"black"}
+        strokeWidth="2.5"
+        cx={pointThirdQuarter.x}
+        cy={pointThirdQuarter.y}
+        r="5.5"
+      />
+      <Circle
+        fill={progressPercent >= 0.5 ? "black" : "#7e7e7e"}
+        stroke={"black"}
+        strokeWidth="2.5"
+        cx={pointSecondQuarter.x}
+        cy={pointSecondQuarter.y}
+        r="5.5"
+      />
+      <Circle
+        fill={progressPercent >= 0.25 ? "black" : "#666666"}
+        stroke={"black"}
+        strokeWidth="2.5"
+        cx={pointFirstQuarter.x}
+        cy={pointFirstQuarter.y}
+        r="5.5"
+      />
+      <Circle
+        fill="black"
+        stroke={"black"}
+        strokeWidth="2.5"
+        cx={startPoint.x}
+        cy={startPoint.y}
+        r="5.5"
+      />
+      <Polyline
+        stroke={progressPercent != 1 ? "white" : "none"}
+        strokeWidth={1}
+        points={
+          lineProgress.x1 +
+          " " +
+          lineProgress.y1 +
+          " " +
+          lineProgress.x2 +
+          " " +
+          lineProgress.y2
+        }
+      />
+      <Trees />
       <Text
         fontSize={20}
         fontWeight="bold"
@@ -147,63 +218,10 @@ export default function Untersberg(props) {
             : progressPosition + 25
         }
       >
-        {progressPercent * 100}%
+        {Math.round(progressPercent * 100)}%
       </Text>
       <Circle
-        fill={progressPercent >= 1 ? "black" : "#e0e0e0"}
-        stroke={"black"}
-        strokeWidth="2.5"
-        cx="209"
-        cy="7"
-        r="5.5"
-      />
-      <Circle
-        fill={progressPercent >= 0.75 ? "black" : "#979797"}
-        stroke={"black"}
-        strokeWidth="2.5"
-        cx="256.189"
-        cy="61.75"
-        r="5.5"
-      />
-      <Circle
-        fill={progressPercent >= 0.5 ? "black" : "#7e7e7e"}
-        stroke={"black"}
-        strokeWidth="2.5"
-        cx="179.5"
-        cy="123.5"
-        r="5.5"
-      />
-      <Circle
-        fill={progressPercent >= 0.25 ? "black" : "#666666"}
-        stroke={"black"}
-        strokeWidth="2.5"
-        cx="335.099"
-        cy="185.25"
-        r="5.5"
-      />
-      <Circle
-        fill="black"
-        stroke={"black"}
-        strokeWidth="2.5"
-        cx="219.754"
-        cy="247"
-        r="5.5"
-      />
-      <Polyline
-        stroke={progressPercent != 1 ? "white" : "none"}
-        strokeWidth={2.5}
-        points={
-          lineProgress.x1 +
-          " " +
-          lineProgress.y1 +
-          " " +
-          lineProgress.x2 +
-          " " +
-          lineProgress.y2
-        }
-      />
-      <Circle
-        fill={progressPercent != 1 ? "#a12b2b" : "none"}
+        fill={progressPercent != 1 ? "#004A99" : "none"}
         stroke={progressPercent != 1 ? "white" : "none"}
         strokeWidth="2.5"
         cx={point.x}
@@ -215,7 +233,6 @@ export default function Untersberg(props) {
 }
 
 function lineIntersect(line1, line2) {
-  console.log(line1.x1);
   return lineIntersectPoints(
     line1.x1,
     line1.y1,

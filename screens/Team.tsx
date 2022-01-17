@@ -1,4 +1,3 @@
-import "react-native-gesture-handler";
 import React, { useContext, useEffect, useState } from "react";
 import { UserDataContext } from "../components/UserDataProvider";
 import JoinOrCreateTeam from "../components/JoinOrCreateTeam";

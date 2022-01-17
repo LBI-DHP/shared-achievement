@@ -1,4 +1,3 @@
-import "react-native-gesture-handler";
 import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet, View, Text, useWindowDimensions } from "react-native";
 import Untersberg from "./Untersberg";

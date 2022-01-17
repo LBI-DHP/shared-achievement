@@ -1,4 +1,3 @@
-import "react-native-gesture-handler";
 import React, { useContext, useEffect, useState } from "react";
 import { Text } from "react-native";
 import { Button } from "react-native-paper";

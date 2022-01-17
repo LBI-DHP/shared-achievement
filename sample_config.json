@@ -1,0 +1,11 @@
+{
+    "serverConfig" : {
+        "root" : "http://yourIP:8080"
+    },
+    "googleConfig" : {
+       "clientID": "clientID",
+       "redirectUri":"redirectUri",
+       "scopes": ["scopes"]
+    }
+
+}

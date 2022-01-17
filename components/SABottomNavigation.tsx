@@ -1,4 +1,3 @@
-import "react-native-gesture-handler";
 import * as React from "react";
 import TeamScreen from "../screens/Team";
 import HomeScreen from "../screens/Home";

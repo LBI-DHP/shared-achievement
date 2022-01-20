@@ -12,6 +12,23 @@ export default class dataManager {
    *  some more error handling
    */
 
+  static getGoogleAuthInfo = async () => {
+    try {
+      let authInfo = await AsyncStorage.getItem("authInfo");
+      return authInfo != null ? JSON.parse(authInfo) : null;
+    } catch (e) {
+      console.log("error on get google auth info: ", e);
+    }
+  };
+
+  static setGoogleAuthInfo = async (authInfo) => {
+    try {
+      await AsyncStorage.setItem("authInfo", JSON.stringify(authInfo));
+    } catch (e) {
+      console.log("error on set google auth info: ", e);
+    }
+  };
+
   static getUserId = async () => {
     let id = await AsyncStorage.getItem("uuid");
     if (id == null) {

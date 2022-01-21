@@ -29,6 +29,14 @@ export default class dataManager {
     }
   };
 
+  static deleteGoogleAuthInfo = async () => {
+    try {
+      await AsyncStorage.removeItem("authInfo");
+    } catch (e) {
+      console.log("error on delete google auth info: ", e);
+    }
+  };
+
   static getUserId = async () => {
     let id = await AsyncStorage.getItem("uuid");
     if (id == null) {

@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text } from "react-native";
-import { Button, TextInput } from "react-native-paper";
-import { style } from "../constants/Styles";
+import { Text, StyleSheet } from "react-native";
+import { Button, TextInput, Surface } from "react-native-paper";
 import { UserDataContext } from "../components/UserDataProvider";
 import dataManager from "../components/DataManager";
 
@@ -30,23 +29,24 @@ export default function JoinOrCreateTeam() {
   }, [teamName]);
 
   return (
-    <>
-      <Text style={style.subheading}>
-        Great challenges are easier to accomplish when you tackle them as a
-        team. 💪
-      </Text>
-      <Text style={{ paddingBottom: 10 }}>
-        Join an existing team or create a new one:
-      </Text>
+    <Surface style={styles.surface}>
+      <Text style={styles.header}>Create/Join a team</Text>
       <TextInput
+        style={{
+          margin: 10,
+          marginBottom: 0,
+        }}
+        label={"Team name"}
         value={teamName}
         multiline={false}
-        placeholder="team name"
         autoComplete={false}
         onChangeText={(text) => setTeamName(text)}
       />
       <Button
         mode="contained"
+        style={{
+          margin: 10,
+        }}
         onPress={() => {
           const updatedUserData = {
             id: userData.id,
@@ -83,6 +83,37 @@ export default function JoinOrCreateTeam() {
         {teamExists ? "Join team" : "Create and join team"}
       </Button>
       {error && <Text>Error!</Text>}
-    </>
+    </Surface>
   );
 }
+
+const styles = StyleSheet.create({
+  viewWrapper: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  wrapper: {
+    padding: 15,
+    alignItems: "center",
+    width: "33.33%",
+  },
+  header: {
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+    width: "100%",
+    fontSize: 20,
+    fontWeight: "bold",
+    backgroundColor: "#3f5c7c",
+    color: "white",
+    padding: 10,
+    textAlign: "center",
+  },
+  headerText: { fontSize: 20, fontWeight: "bold" },
+  labelText: { textAlign: "center" },
+  surface: {
+    elevation: 4,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+});

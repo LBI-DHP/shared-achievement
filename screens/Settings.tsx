@@ -1,17 +1,14 @@
 import React, { useContext } from "react";
-
 import { View, Text } from "react-native";
 import { Button, TextInput } from "react-native-paper";
-
 import { style } from "../constants/Styles";
-
 import { useEffect, useState } from "react";
-
 import { UserDataContext } from "../components/UserDataProvider";
 import dataManager from "../components/DataManager";
 
 export default function Settings() {
-  const { userData, setUserData } = useContext(UserDataContext);
+  const { userData, setUserData, updated, setUpdated } =
+    useContext(UserDataContext);
   const [isUserInATeam, setIsUserInATeam] = useState(false);
   const [error, setError] = useState(false);
   const [isUserNameChanged, setIsUserNameChanged] = useState(false);
@@ -89,6 +86,15 @@ export default function Settings() {
       >
         Leave Team
       </Button>
+      {/* <Button
+        style={{ marginTop: 10 }}
+        mode="contained"
+        onPress={() => {
+          dataManager.deleteGoogleAuthInfo();
+        }}
+      >
+        Disconnect App from Google Fit
+      </Button> */}
     </View>
   );
 }

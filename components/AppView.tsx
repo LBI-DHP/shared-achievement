@@ -3,29 +3,21 @@ import Header from "./Header";
 import Navigation from "./SABottomNavigation";
 import { StatusBar } from "expo-status-bar";
 import WelcomeScreen from "../screens/Welcome";
+import ConnectToGoogleFit from "./ConnectToGoogleFit";
 import { UserDataContext } from "./UserDataProvider";
-import { Keyboard } from "react-native";
+import dataManager from "./DataManager";
+import { Platform } from "react-native";
 
 export default function AppView() {
-  const { userData, setUserData } = useContext(UserDataContext);
+  const { userData, setUserData, updated } = useContext(UserDataContext);
   const [isUserNameSet, setIsUserNameSet] = useState(false);
+  const [isConnectedToGoogleFit, setIsConnectedToGoogleFit] = useState(false);
+
   useEffect(() => {
-    _subscribe();
-    return _unsubscribe();
-  }, []);
-
-  let _subscription;
-
-  const _subscribe = () => {
-    // this.keyboardDidShowListener = Keyboard.addListener(
-    //   "keyboardDidShow",
-    //   this._keyboardDidShow
-    // );
-  };
-  const _unsubscribe = () => {
-    // this.keyboardDidShowListener.remove();
-    // this.keyboardDidHideListener.remove();
-  };
+    dataManager.getGoogleAuthInfo().then((authInfo) => {
+      if (authInfo != null) setIsConnectedToGoogleFit(true);
+    });
+  }, [updated]);
 
   useEffect(() => {
     if (userData.name !== null) {
@@ -33,14 +25,21 @@ export default function AppView() {
     }
   }, [userData]);
 
-  if (isUserNameSet) {
+  if (!isUserNameSet) return <WelcomeScreen />;
+  else if (Platform.OS === "android" && !isConnectedToGoogleFit)
     return (
-      <>
-        <Header />
-        <Navigation />
-        <StatusBar />
-      </>
+      <ConnectToGoogleFit
+        setIsConnectedToGoogleFit={(data) => {
+          setIsConnectedToGoogleFit(data);
+        }}
+      />
     );
-  }
-  return <WelcomeScreen />;
+
+  return (
+    <>
+      <Header />
+      <Navigation />
+      <StatusBar />
+    </>
+  );
 }

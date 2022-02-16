@@ -86,7 +86,7 @@ export default function Settings() {
       >
         Leave Team
       </Button>
-      {/* <Button
+      <Button
         style={{ marginTop: 10 }}
         mode="contained"
         onPress={() => {
@@ -94,7 +94,7 @@ export default function Settings() {
         }}
       >
         Disconnect App from Google Fit
-      </Button> */}
+      </Button>
     </View>
   );
 }

@@ -4,7 +4,6 @@ import { ScrollView, Keyboard, Platform } from "react-native";
 import { style } from "../constants/Styles";
 import { UserDataContext } from "../components/UserDataProvider";
 import Challenge from "../components/Challenge";
-// import GoogleAuth from "../components/GoogleAuth";
 import JoinOrCreateTeam from "../components/JoinOrCreateTeam";
 import TeamStatistics from "../components/TeamStatistics";
 import StepCounterAndroid from "../components/StepCounterAndroid";

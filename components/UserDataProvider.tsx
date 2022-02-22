@@ -26,7 +26,7 @@ export const UserDataProvider = (props) => {
         console.log("UserId: " + id);
         dataManager.getUserData(id).then((data) => {
           if (data && data.error) {
-            if (mounted) setUserData({ id: id, name: null, teamName: null, expoToken: null });
+            if (mounted) setUserData({ ...userData, id: id });
           } else {
             if (mounted) setUserData(data);
           }

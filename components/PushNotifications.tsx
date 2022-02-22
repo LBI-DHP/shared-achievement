@@ -26,7 +26,7 @@ Notifications.setNotificationHandler({
     useEffect(() => {
       registerForPushNotificationsAsync().then(token => {
         //   setExpoPushToken(token);
-          setUserData({...userData, expoToken: token}); // TODO: update copy object syntax
+          setUserData({...userData, expoToken: token});
       });
   
       notificationListener.current = Notifications.addNotificationReceivedListener( (notification) => {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import dataManager from "../components/DataManager";
 
 export const UserDataContext = React.createContext({
-  userData: { id: null, name: null, teamName: null },
+  userData: { id: null, name: null, teamName: null, expoToken: null },
   setUserData: ({}) => {},
   updated: false,
   setUpdated: ({}) => {},
@@ -13,6 +13,7 @@ export const UserDataProvider = (props) => {
     id: null,
     name: null,
     teamName: null,
+    expoToken: null
   });
 
   const [updated, setUpdated] = useState(false);
@@ -25,7 +26,7 @@ export const UserDataProvider = (props) => {
         console.log("UserId: " + id);
         dataManager.getUserData(id).then((data) => {
           if (data && data.error) {
-            if (mounted) setUserData({ id: id, name: null, teamName: null });
+            if (mounted) setUserData({ ...userData, id: id });
           } else {
             if (mounted) setUserData(data);
           }

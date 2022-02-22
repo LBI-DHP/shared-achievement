@@ -7,6 +7,7 @@ import Challenge from "../components/Challenge";
 import JoinOrCreateTeam from "../components/JoinOrCreateTeam";
 import TeamStatistics from "../components/TeamStatistics";
 import StepCounterAndroid from "../components/StepCounterAndroid";
+import PushNotifications from "../components/PushNotifications";
 
 export default function Home() {
   const { userData } = useContext(UserDataContext);
@@ -37,6 +38,8 @@ export default function Home() {
       {isUserInATeam && Platform.OS === "ios" && <StepCounterIOS />}
       {isUserInATeam && Platform.OS === "android" && <StepCounterAndroid />}
       {isUserInATeam ? <TeamStatistics /> : <JoinOrCreateTeam />}
+      <PushNotifications />      
     </ScrollView>
+    
   );
 }

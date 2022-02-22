@@ -29,9 +29,8 @@ export default function Welcome() {
         onPress={() => {
           setError(false);
           const newUserData = {
-            id: userData.id,
+            ...userData,
             name: userName,
-            teamName: null,
           };
 
           dataManager.addUser(newUserData).then((responseStatus) => {

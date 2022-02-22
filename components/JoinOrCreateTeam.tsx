@@ -48,9 +48,7 @@ export default function JoinOrCreateTeam() {
           margin: 10,
         }}
         onPress={() => {
-          const updatedUserData = {
-            id: userData.id,
-            name: userData.name,
+          const updatedUserData = { ...userData,
             teamName: teamName,
           };
           if (teamExists) {

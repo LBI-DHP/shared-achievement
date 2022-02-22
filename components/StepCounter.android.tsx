@@ -7,10 +7,11 @@ import configJSON from "../config.json";
 import { Text } from "../components/Themed";
 import dataManager from "./DataManager";
 import { UserDataContext } from "./UserDataProvider";
+import StepsBarChart from "./StepsBarChart";
 
 WebBrowser.maybeCompleteAuthSession();
 
-export default function StepCounterAndroid() {
+export default function StepCounter() {
   const [googleAuthInfo, setGoogleAuthInfo] = useState({
     access_token: null,
     expires_in: null,
@@ -169,65 +170,54 @@ export default function StepCounterAndroid() {
   return (
     <>
       <Surface style={styles.surface}>
-        <Text style={styles.header}>{userData.name}</Text>
-        <View style={{ margin: 10 }}>
-          <View style={styles.viewWrapper}>
-            <View style={styles.wrapper}>
-              <Text style={styles.headerText}>{stepCountToday}</Text>
-              <Text style={styles.labelText}>total steps</Text>
-            </View>
-            <View style={styles.wrapper}>
-              <Text style={styles.headerText}>{contributedSteps}</Text>
-              <Text style={styles.labelText}>contributed steps</Text>
-            </View>
-            <View style={styles.wrapper}>
-              <Text style={styles.headerText}>{newSteps}</Text>
-              <Text style={styles.labelText}>new steps</Text>
-            </View>
-          </View>
-          <Button
-            disabled={newSteps === 0}
-            style={{ alignSelf: "stretch" }}
-            mode="contained"
-            onPress={() => {
-              if (newSteps === stepCountToday) {
-                dataManager
-                  .pushStepCountofToday({
-                    personId: userData.id,
-                    steps: stepCountToday,
-                  })
-                  .then((responseStatus) => {
-                    if (responseStatus === 201 || responseStatus === 200)
-                      resetStepsAfterContribution();
-                    else setError(true);
-                  });
-              } else {
-                const newDate = new Date();
-                let month = (newDate.getMonth() + 1).toString();
-                if (month.length === 1) month = "0" + month;
-                let day = newDate.getDate().toString();
-                if (day.length === 1) day = "0" + day;
-                const dateString =
-                  newDate.getFullYear() + "-" + month + "-" + day;
-                console.log("dateString", dateString);
+        <StepsBarChart
+          goalSteps={1000}
+          contributedSteps={contributedSteps}
+          newSteps={newSteps}
+        />
 
-                dataManager
-                  .updateStepCount({
-                    day: dateString,
-                    personId: userData.id,
-                    steps: stepCountToday,
-                  })
-                  .then((responseStatus) => {
-                    if (responseStatus === 201 || responseStatus === 200)
-                      resetStepsAfterContribution();
-                    else setError(true);
-                  });
-              }
-            }}
-          >
-            Contribute new steps
-          </Button>
-        </View>
+        <Button
+          disabled={newSteps === 0}
+          style={{ alignSelf: "stretch" }}
+          mode="contained"
+          onPress={() => {
+            if (newSteps === stepCountToday) {
+              dataManager
+                .pushStepCountofToday({
+                  personId: userData.id,
+                  steps: stepCountToday,
+                })
+                .then((responseStatus) => {
+                  if (responseStatus === 201 || responseStatus === 200)
+                    resetStepsAfterContribution();
+                  else setError(true);
+                });
+            } else {
+              const newDate = new Date();
+              let month = (newDate.getMonth() + 1).toString();
+              if (month.length === 1) month = "0" + month;
+              let day = newDate.getDate().toString();
+              if (day.length === 1) day = "0" + day;
+              const dateString =
+                newDate.getFullYear() + "-" + month + "-" + day;
+              console.log("dateString", dateString);
+
+              dataManager
+                .updateStepCount({
+                  day: dateString,
+                  personId: userData.id,
+                  steps: stepCountToday,
+                })
+                .then((responseStatus) => {
+                  if (responseStatus === 201 || responseStatus === 200)
+                    resetStepsAfterContribution();
+                  else setError(true);
+                });
+            }
+          }}
+        >
+          Contribute new steps
+        </Button>
       </Surface>
     </>
   );

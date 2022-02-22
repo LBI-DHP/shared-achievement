@@ -6,8 +6,9 @@ import { Pedometer } from "expo-sensors";
 import dataManager from "./DataManager";
 import { UserDataContext } from "./UserDataProvider";
 import { Text, StyleSheet, View } from "react-native";
+import StepsBarChart from "./StepsBarChart";
 
-export default function StepCounterIOS() {
+export default function StepCounter() {
   const [isPedometerAvailable, setIsPedometerAvailable] = useState(false);
   const [stepCountToday, setStepCountToday] = useState(0);
   const [currentStepCount, setCurrentStepCount] = useState(0);
@@ -92,73 +93,57 @@ export default function StepCounterIOS() {
   return (
     <>
       <Surface style={styles.surface}>
-        <Text style={styles.header}>{userData.name}</Text>
-        <View style={{ margin: 10 }}>
-          <View style={styles.viewWrapper}>
-            <View style={styles.wrapper}>
-              <Text style={styles.headerText}>
-                {stepCountToday + currentStepCount}
-              </Text>
-              <Text style={styles.labelText}>total steps</Text>
-            </View>
-            <View style={styles.wrapper}>
-              <Text style={styles.headerText}>{contributedSteps}</Text>
-              <Text style={styles.labelText}>contributed steps</Text>
-            </View>
-            <View style={styles.wrapper}>
-              <Text style={styles.headerText}>
-                {newSteps + currentStepCount - currentStepCountAdded}
-              </Text>
-              <Text style={styles.labelText}>new steps</Text>
-            </View>
-          </View>
-          <Button
-            disabled={
-              newSteps === 0 && currentStepCount - currentStepCountAdded === 0
-            }
-            style={{ alignSelf: "stretch" }}
-            mode="contained"
-            onPress={() => {
-              if (newSteps === stepCountToday) {
-                dataManager
-                  .pushStepCountofToday({
-                    personId: userData.id,
-                    steps:
-                      stepCountToday + currentStepCount - currentStepCountAdded,
-                  })
-                  .then((responseStatus) => {
-                    if (responseStatus === 201 || responseStatus === 200)
-                      resetStepsAfterContribution();
-                    else setError(true);
-                  });
-              } else {
-                const newDate = new Date();
-                let month = (newDate.getMonth() + 1).toString();
-                if (month.length === 1) month = "0" + month;
-                let day = newDate.getDate().toString();
-                if (day.length === 1) day = "0" + day;
-                const dateString =
-                  newDate.getFullYear() + "-" + month + "-" + day;
-                console.log("dateString", dateString);
+        <StepsBarChart
+          goalSteps={5000}
+          contributedSteps={contributedSteps}
+          newSteps={newSteps + (currentStepCount - currentStepCountAdded)}
+        />
+        <Button
+          disabled={
+            newSteps === 0 && currentStepCount - currentStepCountAdded === 0
+          }
+          style={{ alignSelf: "stretch" }}
+          mode="contained"
+          onPress={() => {
+            if (newSteps === stepCountToday) {
+              dataManager
+                .pushStepCountofToday({
+                  personId: userData.id,
+                  steps:
+                    stepCountToday + currentStepCount - currentStepCountAdded,
+                })
+                .then((responseStatus) => {
+                  if (responseStatus === 201 || responseStatus === 200)
+                    resetStepsAfterContribution();
+                  else setError(true);
+                });
+            } else {
+              const newDate = new Date();
+              let month = (newDate.getMonth() + 1).toString();
+              if (month.length === 1) month = "0" + month;
+              let day = newDate.getDate().toString();
+              if (day.length === 1) day = "0" + day;
+              const dateString =
+                newDate.getFullYear() + "-" + month + "-" + day;
+              console.log("dateString", dateString);
 
-                dataManager
-                  .updateStepCount({
-                    day: dateString,
-                    personId: userData.id,
-                    steps:
-                      stepCountToday + currentStepCount - currentStepCountAdded,
-                  })
-                  .then((responseStatus) => {
-                    if (responseStatus === 201 || responseStatus === 200)
-                      resetStepsAfterContribution();
-                    else setError(true);
-                  });
-              }
-            }}
-          >
-            Contribute new steps
-          </Button>
-        </View>
+              dataManager
+                .updateStepCount({
+                  day: dateString,
+                  personId: userData.id,
+                  steps:
+                    stepCountToday + currentStepCount - currentStepCountAdded,
+                })
+                .then((responseStatus) => {
+                  if (responseStatus === 201 || responseStatus === 200)
+                    resetStepsAfterContribution();
+                  else setError(true);
+                });
+            }
+          }}
+        >
+          Contribute new steps
+        </Button>
       </Surface>
     </>
   );

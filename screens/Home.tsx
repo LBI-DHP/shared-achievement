@@ -1,12 +1,12 @@
 import React, { useContext, useState, useEffect } from "react";
-import StepCounterIOS from "../components/StepCounterIOS";
 import { ScrollView, Keyboard, Platform } from "react-native";
 import { style } from "../constants/Styles";
 import { UserDataContext } from "../components/UserDataProvider";
 import Challenge from "../components/Challenge";
 import JoinOrCreateTeam from "../components/JoinOrCreateTeam";
 import TeamStatistics from "../components/TeamStatistics";
-import StepCounterAndroid from "../components/StepCounterAndroid";
+// @ts-ignore
+import StepCounter from "../components/StepCounter";
 import PushNotifications from "../components/PushNotifications";
 
 export default function Home() {
@@ -35,11 +35,9 @@ export default function Home() {
   return (
     <ScrollView style={style.container}>
       {!(Platform.OS === "ios" && isKeyboardOpen) && <Challenge />}
-      {isUserInATeam && Platform.OS === "ios" && <StepCounterIOS />}
-      {isUserInATeam && Platform.OS === "android" && <StepCounterAndroid />}
+      {isUserInATeam && <StepCounter />}
       {isUserInATeam ? <TeamStatistics /> : <JoinOrCreateTeam />}
-      <PushNotifications />      
+      <PushNotifications />
     </ScrollView>
-    
   );
 }

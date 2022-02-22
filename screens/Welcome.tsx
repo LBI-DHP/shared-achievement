@@ -32,6 +32,7 @@ export default function Welcome() {
             id: userData.id,
             name: userName,
             teamName: null,
+            expoToken: null
           };
 
           dataManager.addUser(newUserData).then((responseStatus) => {

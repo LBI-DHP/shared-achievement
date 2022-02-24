@@ -267,17 +267,22 @@ export default class dataManager {
       console.log("done with get team step count request");
     }
   };
-  static getTeamMembersStepCountOfToday = async () => {
+  static getTeamMembersStepCountOfToday = async (teamName) => {
     try {
-      const response = await fetch(configJSON.serverConfig.root + "/team/all", {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-      const allTeams = await response.json();
-      return allTeams;
+      const response = await fetch(
+        configJSON.serverConfig.root +
+          "/team/teamMembersStepCountOfToday?name=" +
+          teamName.toString(),
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const teamMembersStepCountOfToday = await response.json();
+      return teamMembersStepCountOfToday;
     } catch (error) {
       console.log("error on get all teams" + error);
     } finally {

@@ -43,7 +43,8 @@ export default function Settings() {
         onPress={() => {
           setError(false);
           const newUserData = {
-            ...userData, name: newUserName
+            ...userData,
+            name: newUserName,
           };
 
           dataManager.updateUser(newUserData).then((responseStatus) => {

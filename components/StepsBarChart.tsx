@@ -1,6 +1,6 @@
 import React from "react";
 import { View, useWindowDimensions, Text } from "react-native";
-import Svg, { Rect } from "react-native-svg";
+import Svg, { Rect, Mask } from "react-native-svg";
 
 export default function StepsBarChart({
   goalSteps,
@@ -11,30 +11,24 @@ export default function StepsBarChart({
   const windowWidth = width - 60;
 
   const colorStepsGoal = "#bebdbd";
-  const colorStepsContributed = "#40d2ff";
-  const colorNewSteps = "#167ef5";
+  const colorStepsContributed = "#7ebdd8";
+  const colorNewSteps = "#ffbb00";
 
   const height = 20;
-  const offset = 15;
+  let stepsLeft = goalSteps - newSteps - contributedSteps;
+
+  if (stepsLeft < 0) stepsLeft = 0;
 
   let contributedProgress = 0;
   let newProgress = 0;
 
   if (contributedSteps > 0) {
     contributedProgress = contributedSteps / goalSteps;
-    console.log(contributedProgress);
-    if (windowWidth * contributedProgress < offset) {
-      contributedProgress = offset / windowWidth;
-      console.log(contributedProgress);
-    }
   }
 
   if (newSteps > 0) {
     newProgress = newSteps / goalSteps;
     newProgress += contributedProgress;
-    if (contributedSteps === 0 && windowWidth * newProgress < offset) {
-      newProgress = offset / windowWidth;
-    }
   }
 
   return (
@@ -45,18 +39,27 @@ export default function StepsBarChart({
         width={windowWidth}
         viewBox={"0 0 " + windowWidth + " " + height}
       >
+        <Mask id="Mask" x="0" y="0" width={windowWidth} height={height}>
+          <Rect
+            x="0"
+            y="0"
+            ry={height / 2}
+            rx={height / 2}
+            width={windowWidth}
+            height={height}
+            fill={"white"}
+          />
+        </Mask>
         <Rect
+          mask="url(#Mask)"
           x="0"
           y="0"
-          ry={height / 2}
-          rx={height / 2}
           width={windowWidth}
           height={height}
           fill={colorStepsGoal}
         />
         <Rect
-          ry={height / 2}
-          rx={height / 2}
+          mask="url(#Mask)"
           x="0"
           y="0"
           width={windowWidth * newProgress}
@@ -64,10 +67,9 @@ export default function StepsBarChart({
           fill={colorNewSteps}
         />
         <Rect
+          mask="url(#Mask)"
           x="0"
           y="0"
-          ry={height / 2}
-          rx={height / 2}
           width={windowWidth * contributedProgress}
           height={height}
           fill={colorStepsContributed}
@@ -84,7 +86,7 @@ export default function StepsBarChart({
           <Text style={{ color: colorStepsGoal, fontWeight: "bold" }}>
             &#9679;{" "}
             <Text style={{ color: "#757575", fontWeight: "bold" }}>
-              {goalSteps - newSteps - contributedSteps}
+              {stepsLeft}
             </Text>
           </Text>
         </View>

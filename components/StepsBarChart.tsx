@@ -14,34 +14,63 @@ export default function StepsBarChart({
   const colorStepsContributed = "#40d2ff";
   const colorNewSteps = "#167ef5";
 
+  const height = 20;
+  const offset = 15;
+
+  let contributedProgress = 0;
+  let newProgress = 0;
+
+  if (contributedSteps > 0) {
+    contributedProgress = contributedSteps / goalSteps;
+    console.log(contributedProgress);
+    if (windowWidth * contributedProgress < offset) {
+      contributedProgress = offset / windowWidth;
+      console.log(contributedProgress);
+    }
+  }
+
+  if (newSteps > 0) {
+    newProgress = newSteps / goalSteps;
+    newProgress += contributedProgress;
+    if (contributedSteps === 0 && windowWidth * newProgress < offset) {
+      newProgress = offset / windowWidth;
+    }
+  }
+
   return (
     <View>
       <Svg
         style={{ margin: 10 }}
-        height={50}
+        height={height}
         width={windowWidth}
-        viewBox={"0 0 " + windowWidth + " " + 50}
+        viewBox={"0 0 " + windowWidth + " " + height}
       >
         <Rect
           x="0"
           y="0"
+          ry={height / 2}
+          rx={height / 2}
           width={windowWidth}
-          height="50"
+          height={height}
           fill={colorStepsGoal}
+        />
+        <Rect
+          ry={height / 2}
+          rx={height / 2}
+          x="0"
+          y="0"
+          width={windowWidth * newProgress}
+          height={height}
+          fill={colorNewSteps}
         />
         <Rect
           x="0"
           y="0"
-          width={windowWidth * (contributedSteps / goalSteps)}
-          height="50"
+          ry={height / 2}
+          rx={height / 2}
+          width={windowWidth * contributedProgress}
+          height={height}
           fill={colorStepsContributed}
-        />
-        <Rect
-          x={windowWidth * (contributedSteps / goalSteps)}
-          y="0"
-          width={windowWidth * (newSteps / goalSteps)}
-          height="50"
-          fill={colorNewSteps}
         />
       </Svg>
       <View style={{ margin: 5, flexDirection: "row" }}>
@@ -62,7 +91,7 @@ export default function StepsBarChart({
         <View style={{ margin: 5, flexDirection: "column" }}>
           <Text>steps already contributed</Text>
           <Text>new steps since last contribution</Text>
-          <Text>steps left to reach your goal</Text>
+          <Text>steps left to reach your daily goal</Text>
         </View>
       </View>
     </View>

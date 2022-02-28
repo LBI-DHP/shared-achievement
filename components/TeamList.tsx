@@ -3,6 +3,8 @@ import { Text, View } from "react-native";
 import { Button, Surface } from "react-native-paper";
 import { UserDataContext } from "./UserDataProvider";
 import dataManager from "./DataManager";
+import TeamMemberBarChart from "./TeamMemberBarChart";
+import { style } from "../constants/Styles";
 
 export default function TeamStatistics() {
   const { userData, updated } = useContext(UserDataContext);
@@ -27,27 +29,32 @@ export default function TeamStatistics() {
   };
 
   return (
-    <Surface
+    <View
       style={{
-        elevation: 4,
-        borderRadius: 5,
         marginBottom: 30,
       }}
     >
       {teamMembersAndStepCountsOfToday.persons.map((person) => {
         return (
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              margin: 5,
-            }}
-          >
-            <Text>{person.name}</Text>
-            <Button mode="contained">motivate</Button>
+          <View style={{ paddingBottom: 20 }} key={person.name}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "flex-end",
+                paddingBottom: 10,
+              }}
+            >
+              <Text style={{ fontSize: 15, fontWeight: "bold" }}>
+                {person.name}{" "}
+                <Text style={{ color: "#ffae00" }}>{(500 / 1000) * 100}%</Text>
+              </Text>
+              <Button mode="contained">motivate</Button>
+            </View>
+            <TeamMemberBarChart goalSteps={1000} contributedSteps={500} />
           </View>
         );
       })}
-    </Surface>
+    </View>
   );
 }

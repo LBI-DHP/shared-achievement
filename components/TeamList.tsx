@@ -1,15 +1,21 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Text, View } from "react-native";
-import { Button, Surface } from "react-native-paper";
+import { Button } from "react-native-paper";
 import { UserDataContext } from "./UserDataProvider";
 import dataManager from "./DataManager";
 import TeamMemberBarChart from "./TeamMemberBarChart";
-import { style } from "../constants/Styles";
+import SendMotivationMessageDialog from "./SendMotivationMessageDialog";
 
 export default function TeamStatistics() {
   const { userData, updated } = useContext(UserDataContext);
   const [teamMembersAndStepCountsOfToday, setTeamMembersAndStepCountsOfToday] =
     useState({ challenge: {}, name: "", persons: [] });
+
+  const [visible, setVisible] = React.useState(false);
+
+  const showDialog = () => setVisible(true);
+
+  const hideDialog = () => setVisible(false);
 
   useEffect(() => {
     let mounted = true;
@@ -46,15 +52,20 @@ export default function TeamStatistics() {
               }}
             >
               <Text style={{ fontSize: 15, fontWeight: "bold" }}>
-                {person.name}{" "}
+                {person.name}
+                {console.log(person)}
                 <Text style={{ color: "#ffae00" }}>{(500 / 1000) * 100}%</Text>
               </Text>
-              <Button mode="contained">motivate</Button>
+              <Button onPress={showDialog} mode="contained">
+                motivate
+              </Button>
+              {/* <Text>{person.expoToken}</Text> */}
             </View>
             <TeamMemberBarChart goalSteps={1000} contributedSteps={500} />
           </View>
         );
       })}
+      <SendMotivationMessageDialog visible={visible} hideDialog={hideDialog} />
     </View>
   );
 }

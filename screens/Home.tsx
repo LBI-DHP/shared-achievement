@@ -4,7 +4,6 @@ import { style } from "../constants/Styles";
 import Challenge from "../components/Challenge";
 // @ts-ignore
 import StepCounter from "../components/StepCounter";
-import PushNotifications from "../components/PushNotifications";
 
 export default function Home() {
   const [isKeyboardOpen, setIsKeyBoardOpen] = useState(false);
@@ -27,7 +26,6 @@ export default function Home() {
     <ScrollView style={style.container}>
       {!(Platform.OS === "ios" && isKeyboardOpen) && <Challenge />}
       <StepCounter />
-      <PushNotifications />
     </ScrollView>
   );
 }

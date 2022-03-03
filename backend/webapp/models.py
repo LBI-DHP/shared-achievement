@@ -1,5 +1,6 @@
 import datetime
-from enum import unique
+from email.policy import default
+from enum import Enum
 from numpy import sign
 import playhouse.signals as signals
 from flask_peewee.auth import BaseUser  # provides password helpers..
@@ -38,21 +39,27 @@ class User(BaseModel, BaseUser):
         return self.username
 
 
+class ChallengeStatus(Enum):
+    NOT_STARTED = -1,
+    IN_PROGRESS = 1
+    FINISHED = 2
+
+
 
 class Challenge(BaseModel): # Abstract class for UserChallenge and TeamChallenge
     name = CharField()
-    goal = IntegerField()
+    goal = IntegerField() # Goal in steps
+    total_steps = IntegerField() # Goal in steps
+    progress = IntegerField() # in percent
+    status = CharField(default=ChallengeStatus.NOT_STARTED.name)
 
 class UserChallenge(Challenge):
-    date = DateField()
-    progress = IntegerField()
+    date = DateField()    
     user = ForeignKeyField(User)
 
 class UserChallengeRelationship(BaseModel):
     user = ForeignKeyField(User)
     challenge = ForeignKeyField(UserChallenge)
-    progress = IntegerField()
-
 
 UserChallengeRelationshipDeferred.set_model(UserChallengeRelationship)
 

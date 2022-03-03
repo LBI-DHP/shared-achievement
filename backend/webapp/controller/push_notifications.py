@@ -1,5 +1,5 @@
 
-from asyncio.log import logger
+from controller.shared_achievements_logger import logger, logging
 import imp
 import httplib2
 import json
@@ -10,6 +10,7 @@ NOTIFICATION_URL = "https://exp.host/--/api/v2/push/send"
 
 
 def send_push_notification(sender_user_id:int, receiver_user_id:int, title:str, body:str, type:str):
+    logger = logging.getLogger('SHARED_ACHIEVEMENTS_LOGGER')
     httpSocket = httplib2.Http()
     receiverToken = User.get_by_id(receiver_user_id).expoToken
     

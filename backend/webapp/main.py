@@ -5,6 +5,7 @@ blueprints here too.
 
 then when you want to run your app, you point to main.py or `main.app`
 """
+import logging
 from random import random
 from unicodedata import name
 from xmlrpc.client import DateTime
@@ -15,6 +16,7 @@ from admin import admin
 from api import api
 from models import *
 from views import *
+from controller.shared_achievements_logger import configure_logging, logger
 from controller.challenge_controller import *
 from achievements import *
 from controller.scheduler import *
@@ -22,6 +24,7 @@ from datetime import datetime
 
 admin.setup()
 # api.setup()
+
 
 def create_tables():
     # Create table for each model if it does not exist.
@@ -51,15 +54,31 @@ def fill_in_data():
     challengeUntersberg.date = datetime.now()
     challengeUntersberg.save()
 
+
+    challengeGaisberg = TeamChallenge()
+    challengeGaisberg.name = 'Gaisberg'
+    challengeGaisberg.goal = 5000
+    challengeGaisberg.team = teamLBI
+    challengeGaisberg.date = datetime.now()
+    challengeGaisberg.save()
+
+
+    challengeKlockerin = TeamChallenge()
+    challengeKlockerin.name = 'Klockerin'
+    challengeKlockerin.goal = 5000
+    challengeKlockerin.team = teamHB
+    challengeKlockerin.date = datetime.now()
+    challengeKlockerin.save()
+
     tcr = TeamChallengeRelationship()
     tcr.challenge = challengeUntersberg
     tcr.team = teamLBI    
     tcr.save()
 
     users = [
-        ('jan', ''), 
+        ('jan', 'NO_TOKEN'), 
         ('eva', 'ExponentPushToken[Iy_BAtIcQN07ZSqppKdtmw]'), 
-        ('daniela', ''), 
+        ('daniela', 'NO_TOKEN'), 
         ('dimi', "ExponentPushToken[N7zzLwDwLjk6jZOrRmVbzW]"), 
         ('testy', 'NO_TOKEN')
     ]
@@ -73,6 +92,7 @@ def fill_in_data():
         usr.save()
         
         userChallenge = UserChallenge()
+        userChallenge.name = f"{usr.username}_daily_challenge"
         userChallenge.date = datetime.now()
         userChallenge.goal = 1000
         userChallenge.progress = 0
@@ -92,6 +112,8 @@ def fill_in_data():
 
 
 if __name__ == '__main__':
+    configure_logging()
+    logger.log(logging.INFO, "test logger")
     create_tables()
     fill_in_data()
     app.run()

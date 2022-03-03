@@ -1,7 +1,5 @@
 import datetime
-from email.policy import default
 from enum import Enum
-from numpy import sign
 import playhouse.signals as signals
 from flask_peewee.auth import BaseUser  # provides password helpers..
 from peewee import *
@@ -28,7 +26,7 @@ class User(BaseModel, BaseUser):
     email = CharField()
     expoToken = CharField()
     team = ForeignKeyField(Team, backref='members',  null=True)
-    join_date = DateTimeField(default=datetime.datetime.now)
+    join_date = DateTimeField(default=datetime.datetime.now())
     active = BooleanField(default=True)
     admin = BooleanField(default=False)
     gender = CharField()

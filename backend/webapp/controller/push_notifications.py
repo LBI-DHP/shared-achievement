@@ -1,8 +1,9 @@
 
+from asyncio.log import logger
 import imp
 import httplib2
 import json
-from models import User, Notification, StepCount
+from models import User, Notification
 from playhouse.signals import post_save
 from datetime import datetime
 NOTIFICATION_URL = "https://exp.host/--/api/v2/push/send"
@@ -19,8 +20,16 @@ def send_push_notification(sender_user_id:int, receiver_user_id:int, title:str, 
     }
 
     push_notification_json = json.dumps(push_notification_obj)    
-    headers, resp = httpSocket.request(NOTIFICATION_URL, 'POST', body=push_notification_json, headers={'content-type':'application/json'})    
-    response = json.loads(resp)
+    headers, resp = httpSocket.request(NOTIFICATION_URL, 'POST', body=push_notification_json, headers={'content-type':'application/json'})
+    
+    res = ''
+
+    try:        
+        response = json.loads(resp)
+        res = response
+    except Exception as e:
+        logger.error(e)
+        res = headers['status']   
 
     msg = Notification()
     msg.title = title
@@ -33,15 +42,5 @@ def send_push_notification(sender_user_id:int, receiver_user_id:int, title:str, 
     msg.save()
 
     httpSocket.close()
-    return response# headers['status'] #json.dumps(model_to_dict(msg), default=str)
+    return res #response# headers['status'] #json.dumps(model_to_dict(msg), default=str)
 
-
-@post_save(sender=StepCount)
-def on_save_steps(sender, instance: StepCount, created):
-    print("post save hook")
-    team_users = User.select(User.id.alias('user_id'), 
-                User.username.alias('user_name')
-    ).where(
-        User.team == instance.team
-    )
-    

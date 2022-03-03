@@ -15,8 +15,9 @@ from admin import admin
 from api import api
 from models import *
 from views import *
+from controller.challenge_controller import *
 from achievements import *
-from scheduler import *
+from controller.scheduler import *
 from datetime import datetime
 
 admin.setup()

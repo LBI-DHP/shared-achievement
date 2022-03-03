@@ -1,7 +1,7 @@
 import imp
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from push_notifications import send_push_notification
+from controller.push_notifications import send_push_notification
 from models import User
 def schedule_notifications():
     title = "Shared Achievements: Daily Reminder"

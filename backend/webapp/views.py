@@ -11,7 +11,7 @@ from models import *
 from achievements import *
 import json
 from datetime import datetime
-from push_notifications import send_push_notification
+from controller.push_notifications import send_push_notification
 
 
 

@@ -39,27 +39,39 @@ def send_user_message():
 def push_steps():
     
     print('push_steps')
-    # return "push"    
+        
     query = User.select(
         User.id.alias('user_id'), 
+        User.username.alias('user_name'), 
         User.team.alias('team_id'),
-        Challenge.id.alias('challenge_id'),
-        TeamChallengeRelationship.date.alias('challenge_date')).join(Challenge, on=(Challenge.id == User.team)
-        ).join(TeamChallengeRelationship, on=(TeamChallengeRelationship.challenge == Challenge.id)).where(
+        TeamChallenge.id.alias('team_challenge_id'),
+        UserChallenge.id.alias('user_challenge_id'),
+        TeamChallenge.date.alias('team_challenge_date'),
+        UserChallenge.date.alias('user_challenge_date'),
+        ).join(TeamChallenge, on=(TeamChallenge.team == User.team)
+        ).join(UserChallenge, on=(UserChallenge.user == User.id)
+        ).where(
             (User.id == request.json['user_id'])
-            & (TeamChallengeRelationship.date == datetime.now())
+            & (TeamChallenge.date == datetime.now())
+            & (UserChallenge.date == datetime.now())
         )
+    print(query.sql())
+    print(list(query.dicts()))
+    # return json.dumps(list(query.dicts()), default=str)
+    team_challenge_id = query.dicts()[0]['team_challenge_id']
+    user_challenge_id = query.dicts()[0]['user_challenge_id']
+    print(f"{team_challenge_id=}, {user_challenge_id=}")
     
-    challenge_id = query.dicts()[0]['challenge_id']
-    print(f"{challenge_id=}")
-    
-    challenge = Challenge.get_by_id(challenge_id)
+    team_challenge = TeamChallenge.get_by_id(team_challenge_id)
+    user_challenge = UserChallenge.get_by_id(user_challenge_id)
     user = User.get_by_id(request.json['user_id'])
     
     steps =  StepCount()
     steps.steps = request.json['steps']
     steps.user = user
-    steps.challenge = challenge
+    steps.team = user.team
+    steps.teamChallenge = team_challenge
+    steps.userChallenge = user_challenge
     steps.timestamp = datetime.now()
     steps.save()
     

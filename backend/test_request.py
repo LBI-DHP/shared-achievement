@@ -27,7 +27,7 @@ print(headers['status'])
 
 
 steps_obj = {
-    'user_id': 2,
+    'user_id': 6,
     'steps': 100
 }
 steps_json = json.dumps(steps_obj)

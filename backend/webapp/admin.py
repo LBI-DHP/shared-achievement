@@ -8,6 +8,7 @@ from app import app, db
 from auth import auth
 from models import models
 
+
 admin = Admin(app, auth)
 auth.register_admin(admin)
 for m in models:

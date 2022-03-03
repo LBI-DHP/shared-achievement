@@ -1,9 +1,9 @@
 import datetime
 from enum import unique
-
+from numpy import sign
+import playhouse.signals as signals
 from flask_peewee.auth import BaseUser  # provides password helpers..
 from peewee import *
-
 from app import db
 
 
@@ -13,11 +13,15 @@ UserChallengeRelationshipDeferred = DeferredThroughModel()
 # UserAchievementRelationshipDeferred = DeferredThroughModel()
 # UserNotificationRelationshipDeferred = DeferredThroughModel()
 
+class BaseModel(signals.Model):
+     class Meta:
+        database = db.database
 
-class Team(db.Model):
+
+class Team(BaseModel):
     name = CharField()
 
-class User(db.Model, BaseUser):    
+class User(BaseModel, BaseUser):    
     username = CharField()
     password = CharField()
     email = CharField()
@@ -35,39 +39,48 @@ class User(db.Model, BaseUser):
 
 
 
-class Challenge(db.Model):
+class Challenge(BaseModel): # Abstract class for UserChallenge and TeamChallenge
     name = CharField()
     goal = IntegerField()
 
-
-
-class TeamChallengeRelationship(db.Model):
-    team = ForeignKeyField(Team)
-    challenge = ForeignKeyField(Challenge)
+class UserChallenge(Challenge):
     date = DateField()
     progress = IntegerField()
-
-
-TeamChallengeRelationshipDeferred.set_model(TeamChallengeRelationship)
-    
-
-class UserChallengeRelationship(db.Model):
     user = ForeignKeyField(User)
-    challenge = ForeignKeyField(Challenge)
-    date = DateField()
+
+class UserChallengeRelationship(BaseModel):
+    user = ForeignKeyField(User)
+    challenge = ForeignKeyField(UserChallenge)
     progress = IntegerField()
 
 
 UserChallengeRelationshipDeferred.set_model(UserChallengeRelationship)
 
-class StepCount(db.Model):
+
+class TeamChallenge(Challenge):
+    date = DateField()
+    progress = IntegerField()
+    team = ForeignKeyField(Team)
+
+class TeamChallengeRelationship(BaseModel):
+    team = ForeignKeyField(Team)
+    challenge = ForeignKeyField(TeamChallenge)
+    progress = IntegerField()
+
+
+TeamChallengeRelationshipDeferred.set_model(TeamChallengeRelationship)
+
+
+class StepCount(BaseModel):
     steps = IntegerField()
     timestamp = DateTimeField()
-    challenge = ForeignKeyField(Challenge)
+    userChallenge = ForeignKeyField(UserChallenge)
+    teamChallenge = ForeignKeyField(TeamChallenge)
     user = ForeignKeyField(User)
+    team = ForeignKeyField(Team)
 
 
-class Notification(db.Model):
+class Notification(BaseModel):
     title = CharField()
     body = CharField()
     type = CharField()
@@ -101,4 +114,4 @@ class Notification(db.Model):
 # class AchievementTeam(Achievement):
 #     team = ForeignKeyField(Team)
 
-models = [User, Challenge, Team, StepCount, Notification, TeamChallengeRelationship, UserChallengeRelationship]
+models = [User, Team, StepCount, Notification, UserChallenge, TeamChallenge, TeamChallengeRelationship, UserChallengeRelationship]

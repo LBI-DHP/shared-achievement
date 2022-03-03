@@ -43,12 +43,25 @@ def fill_in_data():
     teamHB = Team(name='Bremen',)
     teamHB.save()
 
-    challengeUntersberg = Challenge()
+    challengeUntersberg = TeamChallenge()
     challengeUntersberg.name = 'Untersberg'
-    challengeUntersberg.steps = 10000
+    challengeUntersberg.goal = 10000
+    challengeUntersberg.team = teamLBI
+    challengeUntersberg.date = datetime.now()
     challengeUntersberg.save()
 
-    users = [('jan', ''), ('eva', 'ExponentPushToken[Iy_BAtIcQN07ZSqppKdtmw]'), ('daniela', ''), ('dimi', "ExponentPushToken[N7zzLwDwLjk6jZOrRmVbzW]")]
+    tcr = TeamChallengeRelationship()
+    tcr.challenge = challengeUntersberg
+    tcr.team = teamLBI    
+    tcr.save()
+
+    users = [
+        ('jan', ''), 
+        ('eva', 'ExponentPushToken[Iy_BAtIcQN07ZSqppKdtmw]'), 
+        ('daniela', ''), 
+        ('dimi', "ExponentPushToken[N7zzLwDwLjk6jZOrRmVbzW]"), 
+        ('testy', 'NO_TOKEN')
+    ]
     for u in users:
         usr = User()
         usr.username = u[0]
@@ -58,19 +71,24 @@ def fill_in_data():
         usr.team = teamLBI
         usr.save()
         
+        userChallenge = UserChallenge()
+        userChallenge.date = datetime.now()
+        userChallenge.goal = 1000
+        userChallenge.progress = 0
+        userChallenge.user = usr
+        userChallenge.save()
+
         for i in range(0,3):
             steps = StepCount()
             steps.user = usr
+            steps.team = usr.team
             steps.steps = 200
-            steps.challenge = challengeUntersberg
+            steps.teamChallenge = challengeUntersberg
+            steps.userChallenge = userChallenge
             steps.timestamp = datetime.now()
             steps.save()
 
-    tcr = TeamChallengeRelationship()
-    tcr.challenge = challengeUntersberg
-    tcr.team = teamLBI
-    tcr.date = datetime.now()
-    tcr.save()
+
 
 if __name__ == '__main__':
     create_tables()

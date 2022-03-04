@@ -6,8 +6,8 @@ from peewee import *
 from app import db
 
 
-TeamChallengeRelationshipDeferred = DeferredThroughModel()
-UserChallengeRelationshipDeferred = DeferredThroughModel()
+# TeamChallengeRelationshipDeferred = DeferredThroughModel()
+# UserChallengeRelationshipDeferred = DeferredThroughModel()
 # TeamAchievementRelationshipDeferred = DeferredThroughModel()
 # UserAchievementRelationshipDeferred = DeferredThroughModel()
 # UserNotificationRelationshipDeferred = DeferredThroughModel()
@@ -55,11 +55,11 @@ class UserChallenge(Challenge):
     date = DateField()    
     user = ForeignKeyField(User)
 
-class UserChallengeRelationship(BaseModel):
-    user = ForeignKeyField(User)
-    challenge = ForeignKeyField(UserChallenge)
+# class UserChallengeRelationship(BaseModel):
+#     user = ForeignKeyField(User)
+#     challenge = ForeignKeyField(UserChallenge)
 
-UserChallengeRelationshipDeferred.set_model(UserChallengeRelationship)
+# UserChallengeRelationshipDeferred.set_model(UserChallengeRelationship)
 
 
 class TeamChallenge(Challenge):
@@ -67,13 +67,13 @@ class TeamChallenge(Challenge):
     progress = IntegerField()
     team = ForeignKeyField(Team)
 
-class TeamChallengeRelationship(BaseModel):
-    team = ForeignKeyField(Team)
-    challenge = ForeignKeyField(TeamChallenge)
-    progress = IntegerField()
+# class TeamChallengeRelationship(BaseModel):
+#     team = ForeignKeyField(Team)
+#     challenge = ForeignKeyField(TeamChallenge)
+#     progress = IntegerField()
 
 
-TeamChallengeRelationshipDeferred.set_model(TeamChallengeRelationship)
+# TeamChallengeRelationshipDeferred.set_model(TeamChallengeRelationship)
 
 
 class StepCount(BaseModel):
@@ -105,7 +105,7 @@ class Notification(BaseModel):
 
 
 
-# class Achievement(db.Model):
+# class Achievement(BaseModel):
 #     name = CharField()
 #     progress = IntegerField()
     
@@ -119,4 +119,4 @@ class Notification(BaseModel):
 # class AchievementTeam(Achievement):
 #     team = ForeignKeyField(Team)
 
-models = [User, Team, StepCount, Notification, UserChallenge, TeamChallenge, TeamChallengeRelationship, UserChallengeRelationship]
+models = [User, Team, StepCount, Notification, UserChallenge, TeamChallenge]

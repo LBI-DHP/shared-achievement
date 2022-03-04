@@ -32,7 +32,6 @@ def create_tables():
     # flask-peewee database wrapper:
     
     db.database.drop_tables(models)
-
     db.database.create_tables(models)    
     
 
@@ -116,4 +115,4 @@ if __name__ == '__main__':
     logger.log(logging.INFO, "test logger")
     create_tables()
     fill_in_data()
-    app.run()
+    app.run(host="0.0.0.0", port=11883)

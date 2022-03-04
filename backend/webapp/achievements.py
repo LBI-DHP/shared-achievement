@@ -1,4 +1,3 @@
-from unicodedata import category, name
 from pychievements import Achievement, icons, tracker
 from pychievements.backends import SQLiteAchievementBackend
 

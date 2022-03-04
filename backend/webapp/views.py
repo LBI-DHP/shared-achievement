@@ -27,6 +27,15 @@ def homepage():
 #     user = auth.get_logged_in_user()
 #     return user #render_tempate(...)
 
+
+# @app.route('/team/<team_id>')
+# def get_team(team_id):
+#     team = (Team.get_by_id(team_id))
+#     # d = model_to_dict(team, backrefs=True)
+#     members = list(team.members.dicts())
+#     # print(members)
+#     return json.dumps(members, default=str, indent=4, sort_keys=True)    
+
 @app.route('/send_user_message', methods=['POST'])
 # @auth.login_required
 def send_user_message():

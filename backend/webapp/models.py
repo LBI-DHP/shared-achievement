@@ -1,5 +1,5 @@
 import datetime
-from enum import Enum
+from enum import Enum, unique
 import playhouse.signals as signals
 from flask_peewee.auth import BaseUser  # provides password helpers..
 from peewee import *
@@ -21,7 +21,7 @@ class Team(BaseModel):
     name = CharField()
 
 class User(BaseModel, BaseUser):    
-    username = CharField()
+    username = CharField(unique=True)
     password = CharField()
     email = CharField()
     expoToken = CharField()

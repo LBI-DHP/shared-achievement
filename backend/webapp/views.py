@@ -20,6 +20,19 @@ from controller.push_notifications import send_push_notification
 def homepage():
     return "hello"
 
+
+@app.rout('/register', methods=['POST'])
+def register_user():
+    usr = User()
+    usr.username = request.json['username']    
+    usr.password = request.json['password']
+    usr.expoToken = request.json['expoToken']
+    usr.active = True
+    usr.admin = False
+    usr.save()
+
+    return json.dumps(model_to_dict(usr, recurse=False, exclude=['password']), default=str, indent=4, sort_keys=True)    
+
 # @app.route('/private/')
 # @auth.login_required
 # def private_view():

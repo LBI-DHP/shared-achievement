@@ -24,14 +24,32 @@ def homepage():
 @app.route('/register', methods=['POST'])
 def register_user():
     usr = User()
-    usr.username = request.json['username']    
-    usr.password = request.json['password']
+    usr.username = request.json['username']
+    usr.set_password(request.json['password'])        
     usr.expoToken = request.json['expoToken']
     usr.active = True
     usr.admin = False
     usr.save()
 
     return json.dumps(model_to_dict(usr, recurse=False, exclude=['password']), default=str, indent=4, sort_keys=True)    
+
+
+
+@app.route('/stepcounttoday/user/<user_id>', methods=['GET'])
+def stepcount_today_user(user_id):
+    userChallenge = (UserChallenge.select().where((UserChallenge.user == user_id) & (UserChallenge.date == datetime.now())).get())    
+    total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.user == user_id) & (StepCount.userChallenge == userChallenge)).get())    
+    res = {'total_steps': total_steps.total_steps}
+    return json.dumps(res, default=str, indent=4, sort_keys=True)
+
+
+@app.route('/stepcounttoday/team/<team_id>', methods=['GET'])
+def stepcount_today_team(team_id):
+    teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == team_id) & (TeamChallenge.date == datetime.now())).get())    
+    total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.team == team_id) & (StepCount.teamChallenge == teamChallenge)).get())    
+    res = {'total_steps': total_steps.total_steps}
+    return json.dumps(res, default=str, indent=4, sort_keys=True)
+
 
 # @app.route('/private/')
 # @auth.login_required

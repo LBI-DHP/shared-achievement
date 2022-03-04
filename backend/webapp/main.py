@@ -69,10 +69,10 @@ def fill_in_data():
     challengeKlockerin.date = datetime.now()
     challengeKlockerin.save()
 
-    tcr = TeamChallengeRelationship()
-    tcr.challenge = challengeUntersberg
-    tcr.team = teamLBI    
-    tcr.save()
+    # tcr = TeamChallengeRelationship()
+    # tcr.challenge = challengeUntersberg
+    # tcr.team = teamLBI    
+    # tcr.save()
 
     users = [
         ('jan', 'NO_TOKEN'), 

@@ -120,7 +120,6 @@ seaborn==0.11.2
 Send2Trash==1.8.0
 sh==1.14.2
 six==1.16.0
--e git+ssh://git@github.com/alexandrovsky/SNACKING3-WEB-APP.git@4938712983ecf464ce3887488a5fdbd0f9529f35#egg=snacking3
 SoundFile==0.10.3.post1
 soupsieve==2.3.1
 SQLAlchemy==1.4.31

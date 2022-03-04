@@ -5,6 +5,7 @@ from crypt import methods
 import imp
 from flask import jsonify, render_template, request  # ...etc , redirect, request, url_for
 from playhouse.shortcuts import model_to_dict, dict_to_model
+from sqlalchemy import null
 from app import app
 from auth import auth
 from models import *
@@ -23,6 +24,12 @@ def homepage():
 
 @app.route('/register', methods=['POST'])
 def register_user():
+    existingUsr = (User.select(fn.Count(User.id).alias('count_ids')).where(User.username == request.json['username']).get())
+    print(existingUsr)
+    if existingUsr.count_ids > 0:
+        return 'Username already exists', 409
+    
+
     usr = User()
     usr.username = request.json['username']
     usr.set_password(request.json['password'])        

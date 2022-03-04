@@ -98,7 +98,7 @@ def fill_in_data():
         userChallenge.user = usr
         userChallenge.save()
 
-        for i in range(0,3):
+        for i in range(0,1):
             steps = StepCount()
             steps.user = usr
             steps.team = usr.team
@@ -113,6 +113,6 @@ def fill_in_data():
 if __name__ == '__main__':
     configure_logging()
     logger.log(logging.INFO, "test logger")
-    create_tables()
-    fill_in_data()
+    # create_tables()
+    # fill_in_data()
     app.run(host="0.0.0.0", port=11883)

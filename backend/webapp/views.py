@@ -21,7 +21,7 @@ def homepage():
     return "hello"
 
 
-@app.rout('/register', methods=['POST'])
+@app.route('/register', methods=['POST'])
 def register_user():
     usr = User()
     usr.username = request.json['username']    

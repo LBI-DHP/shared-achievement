@@ -83,8 +83,9 @@ def on_user_post_save(sender, instance: User, created):
         team = (Team.get_by_id(team_id))
         try:
             teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == team) & TeamChallenge.date == datetime.now()))
-            #if teamChallenge is not None:
-            teamChallenge.teamMembersGoal = teamChallenge.goal * len(team.members)
+            if teamChallenge is not None:
+                teamChallenge = teamChallenge.get()
+                teamChallenge.teamMembersGoal = teamChallenge.goal * len(team.members)
         except Exception as e:
             logger.error(e)
 
@@ -92,7 +93,9 @@ def on_user_post_save(sender, instance: User, created):
     if instance.team is not None:
         team = (Team.get_by_id(instance.team))
         try:
-            teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == team) & TeamChallenge.date == datetime.now()))           
+            teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == team) & TeamChallenge.date == datetime.now()))
+            if teamChallenge is not None:
+                teamChallenge = teamChallenge.get()           
             teamChallenge.teamMembersGoal = teamChallenge.goal * len(team.members)
         except Exception as e:
             logger.error(e)

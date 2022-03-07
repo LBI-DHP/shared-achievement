@@ -3,7 +3,7 @@ views imports app, auth, and models, but none of these import views
 """
 from crypt import methods
 import imp
-from flask import jsonify, render_template, request  # ...etc , redirect, request, url_for
+from flask import Response, jsonify, render_template, request  # ...etc , redirect, request, url_for
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from sqlalchemy import null
 from app import app
@@ -25,7 +25,7 @@ def homepage():
 @app.route('/register', methods=['POST'])
 def register_user():
     existingUsr = (User.select(fn.Count(User.id).alias('count_ids')).where(User.username == request.json['username']).get())
-    print(existingUsr)
+    
     if existingUsr.count_ids > 0:
         return 'Username already exists', 409
     
@@ -38,7 +38,12 @@ def register_user():
     usr.admin = False
     usr.save()
 
-    return json.dumps(model_to_dict(usr, recurse=False, exclude=['password']), default=str, indent=4, sort_keys=True)    
+    res = model_to_dict(usr, recurse=False, exclude=['password',"email"])
+    del res['password']
+    del res['email']
+    print(res)
+    return jsonify(res) 
+    #return json.dumps(model_to_dict(usr, recurse=False, exclude=['password']), default=str, indent=4, sort_keys=True)    
 
 
 

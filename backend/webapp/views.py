@@ -85,7 +85,7 @@ def stepcount_today_team(team_id):
 @app.route('/teamprogresstoday/<team_id>', methods=['get'])
 def teamprogresstoday(team_id):
     teamChallenge = TeamChallenge.select().where((TeamChallenge.team==team_id) & (TeamChallenge.date==datetime.now())).get()
-    res = list(StepCount.select().where(StepCount.team == teamChallenge).dicts())
+    res = list(StepCount.select().where(StepCount.teamChallenge == teamChallenge).dicts())
     print(res)
     return jsonify(res)
     

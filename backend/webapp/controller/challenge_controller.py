@@ -39,7 +39,7 @@ def on_save_steps(sender, instance: StepCount, created):
     total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.user == contributor) & (StepCount.userChallenge == userChallenge)).get())
     print(total_steps.total_steps)
     userChallenge.total_steps = total_steps.total_steps 
-    userChallenge.progress = (total_steps.total_steps / userChallenge.goal) * 100
+    userChallenge.progress = (total_steps.total_steps / max(userChallenge.goal, 1) ) * 100
     if userChallenge.status != ChallengeStatus.FINISHED.name and userChallenge.progress >= 100:
         userChallenge.status = ChallengeStatus.FINISHED.name
         msg_title = "Personal Challenge achieved"

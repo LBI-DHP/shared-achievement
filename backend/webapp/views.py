@@ -33,7 +33,7 @@ def register_user():
 
     usr = User()
     usr.username = request.json['username']
-    usr.set_password(request.json['password'])        
+    usr.set_password(request.json['password'])            
     usr.expoToken = request.json['expoToken']
     usr.active = True
     usr.admin = True
@@ -63,7 +63,7 @@ def stepcount_today_user(user_id):
 @app.route('/stepcounttoday/team/<team_id>', methods=['GET'])
 def stepcount_today_team(team_id):
     teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=datetime.now())
-    team = team.get_by_id(team_id) 
+    team = Team.get_by_id(team_id) 
     teamChallenge.teamMembersGoal = teamChallenge.goal * len(team.members)
     teamChallenge.save()
 

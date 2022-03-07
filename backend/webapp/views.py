@@ -36,7 +36,7 @@ def register_user():
     usr.set_password(request.json['password'])        
     usr.expoToken = request.json['expoToken']
     usr.active = True
-    usr.admin = False
+    usr.admin = True
     usr.save()
 
     res = model_to_dict(usr, recurse=False, exclude=['password',"email"])
@@ -63,8 +63,12 @@ def stepcount_today_user(user_id):
 @app.route('/stepcounttoday/team/<team_id>', methods=['GET'])
 def stepcount_today_team(team_id):
     teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=datetime.now())
+    team = team.get_by_id(team_id) 
+    teamChallenge.teamMembersGoal = teamChallenge.goal * len(team.members)
+    teamChallenge.save()
+
     if created:
-        teamChallenge.save()
+        
         res = {'total_steps': 0}
         return jsonify(res)    
     # teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == team_id) & (TeamChallenge.date == datetime.now())).get())    

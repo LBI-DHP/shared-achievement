@@ -7,9 +7,10 @@ import { Platform } from "react-native";
 export const UserDataContext = React.createContext({
   userData: {
     id: null,
-    name: null,
-    teamName: null,
-    // expoToken: null
+    username: null,
+    team: null,
+    expoToken: null,
+    password: null,
   },
   setUserData: ({}) => {},
   updated: false,
@@ -19,9 +20,10 @@ export const UserDataContext = React.createContext({
 export const UserDataProvider = (props) => {
   const [userData, setUserData] = useState({
     id: null,
-    name: null,
-    teamName: null,
-    // expoToken: null
+    username: null,
+    team: null,
+    expoToken: null,
+    password: null,
   });
 
   const [updated, setUpdated] = useState(false);
@@ -37,33 +39,43 @@ export const UserDataProvider = (props) => {
     }),
   });
 
+  const createNewUser = (mounted) => {
+    dataManager.getUserPassword().then((password) => {
+      registerForPushNotificationsAsync()
+        .then((token) => {
+          if (mounted)
+            setUserData({
+              ...userData,
+              expoToken: token,
+              password: password,
+            });
+        })
+        .catch((e) => {
+          console.log("Could not register for push notifications", e);
+          setUserData({
+            ...userData,
+            password: password,
+          });
+        });
+    });
+  };
+
   useEffect(() => {
     let mounted = true;
     dataManager
       .getUserId()
       .then((id) => {
-        console.log("UserId: " + id);
-        dataManager.getUserData(id).then((data) => {
-          // user does not exist
-          if (data && data.error) {
-            registerForPushNotificationsAsync()
-              .then((token) => {
-                console.log(token);
-                if (mounted)
-                  setUserData({
-                    ...userData,
-                    //  expoToken: token
-                    id: id,
-                  });
-              })
-              .catch((e) => {
-                console.log("Could not register for push notifications", e);
-              });
-            if (mounted) setUserData({ ...userData, id: id });
-          } else {
-            if (mounted) setUserData(data);
-          }
-        });
+        if (id) {
+          dataManager.getUserData(id).then((data) => {
+            if (data === null) {
+              createNewUser(mounted);
+            } else {
+              if (mounted) setUserData(data);
+            }
+          });
+        } else {
+          createNewUser(mounted);
+        }
       })
       .catch((e) => console.log("Error:", e));
 

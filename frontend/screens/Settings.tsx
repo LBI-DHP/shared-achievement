@@ -5,6 +5,7 @@ import { style } from "../constants/Styles";
 import { useEffect, useState } from "react";
 import { UserDataContext } from "../components/UserDataProvider";
 import dataManager from "../components/DataManager";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Settings() {
   const { userData, setUserData, updated, setUpdated } =
@@ -12,18 +13,18 @@ export default function Settings() {
   const [isUserInATeam, setIsUserInATeam] = useState(false);
   const [error, setError] = useState(false);
   const [isUserNameChanged, setIsUserNameChanged] = useState(false);
-  const [newUserName, setNewUserName] = useState(userData.name);
+  const [newUserName, setNewUserName] = useState(userData.username);
 
   useEffect(() => {
-    if (userData.teamName === null) setIsUserInATeam(false);
+    if (userData.team === null) setIsUserInATeam(false);
     else setIsUserInATeam(true);
 
-    if (newUserName === userData.name) setIsUserNameChanged(false);
+    if (newUserName === userData.username) setIsUserNameChanged(false);
     else setIsUserNameChanged(true);
   }, [userData]);
 
   useEffect(() => {
-    if (newUserName === userData.name) setIsUserNameChanged(false);
+    if (newUserName === userData.username) setIsUserNameChanged(false);
     else setIsUserNameChanged(true);
   }, [newUserName]);
 
@@ -59,7 +60,7 @@ export default function Settings() {
         Update user name
       </Button>
       {isUserInATeam ? (
-        <Text style={{ padding: 10 }}>You are in Team {userData.teamName}</Text>
+        <Text style={{ padding: 10 }}>You are in Team {userData.team}</Text>
       ) : (
         <Text style={{ padding: 10 }}>Currently you're not part of a team</Text>
       )}
@@ -92,6 +93,15 @@ export default function Settings() {
         }}
       >
         Disconnect App from Google Fit
+      </Button>
+      <Button
+        style={{ marginTop: 10 }}
+        mode="contained"
+        onPress={() => {
+          AsyncStorage.clear();
+        }}
+      >
+        Clear local storage
       </Button>
     </View>
   );

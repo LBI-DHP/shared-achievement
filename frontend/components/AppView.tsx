@@ -20,7 +20,7 @@ export default function AppView() {
   }, [updated]);
 
   useEffect(() => {
-    if (userData.name !== null) {
+    if (userData && userData.username !== null) {
       setIsUserNameSet(true);
     }
   }, [userData]);

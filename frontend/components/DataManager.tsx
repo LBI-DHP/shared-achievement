@@ -12,6 +12,19 @@ export default class dataManager {
    *  some more error handling
    */
 
+  static mapResponseUserDataToUserData = async (responseUserData) => {
+    if (!responseUserData.password) {
+      responseUserData.password = await this.getUserPassword();
+    }
+    return {
+      id: responseUserData.id,
+      username: responseUserData.username,
+      team: responseUserData.team,
+      expoToken: responseUserData.expoToken,
+      password: responseUserData.password,
+    };
+  };
+
   static getGoogleAuthInfo = async () => {
     try {
       let authInfo = await AsyncStorage.getItem("authInfo");
@@ -38,19 +51,73 @@ export default class dataManager {
   };
 
   static getUserId = async () => {
-    let id = await AsyncStorage.getItem("uuid");
-    if (id == null) {
-      console.log("generate UUID");
-      id = uuid.v4().toString(); // something like '11edc52b-2918-4d71-9058-f7285e29d894'
-      await AsyncStorage.setItem("uuid", id);
+    let id = await AsyncStorage.getItem("id");
+    console.log("userID", id);
+    return id;
+  };
+
+  static setUserId = async (id) => {
+    try {
+      await AsyncStorage.setItem("id", id.toString());
+    } catch (e) {
+      console.log(e);
+    } finally {
+      console.log("User ID (", id, ") was set in local storage");
     }
-    return id.toString();
+  };
+
+  static getUserPassword = async () => {
+    let password = null;
+    try {
+      password = await AsyncStorage.getItem("uuid");
+      if (password == null) {
+        console.log("generate password");
+        password = uuid.v4().toString(); // something like '11edc52b-2918-4d71-9058-f7285e29d894'
+        await AsyncStorage.setItem("password", password);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      console.log("Password was set/retrieved from local storage");
+    }
+    return password.toString();
+  };
+
+  static getUserDataOld = async (userid) => {
+    fetch(configJSON.serverConfig.root + "/api/user/" + userid, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error("response not ok");
+        }
+        return response.json();
+      })
+      .then((result) => {
+        if (result.stat === "fail") {
+          throw new Error(result.message);
+        }
+        // Everything should be ok, process the result here
+        return result;
+        // this.mapResponseUserDataToUserData(result).then((d) => {
+        //   return d;
+        // });
+      })
+      .catch(function (e) {
+        console.log(e);
+        return null;
+      });
+    // .finally(() => console.log("done with get user data request"));
   };
 
   static getUserData = async (userid) => {
     try {
       const response = await fetch(
-        configJSON.serverConfig.root + "/person/find?id=" + userid,
+        configJSON.serverConfig.root + "/api/user/" + userid,
         {
           method: "GET",
           headers: {
@@ -59,12 +126,54 @@ export default class dataManager {
           },
         }
       );
-      const userData = await response.json();
-      return userData;
+
+      if (response.ok) {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          const responseJSON = await response.json();
+          return await this.mapResponseUserDataToUserData(responseJSON);
+        }
+      }
+      return null;
     } catch (error) {
       console.log("error on get user data:" + error);
     } finally {
-      console.log("done with get user data request");
+      console.log("done with get user request");
+    }
+  };
+
+  static registerUser = async (userData) => {
+    console.log("userData for register", userData);
+    try {
+      const response = await fetch(configJSON.serverConfig.root + "/register", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (response.ok) {
+        console.log("response ok");
+        const contentType = await response.headers.get("content-type");
+        console.log(contentType);
+        // if (contentType && contentType.indexOf("application/json") !== -1) {
+        // console.log("contentType ok");
+        const responseJSON = await response.json();
+        console.log("responseJSON", responseJSON);
+        if (responseJSON && responseJSON.id) {
+          this.setUserId(responseJSON.id);
+        }
+        console.log("responseJSON", responseJSON);
+        return await this.mapResponseUserDataToUserData(responseJSON);
+        // }
+      }
+      return null;
+    } catch (error) {
+      console.log("error on register user:" + error);
+    } finally {
+      console.log("done with register user request");
     }
   };
 

@@ -30,14 +30,14 @@ export default function Welcome() {
           setError(false);
           const newUserData = {
             ...userData,
-            name: userName,
+            username: userName,
           };
 
-          dataManager.addUser(newUserData).then((responseStatus) => {
-            if (responseStatus === 201) {
-              setUserData(newUserData);
-            } else {
+          dataManager.registerUser(newUserData).then((data) => {
+            if (data === null) {
               setError(true);
+            } else {
+              setUserData(data);
             }
           });
         }}

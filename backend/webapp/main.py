@@ -113,6 +113,7 @@ def fill_in_data():
 if __name__ == '__main__':
     configure_logging()
     logger.log(logging.INFO, "test logger")
-    # create_tables()
-    # fill_in_data()
+    create_tables()
+    fill_in_data()
+    #app.run(host="0.0.0.0", port=11883)
     app.run(host="0.0.0.0", port=11883)

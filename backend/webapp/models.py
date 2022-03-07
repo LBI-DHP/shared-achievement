@@ -32,6 +32,7 @@ class User(BaseModel, BaseUser):
     gender = CharField()
     age = IntegerField()
     weight = IntegerField()
+    currentActivityLevel = IntegerField()
     targetGoal = IntegerField()
     def __unicode__(self):
         return self.username
@@ -47,8 +48,8 @@ class ChallengeStatus(Enum):
 class Challenge(BaseModel): # Abstract class for UserChallenge and TeamChallenge
     name = CharField()
     goal = IntegerField() # Goal in steps
-    total_steps = IntegerField() # Goal in steps
-    progress = IntegerField() # in percent
+    total_steps = IntegerField() # progress in steps
+    progress = IntegerField(default=0) # progress in percent
     status = CharField(default=ChallengeStatus.NOT_STARTED.name)
 
 class UserChallenge(Challenge):
@@ -64,7 +65,6 @@ class UserChallenge(Challenge):
 
 class TeamChallenge(Challenge):
     date = DateField()
-    progress = IntegerField()
     team = ForeignKeyField(Team)
 
 # class TeamChallengeRelationship(BaseModel):

@@ -44,5 +44,5 @@ def schedule_create_new_daily_challenges():
         teamChallenge.save()
 
 # scheduler.add_job(schedule_create_new_daily_challenges,'cron',hour=16, minute=52)
-scheduler.add_job(schedule_create_new_daily_challenges,'cron',hour=0, minute=1)
+# scheduler.add_job(schedule_create_new_daily_challenges,'cron',hour=0, minute=1)
 scheduler.start()

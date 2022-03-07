@@ -3,6 +3,7 @@ views imports app, auth, and models, but none of these import views
 """
 from crypt import methods
 import imp
+from unicodedata import name
 from flask import Response, jsonify, render_template, request  # ...etc , redirect, request, url_for
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from sqlalchemy import null
@@ -49,18 +50,30 @@ def register_user():
 
 @app.route('/stepcounttoday/user/<user_id>', methods=['GET'])
 def stepcount_today_user(user_id):
-    userChallenge = (UserChallenge.select().where((UserChallenge.user == user_id) & (UserChallenge.date == datetime.now())).get())    
+    userChallenge, created = UserChallenge.get_or_create(user=user_id, date=datetime.now())
+    if created:
+        userChallenge.save()
+        res = {'total_steps': 0}
+    # userChallenge = (UserChallenge.select().where((UserChallenge.user == user_id) & (UserChallenge.date == datetime.now())).get())    
     total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.user == user_id) & (StepCount.userChallenge == userChallenge)).get())    
     res = {'total_steps': total_steps.total_steps}
-    return json.dumps(res, default=str, indent=4, sort_keys=True)
+    return jsonify(res) #json.dumps(res, default=str, indent=4, sort_keys=True)
 
 
 @app.route('/stepcounttoday/team/<team_id>', methods=['GET'])
 def stepcount_today_team(team_id):
-    teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == team_id) & (TeamChallenge.date == datetime.now())).get())    
+    teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=datetime.now())
+    if created:
+        teamChallenge.save()
+        res = {'total_steps': 0}
+        return jsonify(res)    
+    # teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == team_id) & (TeamChallenge.date == datetime.now())).get())    
     total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.team == team_id) & (StepCount.teamChallenge == teamChallenge)).get())    
+    
+    if total_steps.total_steps is None:
+        total_steps.total_steps = 0
     res = {'total_steps': total_steps.total_steps}
-    return json.dumps(res, default=str, indent=4, sort_keys=True)
+    return jsonify(res) # json.dumps(res, default=str, indent=4, sort_keys=True)
 
 
 # @app.route('/private/')
@@ -91,7 +104,22 @@ def send_user_message():
 def push_steps():
     
     print('push_steps')
+
+    user = User.get_by_id(request.json['user_id'])
+    if user is None:
+        return "User does not exist", 404
+
+    userChallenge, created = UserChallenge.get_or_create(user=user.id, date=datetime.now())
+    if created:
+        userChallenge.save()
+
+    
         
+    teamChallenge, created = TeamChallenge.get_or_create(team=user.team, date=datetime.now())
+    if created:
+        teamChallenge.save()
+
+
     query = User.select(
         User.id.alias('user_id'), 
         User.username.alias('user_name'), 
@@ -103,7 +131,7 @@ def push_steps():
         ).join(TeamChallenge, on=(TeamChallenge.team == User.team)
         ).join(UserChallenge, on=(UserChallenge.user == User.id)
         ).where(
-            (User.id == request.json['user_id'])
+            (User.id == user.id)
             & (TeamChallenge.date == datetime.now())
             & (UserChallenge.date == datetime.now())
         )
@@ -116,7 +144,6 @@ def push_steps():
     
     team_challenge = TeamChallenge.get_by_id(team_challenge_id)
     user_challenge = UserChallenge.get_by_id(user_challenge_id)
-    user = User.get_by_id(request.json['user_id'])
     
     steps =  StepCount()
     steps.steps = request.json['steps']
@@ -127,6 +154,6 @@ def push_steps():
     steps.timestamp = datetime.now()
     steps.save()
     
-    return json.dumps(model_to_dict(steps, recurse=False), default=str, indent=4, sort_keys=True)    
+    return Response(json.dumps(model_to_dict(steps, recurse=False), default=str, indent=4, sort_keys=True), mimetype='application/json')    
     
     

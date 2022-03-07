@@ -47,8 +47,8 @@ class ChallengeStatus(Enum):
 
 class Challenge(BaseModel): # Abstract class for UserChallenge and TeamChallenge
     name = CharField()
-    goal = IntegerField() # Goal in steps
-    total_steps = IntegerField() # progress in steps
+    goal = IntegerField() # base Goal in steps
+    total_steps = IntegerField() #  number of steps contributed to this challenge
     progress = IntegerField(default=0) # progress in percent
     status = CharField(default=ChallengeStatus.NOT_STARTED.name)
 
@@ -66,6 +66,7 @@ class UserChallenge(Challenge):
 class TeamChallenge(Challenge):
     date = DateField()
     team = ForeignKeyField(Team)
+    teamMembersGoal = IntegerField() # total goal for all team members
 
 # class TeamChallengeRelationship(BaseModel):
 #     team = ForeignKeyField(Team)

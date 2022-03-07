@@ -1,12 +1,13 @@
 from datetime import datetime
+import queue
 from controller.shared_achievements_logger import logger, logging
-from models import User, StepCount,UserChallenge, TeamChallenge, ChallengeStatus
-from playhouse.signals import post_save
+from models import User, Team, StepCount,UserChallenge, TeamChallenge, ChallengeStatus
+from playhouse.signals import post_save, pre_save
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from peewee import fn
 from controller.push_notifications import send_push_notification
 
-
+teams_to_update = []
 
 @post_save(sender=StepCount)
 def on_save_steps(sender, instance: StepCount, created):
@@ -51,9 +52,14 @@ def on_save_steps(sender, instance: StepCount, created):
     ### Evaluate team challenge
     ### .....
     teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == contributor.team) & (TeamChallenge.date == datetime.now())).get())
+    # print ("--------------------S")
+    # logger.log(logging.INFO, teamChallenge.members)
+    # print ("--------------------E")
     total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.teamChallenge == teamChallenge)).get())
     teamChallenge.total_steps = total_steps.total_steps
-    teamChallenge.progress = (total_steps.total_steps / teamChallenge.goal) * 100
+    if total_steps.total_steps is None:
+        total_steps.total_steps = 0
+    teamChallenge.progress = (total_steps.total_steps / max(teamChallenge.teamMembersGoal, 1)) * 100
     if teamChallenge.status != ChallengeStatus.FINISHED.name and teamChallenge.progress >= 100:
         teamChallenge.status = ChallengeStatus.FINISHED.name
         msg_title = "Team Challenge Completed"
@@ -63,5 +69,30 @@ def on_save_steps(sender, instance: StepCount, created):
         teamChallenge.status = ChallengeStatus.IN_PROGRESS.name
     teamChallenge.save()
 
-    
-    
+
+@pre_save(sender=User)
+def on_user_pre_save(sender, instance: User, created):
+    if instance.team is not None:
+        teams_to_update.append(instance.team)
+     
+@post_save(sender=User)
+def on_user_post_save(sender, instance: User, created):
+    # update challenge of old team
+    for team_id in teams_to_update:
+        print(f"update team challenge for team {team_id}")
+        team = (Team.get_by_id(team_id))
+        try:
+            teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == team) & TeamChallenge.date == datetime.now()))
+            #if teamChallenge is not None:
+            teamChallenge.teamMembersGoal = teamChallenge.goal * len(team.members)
+        except Exception as e:
+            logger.error(e)
+
+    # update challenge of new team
+    if instance.team is not None:
+        team = (Team.get_by_id(instance.team))
+        try:
+            teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == team) & TeamChallenge.date == datetime.now()))           
+            teamChallenge.teamMembersGoal = teamChallenge.goal * len(team.members)
+        except Exception as e:
+            logger.error(e)

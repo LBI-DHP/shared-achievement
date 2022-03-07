@@ -20,7 +20,8 @@ from controller.shared_achievements_logger import configure_logging, logger
 from controller.challenge_controller import *
 from achievements import *
 from controller.scheduler import *
-from datetime import datetime
+# from datetime import datetime
+import datetime
 
 admin.setup()
 # api.setup()
@@ -50,7 +51,7 @@ def fill_in_data():
     challengeUntersberg.name = 'Untersberg'
     challengeUntersberg.goal = 10000
     challengeUntersberg.team = teamLBI
-    challengeUntersberg.date = datetime.now()
+    challengeUntersberg.date = datetime.date.today() - datetime.timedelta(days=1) #datetime.now() 
     challengeUntersberg.save()
 
 
@@ -58,15 +59,15 @@ def fill_in_data():
     challengeGaisberg.name = 'Gaisberg'
     challengeGaisberg.goal = 5000
     challengeGaisberg.team = teamLBI
-    challengeGaisberg.date = datetime.now()
+    challengeGaisberg.date = datetime.datetime.now()
     challengeGaisberg.save()
-
+    
 
     challengeKlockerin = TeamChallenge()
     challengeKlockerin.name = 'Klockerin'
     challengeKlockerin.goal = 5000
     challengeKlockerin.team = teamHB
-    challengeKlockerin.date = datetime.now()
+    challengeKlockerin.date = datetime.datetime.now()
     challengeKlockerin.save()
 
     # tcr = TeamChallengeRelationship()
@@ -92,7 +93,7 @@ def fill_in_data():
         
         userChallenge = UserChallenge()
         userChallenge.name = f"{usr.username}_daily_challenge"
-        userChallenge.date = datetime.now()
+        userChallenge.date = datetime.datetime.now()
         userChallenge.goal = 1000
         userChallenge.progress = 0
         userChallenge.user = usr
@@ -105,7 +106,7 @@ def fill_in_data():
             steps.steps = 200
             steps.teamChallenge = challengeUntersberg
             steps.userChallenge = userChallenge
-            steps.timestamp = datetime.now()
+            steps.timestamp = datetime.datetime.now()
             steps.save()
 
 

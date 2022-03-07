@@ -54,8 +54,11 @@ def stepcount_today_user(user_id):
     if created:
         userChallenge.save()
         res = {'total_steps': 0}
+        return jsonify(res) 
     # userChallenge = (UserChallenge.select().where((UserChallenge.user == user_id) & (UserChallenge.date == datetime.now())).get())    
     total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.user == user_id) & (StepCount.userChallenge == userChallenge)).get())    
+    if total_steps.total_steps is None:
+        total_steps.total_steps = 0
     res = {'total_steps': total_steps.total_steps}
     return jsonify(res) #json.dumps(res, default=str, indent=4, sort_keys=True)
 
@@ -67,8 +70,7 @@ def stepcount_today_team(team_id):
     teamChallenge.teamMembersGoal = teamChallenge.goal * len(team.members)
     teamChallenge.save()
 
-    if created:
-        
+    if created:        
         res = {'total_steps': 0}
         return jsonify(res)    
     # teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == team_id) & (TeamChallenge.date == datetime.now())).get())    

@@ -48,8 +48,8 @@ export default function Settings() {
             name: newUserName,
           };
 
-          dataManager.updateUser(newUserData).then((responseStatus) => {
-            if (responseStatus === 200) {
+          dataManager.updateUser(newUserData).then((data) => {
+            if (data !== null) {
               setUserData(newUserData);
             } else {
               setError(true);
@@ -71,11 +71,11 @@ export default function Settings() {
           setError(false);
           const newUserData = {
             ...userData,
-            teamName: null,
+            team: null,
           };
 
-          dataManager.updateUser(newUserData).then((responseStatus) => {
-            if (responseStatus === 200) {
+          dataManager.updateUser(newUserData).then((data) => {
+            if (data !== null) {
               setUserData(newUserData);
             } else {
               setError(true);

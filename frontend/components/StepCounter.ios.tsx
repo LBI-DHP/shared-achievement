@@ -33,7 +33,6 @@ export default function StepCounter() {
     let mounted = true;
     dataManager.getUserStepCount(userData.id).then((userStepCount) => {
       if (mounted) {
-        console.log("userStepCount", userStepCount);
         setNewSteps(stepCountToday - userStepCount);
         setContributedSteps(userStepCount);
       }

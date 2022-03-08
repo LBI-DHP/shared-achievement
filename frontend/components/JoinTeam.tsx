@@ -54,7 +54,7 @@ export default function JoinOrCreateTeam() {
         }}
         onPress={() => {
           const updatedUserData = { ...userData, team: selectedTeam };
-          dataManager.updateUser(updatedUserData).then((data) => {
+          dataManager.updateUserData(updatedUserData).then((data) => {
             if (data) {
               setUserData(data);
             }

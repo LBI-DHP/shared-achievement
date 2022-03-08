@@ -14,19 +14,20 @@ export default function Challenge() {
 
   useEffect(() => {
     let mounted = true;
-    dataManager
-      .getRelativeTeamStepCountOfToday(userData.teamName)
-      .then((relativeStepCount) => {
-        if (userData.teamName != null && mounted)
-          setTeamRelativeStepCountToday(relativeStepCount / 100);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    setTeamRelativeStepCountToday(0.8);
+    // dataManager
+    //   .getRelativeTeamStepCountOfToday(userData.team)
+    //   .then((relativeStepCount) => {
+    //     if (userData.team != null && mounted)
+    //       setTeamRelativeStepCountToday(relativeStepCount / 100);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
     return () => {
       mounted = false;
     };
-  }, [updated, userData.teamName]);
+  }, [updated, userData.team]);
 
   const progress = teamRelativeStepCountToday;
   const { height, width } = useWindowDimensions();
@@ -60,7 +61,7 @@ export default function Challenge() {
     10 -
     (untersbergSvgViewBoxHeight - 10 - 7.5) * progress;
 
-  if (userData.teamName === null) {
+  if (userData.team === null) {
     return (
       <View
         style={{

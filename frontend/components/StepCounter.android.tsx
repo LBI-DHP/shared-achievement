@@ -39,7 +39,7 @@ export default function StepCounter() {
 
   useEffect(() => {
     let mounted = true;
-    dataManager.getUserStepCountOfToday(userData.id).then((userStepCount) => {
+    dataManager.getUserStepCount(userData.id).then((userStepCount) => {
       if (mounted) {
         setNewSteps(stepCountToday - userStepCount);
         setContributedSteps(userStepCount);
@@ -181,39 +181,10 @@ export default function StepCounter() {
           style={{ alignSelf: "stretch" }}
           mode="contained"
           onPress={() => {
-            if (newSteps === stepCountToday) {
-              dataManager
-                .pushStepCountofToday({
-                  personId: userData.id,
-                  steps: stepCountToday,
-                })
-                .then((responseStatus) => {
-                  if (responseStatus === 201 || responseStatus === 200)
-                    resetStepsAfterContribution();
-                  else setError(true);
-                });
-            } else {
-              const newDate = new Date();
-              let month = (newDate.getMonth() + 1).toString();
-              if (month.length === 1) month = "0" + month;
-              let day = newDate.getDate().toString();
-              if (day.length === 1) day = "0" + day;
-              const dateString =
-                newDate.getFullYear() + "-" + month + "-" + day;
-              console.log("dateString", dateString);
-
-              dataManager
-                .updateStepCount({
-                  day: dateString,
-                  personId: userData.id,
-                  steps: stepCountToday,
-                })
-                .then((responseStatus) => {
-                  if (responseStatus === 201 || responseStatus === 200)
-                    resetStepsAfterContribution();
-                  else setError(true);
-                });
-            }
+            dataManager.pushSteps(userData.id, newSteps).then((worked) => {
+              if (worked) resetStepsAfterContribution();
+              else setError(true);
+            });
           }}
         >
           Contribute new steps

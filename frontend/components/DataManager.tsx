@@ -145,7 +145,7 @@ export default class dataManager {
     }
   };
 
-  static updateUser = async (userData) => {
+  static updateUserData = async (userData) => {
     try {
       console.log("Auth", userData.username, userData.password);
       const response = await fetch(
@@ -184,33 +184,33 @@ export default class dataManager {
     }
   };
 
-  static getTeamStepCount = async (id) => {
-    try {
-      const response = await fetch(
-        configJSON.serverConfig.root + "/stepcounttoday/team/" + id,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        }
-      );
+  // static getTeamStepCount = async (id) => {
+  //   try {
+  //     const response = await fetch(
+  //       configJSON.serverConfig.root + "/stepcounttoday/team/" + id,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           Accept: "application/json",
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
 
-      if (response.ok) {
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.indexOf("application/json") !== -1) {
-          const responseJSON = await response.json();
-          if (responseJSON.total_steps) return responseJSON.total_steps;
-        }
-      }
-      return null;
-    } catch (error) {
-      console.log("error on get team step count data:" + error);
-    } finally {
-      console.log("done with get team step count request");
-    }
-  };
+  //     if (response.ok) {
+  //       const contentType = response.headers.get("content-type");
+  //       if (contentType && contentType.indexOf("application/json") !== -1) {
+  //         const responseJSON = await response.json();
+  //         if (responseJSON.total_steps) return responseJSON.total_steps;
+  //       }
+  //     }
+  //     return null;
+  //   } catch (error) {
+  //     console.log("error on get team step count data:" + error);
+  //   } finally {
+  //     console.log("done with get team step count request");
+  //   }
+  // };
 
   static getUserStepCount = async (id) => {
     try {
@@ -241,34 +241,6 @@ export default class dataManager {
       console.log("done with get team step count request");
     }
   };
-
-  // static getUserStepCountOfTodayNew = async (userid) => {
-  //   try {
-  //     const response = await fetch(
-  //       configJSON.serverConfig.root + "/api/user/" + userid + "/",
-  //       {
-  //         method: "GET",
-  //         headers: {
-  //           Accept: "application/json",
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
-
-  //     if (response.ok) {
-  //       const contentType = response.headers.get("content-type");
-  //       if (contentType && contentType.indexOf("application/json") !== -1) {
-  //         const responseJSON = await response.json();
-  //         return await this.mapResponseUserDataToUserData(responseJSON);
-  //       }
-  //     }
-  //     return null;
-  //   } catch (error) {
-  //     console.log("error on get user data:" + error);
-  //   } finally {
-  //     console.log("done with get user request");
-  //   }
-  // };
 
   static getUserStepCountOfToday = async (userid) => {
     try {
@@ -310,10 +282,6 @@ export default class dataManager {
           }),
         }
       );
-      console.log("push", {
-        user_id: userid,
-        steps: newSteps,
-      });
 
       if (response.ok) {
         console.log("response ok");
@@ -325,73 +293,9 @@ export default class dataManager {
       }
       return false;
     } catch (error) {
-      console.log("error on register user:" + error);
+      console.log("error on push new steps:" + error);
     } finally {
-      console.log("done with register user request");
-    }
-  };
-
-  static pushStepCountofToday = async (stepCountData) => {
-    try {
-      const response = await fetch(
-        configJSON.serverConfig.root + "/stepcount/push",
-        {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(stepCountData),
-        }
-      );
-      const responseStatus = await response.status;
-      console.log("server response: " + responseStatus);
-      return responseStatus;
-    } catch (error) {
-      console.log("error on push step count:" + error);
-    } finally {
-      console.log("done with push step count request");
-    }
-  };
-
-  static updateStepCount = async (stepCountData) => {
-    try {
-      const response = await fetch(
-        configJSON.serverConfig.root + "/stepcount/update",
-        {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(stepCountData),
-        }
-      );
-      const responseStatus = await response.status;
-      console.log("server response: " + responseStatus);
-      return responseStatus;
-    } catch (error) {
-      console.log("error on update step count:" + error);
-    } finally {
-      console.log("done with update step count request");
-    }
-  };
-
-  static getAllTeamsOld = async () => {
-    try {
-      const response = await fetch(configJSON.serverConfig.root + "/team/all", {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-      const allTeams = await response.json();
-      return allTeams;
-    } catch (error) {
-      console.log("error on get all teams" + error);
-    } finally {
-      console.log("done with get all teams request");
+      console.log("done with push new steps request");
     }
   };
 
@@ -418,75 +322,6 @@ export default class dataManager {
       return null;
     } catch (error) {
       console.log("error on get all teams:" + error);
-    } finally {
-      console.log("done with get all teams request");
-    }
-  };
-
-  static getTeamStepCountToday = async (teamName) => {
-    try {
-      const response = await fetch(
-        configJSON.serverConfig.root +
-          "/team/stepCountToday?name=" +
-          teamName.toString(),
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const stepCount = await response.json();
-      return stepCount.steps;
-    } catch (error) {
-      console.log("error on get team step count:" + error);
-    } finally {
-      console.log("done with get team step count request");
-    }
-  };
-
-  static getRelativeTeamStepCountOfToday = async (teamName) => {
-    try {
-      const response = await fetch(
-        configJSON.serverConfig.root +
-          "/team/relativeStepCountOfTeamTodayOfChallengeInPercent?name=" +
-          teamName.toString(),
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const relativeSteps = await response.json();
-      return relativeSteps.relativeSteps;
-    } catch (error) {
-      console.log("error on get team step count:" + error);
-    } finally {
-      console.log("done with get team step count request");
-    }
-  };
-
-  static getTeamMembersStepCountOfToday = async (teamName) => {
-    try {
-      const response = await fetch(
-        configJSON.serverConfig.root +
-          "/team/teamMembersStepCountOfToday?name=" +
-          teamName.toString(),
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const teamMembersStepCountOfToday = await response.json();
-      return teamMembersStepCountOfToday;
-    } catch (error) {
-      console.log("error on get all teams" + error);
     } finally {
       console.log("done with get all teams request");
     }

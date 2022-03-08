@@ -1,4 +1,5 @@
 from datetime import datetime
+import datetime as dt
 import queue
 from controller.shared_achievements_logger import logger, logging
 from models import User, Team, StepCount,UserChallenge, TeamChallenge, ChallengeStatus
@@ -33,12 +34,12 @@ def on_save_steps(sender, instance: StepCount, created):
 
     ### Evaluate personal challenge
     ### .....
-    userChallenge = (UserChallenge.select().where((UserChallenge.user == contributor) & (UserChallenge.date == datetime.now())).get())
+    userChallenge = (UserChallenge.select().where((UserChallenge.user == contributor) & (UserChallenge.date == dt.date.today())).get())
     # print(userChallenge)
     total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.user == contributor) & (StepCount.userChallenge == userChallenge)).get())
     print(total_steps.total_steps)
     userChallenge.total_steps = total_steps.total_steps 
-    userChallenge.progress = (total_steps.total_steps / userChallenge.goal) * 100
+    userChallenge.progress = (total_steps.total_steps / max(userChallenge.goal, 1) ) * 100
     if userChallenge.status != ChallengeStatus.FINISHED.name and userChallenge.progress >= 100:
         userChallenge.status = ChallengeStatus.FINISHED.name
         msg_title = "Personal Challenge achieved"
@@ -51,7 +52,7 @@ def on_save_steps(sender, instance: StepCount, created):
 
     ### Evaluate team challenge
     ### .....
-    teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == contributor.team) & (TeamChallenge.date == datetime.now())).get())
+    teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == contributor.team) & (TeamChallenge.date == dt.date.today())).get())
     # print ("--------------------S")
     # logger.log(logging.INFO, teamChallenge.members)
     # print ("--------------------E")
@@ -74,28 +75,34 @@ def on_save_steps(sender, instance: StepCount, created):
 def on_user_pre_save(sender, instance: User, created):
     if instance.team is not None:
         teams_to_update.append(instance.team)
-     
+    print(f"{teams_to_update=}")
+
+    
 @post_save(sender=User)
 def on_user_post_save(sender, instance: User, created):
     # update challenge of old team
-    for team_id in teams_to_update:
-        print(f"update team challenge for team {team_id}")
-        team = (Team.get_by_id(team_id))
+    while len(teams_to_update):
+        team = teams_to_update.pop()
+        print(f"update team challenge for team {team.id}")             
         try:
-            teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == team) & TeamChallenge.date == datetime.now()))
-            if teamChallenge is not None:
-                teamChallenge = teamChallenge.get()
-                teamChallenge.teamMembersGoal = teamChallenge.goal * len(team.members)
+            teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == team) & (TeamChallenge.date == dt.date.today())).get())            
+            print(teamChallenge.id)
+            teamChallenge.teamMembersGoal = teamChallenge.goal * len(team.members)
+            teamChallenge.save()
+            logger.log(logging.INFO, f"updated old team {teamChallenge.team} member goal: {teamChallenge.teamMembersGoal}")
         except Exception as e:
             logger.error(e)
 
     # update challenge of new team
     if instance.team is not None:
-        team = (Team.get_by_id(instance.team))
+        team = instance.team
+        print(f"num users in team {team.id}: {len(team.members)}")
         try:
-            teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == team) & TeamChallenge.date == datetime.now()))
-            if teamChallenge is not None:
-                teamChallenge = teamChallenge.get()           
+            teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == team) & (TeamChallenge.date == datetime.now())).get())
+            print(teamChallenge.id)            
+            teamChallenge = teamChallenge.get()           
             teamChallenge.teamMembersGoal = teamChallenge.goal * len(team.members)
+            teamChallenge.save()
+            logger.log(logging.INFO, f"updated new team {teamChallenge.team} member goal: {teamChallenge.teamMembersGoal}")
         except Exception as e:
             logger.error(e)

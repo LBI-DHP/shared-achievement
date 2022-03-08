@@ -82,6 +82,21 @@ def stepcount_today_team(team_id):
     return jsonify(res) # json.dumps(res, default=str, indent=4, sort_keys=True)
 
 
+@app.route('/teamstepsstoday/<team_id>', methods=['get'])
+def teamprogresstoday(team_id):
+    teamChallenge = TeamChallenge.select().where((TeamChallenge.team==team_id) & (TeamChallenge.date==datetime.now())).get()
+    res = list(StepCount.select(fn.SUM(StepCount.steps).alias("sum_steps"), StepCount.user.alias('user'), 
+    User.username.alias("username"),
+    User.targetGoal.alias("user_targerGoal"),
+    TeamChallenge.goal.alias("team_goal_per_member")
+    ).where(StepCount.teamChallenge == teamChallenge
+    ).join(User, on=(User.id == StepCount.user)
+    ).join(TeamChallenge, on=(TeamChallenge.id == StepCount.teamChallenge)).group_by(StepCount.user).dicts())
+    print(res)
+    return jsonify(res)
+    
+    # teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == team_id) & (TeamChallenge.date == datetime.now())).get())    
+    res = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.team == team_id) & (StepCount.teamChallenge == teamChallenge)).get())  
 # @app.route('/private/')
 # @auth.login_required
 # def private_view():
@@ -161,5 +176,4 @@ def push_steps():
     steps.save()
     
     return Response(json.dumps(model_to_dict(steps, recurse=False), default=str, indent=4, sort_keys=True), mimetype='application/json')    
-    
     

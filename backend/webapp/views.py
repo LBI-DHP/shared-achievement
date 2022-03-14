@@ -72,23 +72,41 @@ def stepcount_today_team(team_id):
 
     if created:        
         res = {'total_steps': 0}
-        return jsonify(res)    
-    # teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == team_id) & (TeamChallenge.date == datetime.now())).get())    
+        return jsonify(res)
     total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.team == team_id) & (StepCount.teamChallenge == teamChallenge)).get())    
     
     if total_steps.total_steps is None:
         total_steps.total_steps = 0
     res = {'total_steps': total_steps.total_steps}
-    return jsonify(res) # json.dumps(res, default=str, indent=4, sort_keys=True)
+    return jsonify(res)
 
 
-@app.route('/teamstepsstoday/<team_id>', methods=['get'])
+@app.route('/progresstoday/team/<team_id>', methods=['GET'])
+def stepcount_today_team(team_id):
+    teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=datetime.now())
+    team = Team.get_by_id(team_id) 
+    teamChallenge.teamMembersGoal = teamChallenge.goal * len(team.members)
+    teamChallenge.save()
+
+    if created:        
+        res = {'total_steps': 0}
+        return jsonify(res)
+    total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.team == team_id) & (StepCount.teamChallenge == teamChallenge)).get())    
+    
+    if total_steps.total_steps is None:
+        total_steps.total_steps = 0
+    res = {'total_steps': total_steps.total_steps}
+    return jsonify(res)
+
+
+@app.route('/teamstepstoday/<team_id>', methods=['get'])
 def teamprogresstoday(team_id):
     teamChallenge = TeamChallenge.select().where((TeamChallenge.team==team_id) & (TeamChallenge.date==datetime.now())).get()
     res = list(StepCount.select(fn.SUM(StepCount.steps).alias("sum_steps"), StepCount.user.alias('user'), 
     User.username.alias("username"),
-    User.targetGoal.alias("user_targerGoal"),
-    TeamChallenge.goal.alias("team_goal_per_member")
+    User.targetGoal.alias("targerGoal"),
+    User.expoToken.alias("expoToken"),
+    TeamChallenge.goal.alias("team_goal_per_member")    
     ).where(StepCount.teamChallenge == teamChallenge
     ).join(User, on=(User.id == StepCount.user)
     ).join(TeamChallenge, on=(TeamChallenge.id == StepCount.teamChallenge)).group_by(StepCount.user).dicts())

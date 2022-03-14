@@ -48,7 +48,7 @@ def fill_in_data():
     teamHB.save()
 
     challengeUntersberg = TeamChallenge()
-    challengeUntersberg.name = 'Untersberg'
+    challengeUntersberg.name = 'Gaisberg'
     challengeUntersberg.goal = 10000
     challengeUntersberg.team = teamLBI
     challengeUntersberg.date = datetime.date.today() - datetime.timedelta(days=1) #datetime.now() 
@@ -56,7 +56,7 @@ def fill_in_data():
 
 
     challengeGaisberg = TeamChallenge()
-    challengeGaisberg.name = 'Gaisberg'
+    challengeGaisberg.name = 'Untersberg'
     challengeGaisberg.goal = 5000
     challengeGaisberg.team = teamLBI
     challengeGaisberg.date = datetime.datetime.now()

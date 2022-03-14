@@ -13,6 +13,7 @@ export default function SendMotivationMessageDialog({
   visible,
   nameTo,
   expoToken,
+  nameFrom,
 }) {
   const [message, setMessage] = React.useState("");
 
@@ -44,7 +45,7 @@ export default function SendMotivationMessageDialog({
             onPress={() => {
               hideDialog();
               dataManager
-                .sendPushNotification(expoToken, message)
+                .sendPushNotification(expoToken, message, nameFrom)
                 .then((success) => {
                   if (success) {
                     setMessage("");

@@ -14,8 +14,16 @@ export default function TeamStatistics() {
   const [visible, setVisible] = React.useState(false);
 
   const showDialog = () => setVisible(true);
-
   const hideDialog = () => setVisible(false);
+
+  const [selectedUser, setSelectedUser] = useState({
+    expoToken: null,
+    sumSteps: null,
+    targetGoal: null,
+    teamGoalPerMember: null,
+    user: null,
+    username: null,
+  });
 
   useEffect(() => {
     let mounted = true;
@@ -40,7 +48,6 @@ export default function TeamStatistics() {
       {teamMembersAndStepCountsOfToday.map((member) => {
         return (
           <View style={{ paddingBottom: 20 }} key={member.user}>
-            {console.log("member", member)}
             <View
               style={{
                 flexDirection: "row",
@@ -53,20 +60,27 @@ export default function TeamStatistics() {
                 {member.username + " "}
                 <Text style={{ color: "#ffae00" }}>{(500 / 1000) * 100}%</Text>
               </Text>
-              <Button onPress={showDialog} mode="contained">
+              <Button
+                onPress={() => {
+                  setSelectedUser(member);
+                  showDialog();
+                }}
+                mode="contained"
+              >
                 motivate
               </Button>
-              <SendMotivationMessageDialog
-                visible={visible}
-                hideDialog={hideDialog}
-                nameTo={member.username}
-                expoToken={member.expoToken}
-              />
             </View>
             <TeamMemberBarChart goalSteps={1000} contributedSteps={500} />
           </View>
         );
       })}
+      <SendMotivationMessageDialog
+        visible={visible}
+        hideDialog={hideDialog}
+        nameTo={selectedUser.username}
+        expoToken={selectedUser.expoToken}
+        nameFrom={userData.username}
+      />
     </View>
   );
 }

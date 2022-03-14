@@ -306,7 +306,7 @@ export default class dataManager {
   static getTeamMembersAndStepCountOfToday = async (teamid) => {
     try {
       const response = await fetch(
-        configJSON.serverConfig.root + "/teamstepsstoday/" + teamid,
+        configJSON.serverConfig.root + "/teamstepstoday/" + teamid,
         {
           method: "GET",
           headers: {
@@ -359,7 +359,7 @@ export default class dataManager {
     }
   };
 
-  static sendPushNotification = async (expoToken, message) => {
+  static sendPushNotification = async (expoToken, message, from) => {
     try {
       const response = await fetch("https://exp.host/--/api/v2/push/send", {
         method: "POST",
@@ -369,7 +369,7 @@ export default class dataManager {
         },
         body: JSON.stringify({
           to: expoToken,
-          title: "Hallo",
+          title: "New message from " + from,
           body: message,
         }),
       });

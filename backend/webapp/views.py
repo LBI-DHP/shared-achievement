@@ -172,7 +172,14 @@ def push_steps():
     teamChallenge, created = TeamChallenge.get_or_create(team=user.team, date=datetime.now())
     if created:
         teamChallenge.name = 'Untersberg'
-        teamChallenge.goal = 10000
+        if user.team.progressCalculationMode == TeamProgressCalculationMode.ABSOLUTE.name:
+            teamChallenge.goal = 10000
+            teamChallenge.teamMembersGoal = teamChallenge.goal * len(user.team.members)
+        elif user.team.progressCalculationMode == TeamProgressCalculationMode.RELATIVE.name:
+            teamChallenge.goal = -1            
+            for member in user.team.members:
+                teamChallenge.teamMembersGoal += member.targetGoal
+        
         teamChallenge.team = user.team
         teamChallenge.date = datetime.now()
         teamChallenge.save()

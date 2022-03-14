@@ -2,7 +2,7 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 from controller.push_notifications import send_push_notification
-from models import User, Team, UserChallenge, TeamChallenge
+from models import User, Team, UserChallenge, TeamChallenge, ChallengeDifficulty
 
 scheduler = BackgroundScheduler(daemon=True)
 
@@ -38,7 +38,7 @@ def schedule_create_new_daily_challenges():
     for team in teams:
         teamChallenge = TeamChallenge()
         teamChallenge.name = 'Untersberg'
-        teamChallenge.goal = 10000
+        teamChallenge.goal = int(ChallengeDifficulty.NORMAL)
         teamChallenge.team = team
         teamChallenge.date = datetime.now()
         teamChallenge.save()

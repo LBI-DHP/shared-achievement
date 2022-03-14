@@ -1,5 +1,5 @@
 import datetime
-from enum import Enum, unique
+from enum import Enum, IntEnum, unique
 import playhouse.signals as signals
 from flask_peewee.auth import BaseUser  # provides password helpers..
 from peewee import *
@@ -47,12 +47,17 @@ class ChallengeStatus(Enum):
     IN_PROGRESS = 1
     FINISHED = 2
 
+class ChallengeDifficulty(IntEnum):
+    EASY = 8000,
+    NORMAL = 10000,
+    HARD = 15000,
+    EXPERT = 20000
 
 
 class Challenge(BaseModel): # Abstract class for UserChallenge and TeamChallenge
     name = CharField()
-    goal = IntegerField() # base Goal in steps
-    total_steps = IntegerField() #  number of steps contributed to this challenge
+    goal = IntegerField(default=int(ChallengeDifficulty.NORMAL)) # base Goal in steps
+    total_steps = IntegerField(default=0) #  number of steps contributed to this challenge
     progress = IntegerField(default=0) # progress in percent
     status = CharField(default=ChallengeStatus.NOT_STARTED.name)
 

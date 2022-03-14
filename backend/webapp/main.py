@@ -42,30 +42,31 @@ def fill_in_data():
     adminUsr.save()
 
     teamLBI = Team(name='LBI',)
+    teamLBI.progressCalculationMode = TeamProgressCalculationMode.RELATIVE.name
     teamLBI.save()
     
     teamHB = Team(name='Bremen',)
     teamHB.save()
 
-    challengeUntersberg = TeamChallenge()
-    challengeUntersberg.name = 'Gaisberg'
-    challengeUntersberg.goal = 10000
-    challengeUntersberg.team = teamLBI
-    challengeUntersberg.date = datetime.date.today() - datetime.timedelta(days=1) #datetime.now() 
-    challengeUntersberg.save()
-
-
     challengeGaisberg = TeamChallenge()
-    challengeGaisberg.name = 'Untersberg'
-    challengeGaisberg.goal = 5000
+    challengeGaisberg.name = 'Gaisberg'
+    challengeGaisberg.goal = int(ChallengeDifficulty.NORMAL)
     challengeGaisberg.team = teamLBI
-    challengeGaisberg.date = datetime.datetime.now()
+    challengeGaisberg.date = datetime.date.today() - datetime.timedelta(days=1) #datetime.now() 
     challengeGaisberg.save()
+
+
+    challengeUntersberg = TeamChallenge()
+    challengeUntersberg.name = 'Untersberg'    
+    challengeUntersberg.goal = int(ChallengeDifficulty.NORMAL)
+    challengeUntersberg.team = teamLBI
+    challengeUntersberg.date = datetime.datetime.now()
+    challengeUntersberg.save()
     
 
     challengeKlockerin = TeamChallenge()
     challengeKlockerin.name = 'Klockerin'
-    challengeKlockerin.goal = 5000
+    challengeKlockerin.goal = int(ChallengeDifficulty.EASY)
     challengeKlockerin.team = teamHB
     challengeKlockerin.date = datetime.datetime.now()
     challengeKlockerin.save()
@@ -75,43 +76,38 @@ def fill_in_data():
     # tcr.team = teamLBI    
     # tcr.save()
 
-    users = [
-        ('jan', 'NO_TOKEN'), 
-        ('eva', 'ExponentPushToken[Iy_BAtIcQN07ZSqppKdtmw]'), 
-        ('daniela', 'NO_TOKEN'), 
-        ('dimi', "ExponentPushToken[N7zzLwDwLjk6jZOrRmVbzW]"), 
-        ('testy', 'NO_TOKEN')
+    user_data = [
+        {'username': 'jan', 'email': 'jan@shared-achievement.com', 'expoToken': 'NO_TOKEN', 'team': teamLBI, 'targetGoal': int(ChallengeDifficulty.EASY)},
+        {'username': 'eva', 'email': 'eva@shared-achievement.com', 'expoToken': 'ExponentPushToken[Iy_BAtIcQN07ZSqppKdtmw]', 'team': teamLBI, 'targetGoal': int(ChallengeDifficulty.HARD)},
+        {'username': 'daniela', 'email': 'daniela@shared-achievement.com', 'expoToken': 'NO_TOKEN', 'team': teamLBI, 'targetGoal': int(ChallengeDifficulty.NORMAL)},
+        {'username': 'dimi', 'email': 'dimi@shared-achievement.com', 'expoToken': 'ExponentPushToken[N7zzLwDwLjk6jZOrRmVbzW]', 'team': teamLBI, 'targetGoal': int(ChallengeDifficulty.NORMAL)},
     ]
+
+    User.insert_many(user_data).execute()
+
+    users = User.select().where(~User.team.is_null()).execute()
+
     for u in users:
-        usr = User()
-        usr.username = u[0]
-        usr.email = f"{u[0]}@shared-achievement.com"
-        usr.set_password(u[0])
-        usr.expoToken = u[1]
-        usr.team = teamLBI
-        usr.save()
         
         userChallenge = UserChallenge()
-        userChallenge.name = f"{usr.username}_daily_challenge"
+        userChallenge.name = f"{u.username}_daily_challenge"
         userChallenge.date = datetime.datetime.now()
-        userChallenge.goal = 1000
+        userChallenge.goal = u.targetGoal
         userChallenge.progress = 0
-        userChallenge.user = usr
+        userChallenge.user = u
         userChallenge.save()
 
         for i in range(0,1):
             steps = StepCount()
-            steps.user = usr
-            steps.team = usr.team
-            steps.steps = 200
+            steps.user = u
+            steps.team = u.team
+            steps.steps = u.targetGoal * 0.1 #int(ChallengeDifficulty.NORMAL) * 0.5
             steps.teamChallenge = challengeUntersberg
             steps.userChallenge = userChallenge
             steps.timestamp = datetime.datetime.now()
             steps.save()
 
-    usr = User.get_by_id(5)
-    usr.team = teamHB
-    usr.save()
+
 
 
 

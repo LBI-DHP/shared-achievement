@@ -1,8 +1,10 @@
 """
 views imports app, auth, and models, but none of these import views
 """
+from asyncio.log import logger
 from crypt import methods
 import imp
+import logging
 from unicodedata import name
 from flask import Response, jsonify, render_template, request  # ...etc , redirect, request, url_for
 from playhouse.shortcuts import model_to_dict, dict_to_model
@@ -14,6 +16,7 @@ from achievements import *
 import json
 from datetime import datetime
 from controller.push_notifications import send_push_notification
+from controller.challenge_controller import updateTeamChallengeProgress, updateTeamMembersGoal
 
 
 
@@ -65,10 +68,8 @@ def stepcount_today_user(user_id):
 
 @app.route('/stepcounttoday/team/<team_id>', methods=['GET'])
 def stepcount_today_team(team_id):
-    teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=datetime.now())
-    team = Team.get_by_id(team_id) 
-    teamChallenge.teamMembersGoal = teamChallenge.goal * len(team.members)
-    teamChallenge.save()
+    teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=datetime.now())    
+    updateTeamMembersGoal(teamChallenge=teamChallenge)
 
     if created:        
         res = {'totalSteps': 0}
@@ -84,9 +85,7 @@ def stepcount_today_team(team_id):
 @app.route('/progresstoday/team/<team_id>', methods=['GET'])
 def progresstoday_team(team_id):
     teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=datetime.now())
-    team = Team.get_by_id(team_id) 
-    teamChallenge.teamMembersGoal = teamChallenge.goal * len(team.members)
-    teamChallenge.save()
+    updateTeamMembersGoal(teamChallenge=teamChallenge)
 
     if created:        
         res = {
@@ -100,7 +99,7 @@ def progresstoday_team(team_id):
     totalSteps = (StepCount.select(fn.SUM(StepCount.steps).alias('totalSteps')).where((StepCount.team == team_id) & (StepCount.teamChallenge == teamChallenge)).get())    
    
 
-    if totalSteps.total_steps is None:
+    if totalSteps is None or totalSteps.total_steps is None:
         totalSteps.total_steps = 0
     res = {
         'totalSteps': totalSteps.totalSteps,
@@ -172,16 +171,12 @@ def push_steps():
     teamChallenge, created = TeamChallenge.get_or_create(team=user.team, date=datetime.now())
     if created:
         teamChallenge.name = 'Untersberg'
-        if user.team.progressCalculationMode == TeamProgressCalculationMode.ABSOLUTE.name:
-            teamChallenge.goal = 10000
-            teamChallenge.teamMembersGoal = teamChallenge.goal * len(user.team.members)
-        elif user.team.progressCalculationMode == TeamProgressCalculationMode.RELATIVE.name:
-            teamChallenge.goal = -1            
-            for member in user.team.members:
-                teamChallenge.teamMembersGoal += member.targetGoal
-        
         teamChallenge.team = user.team
         teamChallenge.date = datetime.now()
+        teamChallenge.save()
+        updateTeamMembersGoal(teamChallenge=teamChallenge)
+        
+        
         teamChallenge.save()
 
 

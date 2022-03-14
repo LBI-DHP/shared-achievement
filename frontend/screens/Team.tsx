@@ -9,7 +9,7 @@ import dataManager from "../components/DataManager";
 
 export default function Team() {
   const [isUserInATeam, setIsUserInATeam] = useState(false);
-  const { userData, setUserData } = useContext(UserDataContext);
+  const { userData, setUserData, setMode } = useContext(UserDataContext);
   const [error, setError] = useState(false);
   const [teamName, setTeamName] = useState("");
 
@@ -19,8 +19,11 @@ export default function Team() {
 
   useEffect(() => {
     if (isUserInATeam)
-      dataManager.getTeamName(userData.team).then((data) => {
-        if (data !== null) setTeamName(data);
+      dataManager.getTeamData(userData.team).then((data) => {
+        if (data !== null) {
+          setTeamName(data.name);
+          setMode(data.progressCalculationMode);
+        }
       });
   }, [isUserInATeam]);
 
@@ -42,6 +45,7 @@ export default function Team() {
               dataManager.updateUserData(newUserData).then((data) => {
                 if (data !== null) {
                   setUserData(newUserData);
+                  setMode(null);
                 } else {
                   setError(true);
                 }

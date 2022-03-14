@@ -15,6 +15,10 @@ export const UserDataContext = React.createContext({
   setUserData: ({}) => {},
   updated: false,
   setUpdated: ({}) => {},
+  mode: null,
+  setMode: ({}) => {},
+  navigationIndex: null,
+  setNavigationIndex: ({}) => {},
 });
 
 export const UserDataProvider = (props) => {
@@ -27,6 +31,8 @@ export const UserDataProvider = (props) => {
   });
 
   const [updated, setUpdated] = useState(false);
+  const [mode, setMode] = useState(null);
+  const [navigationIndex, setNavigationIndex] = useState(null);
   const [notification, setNotification] = useState(null);
   const notificationListener = useRef(null);
   const responseListener = useRef(null);
@@ -100,7 +106,16 @@ export const UserDataProvider = (props) => {
 
   return (
     <UserDataContext.Provider
-      value={{ userData, setUserData, updated, setUpdated }}
+      value={{
+        userData,
+        setUserData,
+        updated,
+        setUpdated,
+        mode,
+        setMode,
+        navigationIndex,
+        setNavigationIndex,
+      }}
     >
       {props.children}
     </UserDataContext.Provider>

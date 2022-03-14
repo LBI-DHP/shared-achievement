@@ -28,7 +28,7 @@ def schedule_create_new_daily_challenges():
         userChallenge = UserChallenge()
         userChallenge.name = f"{user.username}_daily_challenge"
         userChallenge.date = datetime.now()
-        userChallenge.goal = 1000
+        userChallenge.goal = user.targetGoal
         userChallenge.progress = 0
         userChallenge.user = user
         userChallenge.save()

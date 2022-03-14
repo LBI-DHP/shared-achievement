@@ -22,6 +22,7 @@ class TeamProgressCalculationMode(Enum):
 
 class Team(BaseModel):
     name = CharField()
+    progressCalculationMode = CharField(default=TeamProgressCalculationMode.ABSOLUTE.name)
 
 class User(BaseModel, BaseUser):    
     username = CharField(unique=True)
@@ -36,7 +37,7 @@ class User(BaseModel, BaseUser):
     age = IntegerField()
     weight = IntegerField()
     currentActivityLevel = IntegerField()
-    targetGoal = IntegerField()
+    targetGoal = IntegerField(default=10000)
     def __unicode__(self):
         return self.username
 

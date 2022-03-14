@@ -53,13 +53,13 @@ def stepcount_today_user(user_id):
     userChallenge, created = UserChallenge.get_or_create(user=user_id, date=datetime.now())
     if created:
         userChallenge.save()
-        res = {'total_steps': 0}
+        res = {'totalSteps': 0}
         return jsonify(res) 
     # userChallenge = (UserChallenge.select().where((UserChallenge.user == user_id) & (UserChallenge.date == datetime.now())).get())    
-    total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.user == user_id) & (StepCount.userChallenge == userChallenge)).get())    
-    if total_steps.total_steps is None:
-        total_steps.total_steps = 0
-    res = {'total_steps': total_steps.total_steps}
+    totalSteps = (StepCount.select(fn.SUM(StepCount.steps).alias('totalSteps')).where((StepCount.user == user_id) & (StepCount.userChallenge == userChallenge)).get())    
+    if totalSteps.totalSteps is None:
+        totalSteps.totalSteps = 0
+    res = {'totalSteps': totalSteps.totalSteps}
     return jsonify(res) #json.dumps(res, default=str, indent=4, sort_keys=True)
 
 
@@ -71,13 +71,13 @@ def stepcount_today_team(team_id):
     teamChallenge.save()
 
     if created:        
-        res = {'total_steps': 0}
+        res = {'totalSteps': 0}
         return jsonify(res)
-    total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.team == team_id) & (StepCount.teamChallenge == teamChallenge)).get())    
+    totalSteps = (StepCount.select(fn.SUM(StepCount.steps).alias('totalSteps')).where((StepCount.team == team_id) & (StepCount.teamChallenge == teamChallenge)).get())    
     
-    if total_steps.total_steps is None:
-        total_steps.total_steps = 0
-    res = {'total_steps': total_steps.total_steps}
+    if totalSteps.totalSteps is None:
+        totalSteps.totalSteps = 0
+    res = {'total_steps': totalSteps.totalSteps}
     return jsonify(res)
 
 
@@ -89,24 +89,34 @@ def progresstoday_team(team_id):
     teamChallenge.save()
 
     if created:        
-        res = {'total_steps': 0}
+        res = {
+            'totalSteps': 0,
+            'totalProgress': 0
+            }
         return jsonify(res)
-    total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.team == team_id) & (StepCount.teamChallenge == teamChallenge)).get())    
+
     
-    if total_steps.total_steps is None:
-        total_steps.total_steps = 0
-    res = {'total_steps': total_steps.total_steps}
+
+    totalSteps = (StepCount.select(fn.SUM(StepCount.steps).alias('totalSteps')).where((StepCount.team == team_id) & (StepCount.teamChallenge == teamChallenge)).get())    
+   
+
+    if totalSteps.total_steps is None:
+        totalSteps.total_steps = 0
+    res = {
+        'totalSteps': totalSteps.totalSteps,
+        'totalProgress': teamChallenge.progress
+        }
     return jsonify(res)
 
 
 @app.route('/teamstepstoday/<team_id>', methods=['get'])
 def teamprogresstoday(team_id):
     teamChallenge = TeamChallenge.select().where((TeamChallenge.team==team_id) & (TeamChallenge.date==datetime.now())).get()
-    res = list(StepCount.select(fn.SUM(StepCount.steps).alias("sum_steps"), StepCount.user.alias('user'), 
+    res = list(StepCount.select(fn.SUM(StepCount.steps).alias("sumSteps"), StepCount.user.alias('user'), 
     User.username.alias("username"),
-    User.targetGoal.alias("targerGoal"),
+    User.targetGoal.alias("targetGoal"),
     User.expoToken.alias("expoToken"),
-    TeamChallenge.goal.alias("team_goal_per_member")    
+    TeamChallenge.goal.alias("teamGoalPerMember")    
     ).where(StepCount.teamChallenge == teamChallenge
     ).join(User, on=(User.id == StepCount.user)
     ).join(TeamChallenge, on=(TeamChallenge.id == StepCount.teamChallenge)).group_by(StepCount.user).dicts())
@@ -150,12 +160,21 @@ def push_steps():
 
     userChallenge, created = UserChallenge.get_or_create(user=user.id, date=datetime.now())
     if created:
+        userChallenge.name = f"{user.username}_daily_challenge"
+        userChallenge.date = datetime.now()
+        userChallenge.goal = user.targetGoal
+        userChallenge.progress = 0
+        userChallenge.user = user
         userChallenge.save()
 
     
         
     teamChallenge, created = TeamChallenge.get_or_create(team=user.team, date=datetime.now())
     if created:
+        teamChallenge.name = 'Untersberg'
+        teamChallenge.goal = 10000
+        teamChallenge.team = user.team
+        teamChallenge.date = datetime.now()
         teamChallenge.save()
 
 

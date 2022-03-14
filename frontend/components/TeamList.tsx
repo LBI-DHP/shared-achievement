@@ -9,7 +9,7 @@ import SendMotivationMessageDialog from "./SendMotivationMessageDialog";
 export default function TeamStatistics() {
   const { userData, updated } = useContext(UserDataContext);
   const [teamMembersAndStepCountsOfToday, setTeamMembersAndStepCountsOfToday] =
-    useState({ challenge: {}, name: "", persons: [] });
+    useState([]);
 
   const [visible, setVisible] = React.useState(false);
 
@@ -19,20 +19,16 @@ export default function TeamStatistics() {
 
   useEffect(() => {
     let mounted = true;
-    getTeamMembersStepCountOfToday(mounted);
+    dataManager
+      .getTeamMembersAndStepCountOfToday(userData.team)
+      .then((teamMembersStepCountOfToday) => {
+        if (mounted && teamMembersStepCountOfToday !== null)
+          setTeamMembersAndStepCountsOfToday(teamMembersStepCountOfToday);
+      });
     return () => {
       mounted = false;
     };
   }, [updated]);
-
-  const getTeamMembersStepCountOfToday = (mounted) => {
-    dataManager
-      .getTeamMembersStepCountOfToday(userData.teamName)
-      .then((teamMembersStepCountOfToday) => {
-        if (mounted)
-          setTeamMembersAndStepCountsOfToday(teamMembersStepCountOfToday);
-      });
-  };
 
   return (
     <View
@@ -40,9 +36,11 @@ export default function TeamStatistics() {
         marginBottom: 30,
       }}
     >
-      {teamMembersAndStepCountsOfToday.persons.map((person) => {
+      {console.log(teamMembersAndStepCountsOfToday)}
+      {teamMembersAndStepCountsOfToday.map((member) => {
         return (
-          <View style={{ paddingBottom: 20 }} key={person.name}>
+          <View style={{ paddingBottom: 20 }} key={member.user}>
+            {console.log("member", member)}
             <View
               style={{
                 flexDirection: "row",
@@ -52,20 +50,23 @@ export default function TeamStatistics() {
               }}
             >
               <Text style={{ fontSize: 15, fontWeight: "bold" }}>
-                {person.name}
-                {console.log(person)}
+                {member.username + " "}
                 <Text style={{ color: "#ffae00" }}>{(500 / 1000) * 100}%</Text>
               </Text>
               <Button onPress={showDialog} mode="contained">
                 motivate
               </Button>
-              {/* <Text>{person.expoToken}</Text> */}
+              <SendMotivationMessageDialog
+                visible={visible}
+                hideDialog={hideDialog}
+                nameTo={member.username}
+                expoToken={member.expoToken}
+              />
             </View>
             <TeamMemberBarChart goalSteps={1000} contributedSteps={500} />
           </View>
         );
       })}
-      <SendMotivationMessageDialog visible={visible} hideDialog={hideDialog} />
     </View>
   );
 }

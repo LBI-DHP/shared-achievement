@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import uuid from "react-native-uuid";
 import configJSON from "../config.json";
+import base64 from "react-native-base64";
 
 export default class dataManager {
   /*
@@ -83,41 +84,10 @@ export default class dataManager {
     return password.toString();
   };
 
-  static getUserDataOld = async (userid) => {
-    fetch(configJSON.serverConfig.root + "/api/user/" + userid, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
-      .then(function (response) {
-        if (!response.ok) {
-          throw new Error("response not ok");
-        }
-        return response.json();
-      })
-      .then((result) => {
-        if (result.stat === "fail") {
-          throw new Error(result.message);
-        }
-        // Everything should be ok, process the result here
-        return result;
-        // this.mapResponseUserDataToUserData(result).then((d) => {
-        //   return d;
-        // });
-      })
-      .catch(function (e) {
-        console.log(e);
-        return null;
-      });
-    // .finally(() => console.log("done with get user data request"));
-  };
-
   static getUserData = async (userid) => {
     try {
       const response = await fetch(
-        configJSON.serverConfig.root + "/api/user/" + userid,
+        configJSON.serverConfig.root + "/api/user/" + userid + "/",
         {
           method: "GET",
           headers: {
@@ -143,7 +113,6 @@ export default class dataManager {
   };
 
   static registerUser = async (userData) => {
-    console.log("userData for register", userData);
     try {
       const response = await fetch(configJSON.serverConfig.root + "/register", {
         method: "POST",
@@ -158,16 +127,15 @@ export default class dataManager {
         console.log("response ok");
         const contentType = await response.headers.get("content-type");
         console.log(contentType);
-        // if (contentType && contentType.indexOf("application/json") !== -1) {
-        // console.log("contentType ok");
-        const responseJSON = await response.json();
-        console.log("responseJSON", responseJSON);
-        if (responseJSON && responseJSON.id) {
-          this.setUserId(responseJSON.id);
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          const responseJSON = await response.json();
+          console.log("responseJSON", responseJSON);
+          if (responseJSON && responseJSON.id) {
+            this.setUserId(responseJSON.id);
+          }
+          console.log("responseJSON", responseJSON);
+          return await this.mapResponseUserDataToUserData(responseJSON);
         }
-        console.log("responseJSON", responseJSON);
-        return await this.mapResponseUserDataToUserData(responseJSON);
-        // }
       }
       return null;
     } catch (error) {
@@ -177,225 +145,249 @@ export default class dataManager {
     }
   };
 
-  static addUser = async (userData) => {
+  static updateUserData = async (userData) => {
+    try {
+      console.log("Auth", userData.username, userData.password);
+      const response = await fetch(
+        configJSON.serverConfig.root + "/api/user/" + userData.id + "/",
+        {
+          method: "PUT",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Basic " + base64.encode("admin" + ":" + "admin"),
+            // base64.encode(userData.username + ":" + userData.password),
+          },
+          body: JSON.stringify(userData),
+        }
+      );
+
+      if (response.ok) {
+        console.log("response ok");
+        const contentType = await response.headers.get("content-type");
+        console.log(contentType);
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          const responseJSON = await response.json();
+          console.log("responseJSON", responseJSON);
+          if (responseJSON && responseJSON.id) {
+            this.setUserId(responseJSON.id);
+          }
+          console.log("responseJSON", responseJSON);
+          return await this.mapResponseUserDataToUserData(responseJSON);
+        }
+      }
+      return null;
+    } catch (error) {
+      console.log("error on update user:" + error);
+    } finally {
+      console.log("done with update user request");
+    }
+  };
+
+  // static getTeamStepCount = async (id) => {
+  //   try {
+  //     const response = await fetch(
+  //       configJSON.serverConfig.root + "/stepcounttoday/team/" + id,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           Accept: "application/json",
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+
+  //     if (response.ok) {
+  //       const contentType = response.headers.get("content-type");
+  //       if (contentType && contentType.indexOf("application/json") !== -1) {
+  //         const responseJSON = await response.json();
+  //         if (responseJSON.total_steps) return responseJSON.total_steps;
+  //       }
+  //     }
+  //     return null;
+  //   } catch (error) {
+  //     console.log("error on get team step count data:" + error);
+  //   } finally {
+  //     console.log("done with get team step count request");
+  //   }
+  // };
+
+  static getUserStepCount = async (id) => {
     try {
       const response = await fetch(
-        configJSON.serverConfig.root + "/person/add",
+        configJSON.serverConfig.root + "/stepcounttoday/user/" + id,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          const responseJSON = await response.json();
+          if (responseJSON.total_steps !== null) {
+            return responseJSON.total_steps;
+          }
+        }
+      }
+      return null;
+    } catch (error) {
+      console.log("error on get user step count data:" + error);
+    } finally {
+      console.log("done with get team step count request");
+    }
+  };
+
+  static pushSteps = async (userid, newSteps) => {
+    try {
+      const response = await fetch(
+        configJSON.serverConfig.root + "/push_steps",
         {
           method: "POST",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(userData),
+          body: JSON.stringify({
+            user_id: userid,
+            steps: newSteps,
+          }),
         }
       );
-      const responseStatus = await response.status;
-      console.log("server response: " + responseStatus);
-      return responseStatus;
-    } catch (error) {
-      console.log("error on add user:" + error);
-    } finally {
-      console.log("done with add user request");
-    }
-  };
 
-  static updateUser = async (userData) => {
-    try {
-      const response = await fetch(
-        configJSON.serverConfig.root + "/person/update",
-        {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(userData),
+      if (response.ok) {
+        console.log("response ok");
+        const contentType = await response.headers.get("content-type");
+        console.log(contentType);
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          return true;
         }
-      );
-      const responseStatus = await response.status;
-      console.log("server response: " + responseStatus);
-      return responseStatus;
+      }
+      return false;
     } catch (error) {
-      console.log("error on update user data:" + error);
+      console.log("error on push new steps:" + error);
     } finally {
-      console.log("done with update user data request");
-    }
-  };
-
-  static getUserStepCountOfToday = async (userid) => {
-    try {
-      const response = await fetch(
-        configJSON.serverConfig.root +
-          "/stepcount/findByPersonIdForToday?personId=" +
-          userid,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const userStepCount = await response.json();
-      console.log(userStepCount);
-      return userStepCount.steps;
-    } catch (error) {
-      console.log("error on get user step count:" + error);
-    } finally {
-      console.log("done with get user step count request");
-    }
-  };
-
-  static pushStepCountofToday = async (stepCountData) => {
-    try {
-      const response = await fetch(
-        configJSON.serverConfig.root + "/stepcount/push",
-        {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(stepCountData),
-        }
-      );
-      const responseStatus = await response.status;
-      console.log("server response: " + responseStatus);
-      return responseStatus;
-    } catch (error) {
-      console.log("error on push step count:" + error);
-    } finally {
-      console.log("done with push step count request");
-    }
-  };
-
-  static updateStepCount = async (stepCountData) => {
-    try {
-      const response = await fetch(
-        configJSON.serverConfig.root + "/stepcount/update",
-        {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(stepCountData),
-        }
-      );
-      const responseStatus = await response.status;
-      console.log("server response: " + responseStatus);
-      return responseStatus;
-    } catch (error) {
-      console.log("error on update step count:" + error);
-    } finally {
-      console.log("done with update step count request");
+      console.log("done with push new steps request");
     }
   };
 
   static getAllTeams = async () => {
     try {
-      const response = await fetch(configJSON.serverConfig.root + "/team/all", {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-      const allTeams = await response.json();
-      return allTeams;
+      const response = await fetch(
+        configJSON.serverConfig.root + "/api/team/",
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          const responseJSON = await response.json();
+          if (responseJSON.objects) return responseJSON.objects;
+        }
+      }
+      return null;
     } catch (error) {
-      console.log("error on get all teams" + error);
+      console.log("error on get all teams:" + error);
     } finally {
       console.log("done with get all teams request");
     }
   };
 
-  static addTeam = async (teamData) => {
+  static getTeamMembersAndStepCountOfToday = async (teamid) => {
     try {
-      const response = await fetch(configJSON.serverConfig.root + "/team/add", {
+      const response = await fetch(
+        configJSON.serverConfig.root + "/teamstepsstoday/" + teamid,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          const responseJSON = await response.json();
+          return responseJSON;
+        }
+      }
+      return null;
+    } catch (error) {
+      console.log("error on get team members and steps:" + error);
+    } finally {
+      console.log("done with get team members and steps request");
+    }
+  };
+
+  static getTeamName = async (teamid) => {
+    try {
+      const response = await fetch(
+        configJSON.serverConfig.root + "/api/team/" + teamid,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          const responseJSON = await response.json();
+          return responseJSON.name;
+        }
+      }
+      return null;
+    } catch (error) {
+      console.log("error on get team name:" + error);
+    } finally {
+      console.log("done with get team name request");
+    }
+  };
+
+  static sendPushNotification = async (expoToken, message) => {
+    try {
+      const response = await fetch("https://exp.host/--/api/v2/push/send", {
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(teamData),
+        body: JSON.stringify({
+          to: expoToken,
+          title: "Hallo",
+          body: message,
+        }),
       });
-      const responseStatus = await response.status;
-      console.log("server response: " + responseStatus);
-      return responseStatus;
-    } catch (error) {
-      console.log("error on add team:" + error);
-    } finally {
-      console.log("done with add team request");
-    }
-  };
 
-  static getTeamStepCountToday = async (teamName) => {
-    try {
-      const response = await fetch(
-        configJSON.serverConfig.root +
-          "/team/stepCountToday?name=" +
-          teamName.toString(),
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
+      if (response.ok) {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          const responseJSON = await response.json();
+          if (responseJSON.data.status === "ok") {
+            return true;
+          }
         }
-      );
-      const stepCount = await response.json();
-      return stepCount.steps;
+      }
+      return false;
     } catch (error) {
-      console.log("error on get team step count:" + error);
+      console.log("error on send push message:" + error);
     } finally {
-      console.log("done with get team step count request");
-    }
-  };
-
-  static getRelativeTeamStepCountOfToday = async (teamName) => {
-    try {
-      const response = await fetch(
-        configJSON.serverConfig.root +
-          "/team/relativeStepCountOfTeamTodayOfChallengeInPercent?name=" +
-          teamName.toString(),
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const relativeSteps = await response.json();
-      return relativeSteps.relativeSteps;
-    } catch (error) {
-      console.log("error on get team step count:" + error);
-    } finally {
-      console.log("done with get team step count request");
-    }
-  };
-  static getTeamMembersStepCountOfToday = async (teamName) => {
-    try {
-      const response = await fetch(
-        configJSON.serverConfig.root +
-          "/team/teamMembersStepCountOfToday?name=" +
-          teamName.toString(),
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const teamMembersStepCountOfToday = await response.json();
-      return teamMembersStepCountOfToday;
-    } catch (error) {
-      console.log("error on get all teams" + error);
-    } finally {
-      console.log("done with get all teams request");
+      console.log("done with send push message request");
     }
   };
 }

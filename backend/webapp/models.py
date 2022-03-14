@@ -16,6 +16,9 @@ class BaseModel(signals.Model):
      class Meta:
         database = db.database
 
+class TeamProgressCalculationMode(Enum):
+    ABSOLUTE = 0, # Use the static goal from challenge multiplied by number of team members
+    RELATIVE = 1  # Use personal goals for team challenge progress
 
 class Team(BaseModel):
     name = CharField()

@@ -82,7 +82,7 @@ def stepcount_today_team(team_id):
 
 
 @app.route('/progresstoday/team/<team_id>', methods=['GET'])
-def stepcount_today_team(team_id):
+def progresstoday_team(team_id):
     teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=datetime.now())
     team = Team.get_by_id(team_id) 
     teamChallenge.teamMembersGoal = teamChallenge.goal * len(team.members)

@@ -10,15 +10,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function Settings() {
   const { userData, setUserData, updated, setUpdated } =
     useContext(UserDataContext);
-  const [isUserInATeam, setIsUserInATeam] = useState(false);
   const [error, setError] = useState(false);
   const [isUserNameChanged, setIsUserNameChanged] = useState(false);
   const [newUserName, setNewUserName] = useState(userData.username);
 
   useEffect(() => {
-    if (userData.team === null) setIsUserInATeam(false);
-    else setIsUserInATeam(true);
-
     if (newUserName === userData.username) setIsUserNameChanged(false);
     else setIsUserNameChanged(true);
   }, [userData]);
@@ -45,10 +41,13 @@ export default function Settings() {
           setError(false);
           const newUserData = {
             ...userData,
-            name: newUserName,
+            username: newUserName,
           };
 
-          dataManager.updateUser(newUserData).then((data) => {
+          console.log("newUserData", newUserData);
+          console.log("userData", userData);
+
+          dataManager.updateUserData(newUserData).then((data) => {
             if (data !== null) {
               setUserData(newUserData);
             } else {
@@ -58,32 +57,6 @@ export default function Settings() {
         }}
       >
         Update user name
-      </Button>
-      {isUserInATeam ? (
-        <Text style={{ padding: 10 }}>You are in Team {userData.team}</Text>
-      ) : (
-        <Text style={{ padding: 10 }}>Currently you're not part of a team</Text>
-      )}
-      <Button
-        disabled={!isUserInATeam}
-        mode="contained"
-        onPress={() => {
-          setError(false);
-          const newUserData = {
-            ...userData,
-            team: null,
-          };
-
-          dataManager.updateUser(newUserData).then((data) => {
-            if (data !== null) {
-              setUserData(newUserData);
-            } else {
-              setError(true);
-            }
-          });
-        }}
-      >
-        Leave Team
       </Button>
       <Button
         style={{ marginTop: 10 }}

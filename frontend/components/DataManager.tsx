@@ -242,30 +242,6 @@ export default class dataManager {
     }
   };
 
-  static getUserStepCountOfToday = async (userid) => {
-    try {
-      const response = await fetch(
-        configJSON.serverConfig.root +
-          "/stepcount/findByPersonIdForToday?personId=" +
-          userid,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const userStepCount = await response.json();
-      console.log(userStepCount);
-      return userStepCount.steps;
-    } catch (error) {
-      console.log("error on get user step count:" + error);
-    } finally {
-      console.log("done with get user step count request");
-    }
-  };
-
   static pushSteps = async (userid, newSteps) => {
     try {
       const response = await fetch(
@@ -352,6 +328,66 @@ export default class dataManager {
       console.log("error on get team members and steps:" + error);
     } finally {
       console.log("done with get team members and steps request");
+    }
+  };
+
+  static getTeamName = async (teamid) => {
+    try {
+      const response = await fetch(
+        configJSON.serverConfig.root + "/api/team/" + teamid,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          const responseJSON = await response.json();
+          return responseJSON.name;
+        }
+      }
+      return null;
+    } catch (error) {
+      console.log("error on get team name:" + error);
+    } finally {
+      console.log("done with get team name request");
+    }
+  };
+
+  static sendPushNotification = async (expoToken, message) => {
+    try {
+      const response = await fetch("https://exp.host/--/api/v2/push/send", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          to: expoToken,
+          title: "Hallo",
+          body: message,
+        }),
+      });
+
+      if (response.ok) {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          const responseJSON = await response.json();
+          if (responseJSON.data.status === "ok") {
+            return true;
+          }
+        }
+      }
+      return false;
+    } catch (error) {
+      console.log("error on send push message:" + error);
+    } finally {
+      console.log("done with send push message request");
     }
   };
 }

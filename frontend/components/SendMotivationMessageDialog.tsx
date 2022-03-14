@@ -1,5 +1,4 @@
 import * as React from "react";
-import { View } from "react-native";
 import {
   Button,
   Paragraph,
@@ -7,23 +6,55 @@ import {
   Portal,
   TextInput,
 } from "react-native-paper";
+import dataManager from "./DataManager";
 
-export default function SendMotivationMessageDialog({ hideDialog, visible }) {
+export default function SendMotivationMessageDialog({
+  hideDialog,
+  visible,
+  nameTo,
+  expoToken,
+}) {
+  const [message, setMessage] = React.useState("");
+
   return (
     <Portal>
       <Dialog visible={visible} onDismiss={hideDialog}>
-        {/* <Dialog.Title>Alert</Dialog.Title>  */}
         <Dialog.Content>
-          {/* <TextInput
-            multiline={true}
-            numberOfLines={4}
-            onChangeText={(val) => console.log(val)}
-            value={" "}
-          /> */}
-          <Paragraph>This is simple dialog</Paragraph>
+          <Paragraph style={{ paddingBottom: 10 }}>
+            Send {nameTo} a motivating message:
+          </Paragraph>
+          <TextInput
+            autoComplete={false}
+            value={message}
+            multiline={false}
+            placeholder="You can do it!"
+            onChangeText={(text) => setMessage(text)}
+          />
         </Dialog.Content>
         <Dialog.Actions>
-          <Button onPress={hideDialog}>Done</Button>
+          <Button
+            onPress={() => {
+              hideDialog();
+              setMessage("");
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onPress={() => {
+              hideDialog();
+              dataManager
+                .sendPushNotification(expoToken, message)
+                .then((success) => {
+                  if (success) {
+                    setMessage("");
+                    hideDialog();
+                  }
+                });
+            }}
+          >
+            Send
+          </Button>
         </Dialog.Actions>
       </Dialog>
     </Portal>

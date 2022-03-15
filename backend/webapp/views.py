@@ -86,7 +86,7 @@ def stepcount_today_team(team_id):
 def progresstoday_team(team_id):
     teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=datetime.now())
     updateTeamMembersGoal(teamChallenge=teamChallenge)
-
+    updateTeamChallengeProgress(teamChallenge=teamChallenge)
     if created:        
         res = {
             'totalSteps': 0,
@@ -110,20 +110,42 @@ def progresstoday_team(team_id):
 
 @app.route('/teamstepstoday/<team_id>', methods=['get'])
 def teamprogresstoday(team_id):
-    teamChallenge = TeamChallenge.select().where((TeamChallenge.team==team_id) & (TeamChallenge.date==datetime.now())).get()
-    res = list(StepCount.select(fn.SUM(StepCount.steps).alias("sumSteps"), StepCount.user.alias('user'), 
-    User.username.alias("username"),
-    User.targetGoal.alias("targetGoal"),
-    User.expoToken.alias("expoToken"),
-    TeamChallenge.goal.alias("teamGoalPerMember")    
-    ).where(StepCount.teamChallenge == teamChallenge
-    ).join(User, on=(User.id == StepCount.user)
-    ).join(TeamChallenge, on=(TeamChallenge.id == StepCount.teamChallenge)).group_by(StepCount.user).dicts())
-    print(res)
+    #teamChallenge = TeamChallenge.select().where((TeamChallenge.team==team_id) & (TeamChallenge.date==datetime.now())).get()
+    teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=datetime.now())
+    updateTeamMembersGoal(teamChallenge=teamChallenge)
+    updateTeamChallengeProgress(teamChallenge=teamChallenge)
+    res = []
+    for member in teamChallenge.team.members:
+        sumSteps = (StepCount.select(fn.SUM(StepCount.steps).alias('sumSteps')).where((StepCount.teamChallenge == teamChallenge) & (StepCount.user == member)).get())
+        if sumSteps.sumSteps is None:
+            sumSteps.sumSteps = 0
+        row = {
+            'username': member.username,
+            'targetGoal': member.targetGoal,
+            'expoToken': member.expoToken,
+            'teamGoalPerMember': teamChallenge.teamMembersGoal,
+            'sumSteps': sumSteps.sumSteps
+        }
+        res.append(row)
     return jsonify(res)
+    #######
+    # teamChallenge = TeamChallenge.select().where((TeamChallenge.team==team_id) & (TeamChallenge.date==datetime.now())).get()
+    # res = list(StepCount.select(fn.SUM(StepCount.steps).alias("sumSteps"), StepCount.user.alias('user'), 
+    # User.username.alias("username"),
+    # User.targetGoal.alias("targetGoal"),
+    # User.expoToken.alias("expoToken"),
+    # TeamChallenge.goal.alias("teamGoalPerMember")    
+    # ).where(StepCount.teamChallenge == teamChallenge
+    # ).join(User, on=(User.id == StepCount.user)
+    # ).join(TeamChallenge, on=(TeamChallenge.id == StepCount.teamChallenge)).group_by(StepCount.user).dicts())
+    # print(res)
+    # return jsonify(res)
     
     # teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == team_id) & (TeamChallenge.date == datetime.now())).get())    
     res = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.team == team_id) & (StepCount.teamChallenge == teamChallenge)).get())  
+
+
+
 # @app.route('/private/')
 # @auth.login_required
 # def private_view():

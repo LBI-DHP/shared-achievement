@@ -42,6 +42,7 @@ export default function SendMotivationMessageDialog({
             Cancel
           </Button>
           <Button
+            disabled={message.length < 1}
             onPress={() => {
               hideDialog();
               dataManager

@@ -14,7 +14,7 @@ export default function StepsBarChart({
   const colorStepsContributed = "#7ebdd8";
   const colorNewSteps = "#ffbb00";
 
-  const height = 20;
+  const height = 10;
   let stepsLeft = goalSteps - newSteps - contributedSteps;
 
   if (stepsLeft < 0) stepsLeft = 0;

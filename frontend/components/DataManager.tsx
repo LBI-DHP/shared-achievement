@@ -331,7 +331,7 @@ export default class dataManager {
     }
   };
 
-  static getTeamName = async (teamid) => {
+  static getTeamData = async (teamid) => {
     try {
       const response = await fetch(
         configJSON.serverConfig.root + "/api/team/" + teamid,
@@ -348,7 +348,7 @@ export default class dataManager {
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.indexOf("application/json") !== -1) {
           const responseJSON = await response.json();
-          return responseJSON.name;
+          return responseJSON;
         }
       }
       return null;

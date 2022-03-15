@@ -7,23 +7,28 @@ import FlagTop from "./FlagTop";
 import { UserDataContext } from "./UserDataProvider";
 import dataManager from "./DataManager";
 
-export default function Challenge() {
-  const { userData, updated } = useContext(UserDataContext);
+export default function Challenge({ isUserInATeam }) {
+  const { userData, updated, setMode, mode } = useContext(UserDataContext);
   const [teamRelativeStepCountToday, setTeamRelativeStepCountToday] =
     useState(0);
 
   useEffect(() => {
     let mounted = true;
-    setTeamRelativeStepCountToday(0.8);
-    // dataManager
-    //   .getRelativeTeamStepCountOfToday(userData.team)
-    //   .then((relativeStepCount) => {
-    //     if (userData.team != null && mounted)
-    //       setTeamRelativeStepCountToday(relativeStepCount / 100);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+    if (isUserInATeam) {
+      setTeamRelativeStepCountToday(0.8);
+
+      // dataManager
+      //   .getRelativeTeamStepCountOfToday(userData.team)
+      //   .then((relativeStepCount) => {
+      //     if (userData.team != null && mounted)
+      //       setTeamRelativeStepCountToday(relativeStepCount / 100);
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
+
+      console.log("mode", mode);
+    }
     return () => {
       mounted = false;
     };
@@ -61,7 +66,7 @@ export default function Challenge() {
     10 -
     (untersbergSvgViewBoxHeight - 10 - 7.5) * progress;
 
-  if (userData.team === null) {
+  if (!isUserInATeam) {
     return (
       <View
         style={{

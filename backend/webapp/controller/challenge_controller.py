@@ -83,10 +83,10 @@ def on_save_steps(sender, instance: StepCount, created):
     # print ("--------------------S")
     # logger.log(logging.INFO, teamChallenge.members)
     # print ("--------------------E")
-    total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.teamChallenge == teamChallenge)).get())
-    teamChallenge.total_steps = total_steps.total_steps
+    total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.teamChallenge == teamChallenge)).get())    
     if total_steps.total_steps is None:
         total_steps.total_steps = 0
+    teamChallenge.total_steps = total_steps.total_steps
     updateTeamMembersGoal(teamChallenge=teamChallenge)
     updateTeamChallengeProgress(teamChallenge=teamChallenge)
 

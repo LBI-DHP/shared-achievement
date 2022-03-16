@@ -3,9 +3,11 @@ views imports app, auth, and models, but none of these import views
 """
 from asyncio.log import logger
 from crypt import methods
+from http.client import HTTPResponse
 import imp
 import logging
 from unicodedata import name
+from urllib.request import Request
 from flask import Response, jsonify, render_template, request  # ...etc , redirect, request, url_for
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from sqlalchemy import null
@@ -50,6 +52,37 @@ def register_user():
     #return json.dumps(model_to_dict(usr, recurse=False, exclude=['password']), default=str, indent=4, sort_keys=True)    
 
 
+@app.route('/challenge/user/<user_id>', methods=['GET'])
+def get_user_challenge(user_id):
+    user_id = int(user_id)    
+    user = User.get_or_none(User.id == user_id)
+    if user is None:
+        return "User does not exist", 404
+
+    userChallenge, created = UserChallenge.get_or_create(user=user_id, date=datetime.now())
+    
+    if created:
+        userChallenge.name = f"{user.username}_daily_challenge"
+        userChallenge.date = datetime.now()
+        userChallenge.goal = user.targetGoal
+        userChallenge.progress = 0
+        userChallenge.user = user
+        userChallenge.save()
+
+    return jsonify(model_to_dict(userChallenge, recurse=False))
+
+@app.route('/challenge/team/<team_id>', methods=['GET'])
+def get_team_challenge(team_id):
+    team_id = int(team_id)
+    team = Team.get_or_none(Team.id == team_id)
+    if team is None:
+        return "Team does not exist", 404
+    teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=datetime.now())    
+    updateTeamMembersGoal(teamChallenge=teamChallenge)
+    updateTeamMembersGoal(teamChallenge=teamChallenge)
+    
+    return jsonify(model_to_dict(teamChallenge, recurse=False))
+
 
 @app.route('/stepcounttoday/user/<user_id>', methods=['GET'])
 def stepcount_today_user(user_id):
@@ -82,30 +115,30 @@ def stepcount_today_team(team_id):
     return jsonify(res)
 
 
-@app.route('/progresstoday/team/<team_id>', methods=['GET'])
-def progresstoday_team(team_id):
-    teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=datetime.now())
-    updateTeamMembersGoal(teamChallenge=teamChallenge)
-    updateTeamChallengeProgress(teamChallenge=teamChallenge)
-    if created:        
-        res = {
-            'totalSteps': 0,
-            'totalProgress': 0
-            }
-        return jsonify(res)
+# @app.route('/progresstoday/team/<team_id>', methods=['GET'])
+# def progresstoday_team(team_id):
+#     teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=datetime.now())
+#     updateTeamMembersGoal(teamChallenge=teamChallenge)
+#     updateTeamChallengeProgress(teamChallenge=teamChallenge)
+#     if created:        
+#         res = {
+#             'totalSteps': 0,
+#             'totalProgress': 0
+#             }
+#         return jsonify(res)
 
     
 
-    totalSteps = (StepCount.select(fn.SUM(StepCount.steps).alias('totalSteps')).where((StepCount.team == team_id) & (StepCount.teamChallenge == teamChallenge)).get())    
+#     totalSteps = (StepCount.select(fn.SUM(StepCount.steps).alias('totalSteps')).where((StepCount.team == team_id) & (StepCount.teamChallenge == teamChallenge)).get())    
    
 
-    if totalSteps is None or totalSteps.total_steps is None:
-        totalSteps.total_steps = 0
-    res = {
-        'totalSteps': totalSteps.totalSteps,
-        'totalProgress': teamChallenge.progress
-        }
-    return jsonify(res)
+#     if totalSteps is None or totalSteps.total_steps is None:
+#         totalSteps.total_steps = 0
+#     res = {
+#         'totalSteps': totalSteps.totalSteps,
+#         'totalProgress': teamChallenge.progress
+#         }
+#     return jsonify(res)
 
 
 @app.route('/teamstepstoday/<team_id>', methods=['get'])
@@ -124,26 +157,13 @@ def teamprogresstoday(team_id):
             'targetGoal': member.targetGoal,
             'expoToken': member.expoToken,
             'teamGoalPerMember': teamChallenge.teamMembersGoal,
-            'sumSteps': sumSteps.sumSteps
+            'sumSteps': int(sumSteps.sumSteps),
+            'userProgress': int(sumSteps.sumSteps) / member.targetGoal,
+            'teamProgress': int(sumSteps.sumSteps) / teamChallenge.teamMembersGoal
         }
         res.append(row)
     return jsonify(res)
-    #######
-    # teamChallenge = TeamChallenge.select().where((TeamChallenge.team==team_id) & (TeamChallenge.date==datetime.now())).get()
-    # res = list(StepCount.select(fn.SUM(StepCount.steps).alias("sumSteps"), StepCount.user.alias('user'), 
-    # User.username.alias("username"),
-    # User.targetGoal.alias("targetGoal"),
-    # User.expoToken.alias("expoToken"),
-    # TeamChallenge.goal.alias("teamGoalPerMember")    
-    # ).where(StepCount.teamChallenge == teamChallenge
-    # ).join(User, on=(User.id == StepCount.user)
-    # ).join(TeamChallenge, on=(TeamChallenge.id == StepCount.teamChallenge)).group_by(StepCount.user).dicts())
-    # print(res)
-    # return jsonify(res)
     
-    # teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == team_id) & (TeamChallenge.date == datetime.now())).get())    
-    res = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.team == team_id) & (StepCount.teamChallenge == teamChallenge)).get())  
-
 
 
 # @app.route('/private/')
@@ -175,7 +195,7 @@ def push_steps():
     
     print('push_steps')
 
-    user = User.get_by_id(request.json['user_id'])
+    user = User.get_or_none(User.id == request.json['user_id'])
     if user is None:
         return "User does not exist", 404
 
@@ -196,10 +216,10 @@ def push_steps():
         teamChallenge.team = user.team
         teamChallenge.date = datetime.now()
         teamChallenge.save()
-        updateTeamMembersGoal(teamChallenge=teamChallenge)
+    
+    updateTeamMembersGoal(teamChallenge=teamChallenge)
+    updateTeamChallengeProgress(teamChallenge=teamChallenge)
         
-        
-        teamChallenge.save()
 
 
     query = User.select(
@@ -238,3 +258,13 @@ def push_steps():
     
     return Response(json.dumps(model_to_dict(steps, recurse=False), default=str, indent=4, sort_keys=True), mimetype='application/json')    
     
+
+
+###### SURVEY
+@app.route('/consent', methods=['GET', 'POST'])
+def consent():
+    if request.method == 'GET':        
+        return render_template('consent.html')
+    else:        
+        return "Consent", 200
+

@@ -1,0 +1,97 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}Consent{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div>
+                <h1>Informed Consent Agreement</h1>
+                <h4>Please read this consent agreement carefully before you decide to participate in the study.</h4>
+                <p>
+                    <h5>Researcher(s):</h5>
+                    <ul>
+                        <li>
+                            Dmitry Alexandrovsky, Digital Media Lab, University of Bremen, +49 421 218 644 20, <a href="mailto:dmitry.alexandrovsky@uni-bremen.de">dmitry.alexandrovsky@uni-bremen.de</a>
+                        </li>
+                        <li>
+                            Jan Smeddinck, Ludwig Boltzmann Institute, Salzburg
+                        </li>
+                        <li>
+                            Eva Strumegger, Ludwig Boltzmann Institute, Salzburg
+                        </li>
+                        <li>
+                            Daniela Wurhofer, Ludwig Boltzmann Institute, Salzburg
+                        </li>                        
+                    </ul>
+                    
+
+                    
+                </p>
+
+                <p>
+                    <h5>Purpose(s) and Objective(s) of the Research:</h5> The purpose of this project is to categorize individual game elements.
+                </p>
+                <p>
+                    <h5>Procedures:</h5>
+                    First, you will be presented with a short survey regarding your gaming experience.
+                    After that, you will receive a series of terms associated with gaming. Your task is to select the most appropriate category for this term.
+                    If you find none of provided categories applies, please add your own category in the last input item. The approximate duration is ca. <b>30-45 minutes</b>.
+                </p>
+                <p>
+                    <h5>Potential Risks and Benefits:</h5> There are no known or anticipated risks to you by participating in this research. Your participation will help us to design better games and more efficacious serious games.
+                </p>
+
+                <p>
+                    <h5>Confidentiality:</h5>
+                    <ul>
+                        <li>Confidentiality will be maintained throughout the study. The entire process and data is anonymous and no personal data is collected.  Data will only be presented in the aggregate and any individual user comments will be anonymized prior to presentation in academic venues.</li>
+                        <li>Only the researchers listed above and their research assistants will have access to the data to ensure that your confidentiality is protected.</li>
+                        <li>Storage of Data</br>
+                            <ul>
+                                <li>Data (including survey and logs of computer use) will be stored on a secure password-protected server after data collection.</li>
+                                <li>As an anonymized identifier, we generate a unique session id ({% if session_id %}{{session_id}}{% endif %}). The session id is anonymous and cannot be traced back to the personal responses.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </p>
+
+                <p>
+                    <h5>Right to Withdraw:</h5>
+                    <ul>
+                        <li>Your participation is voluntary. You may withdraw from the research project for any reason, at any time without explanation.</li>
+                        <li>Should you wish to withdraw, you may do so at any point. If you wish your data to be deleted, please contact us and please provide the <b>session id</b> displayed below. We will immediatly destroy all records of your data.</li>
+                        <li>Your right to withdraw data from the study will apply until the data have been aggregated (one week after study completion). After this date, it is possible that some form of research dissemination will have already occurred and it may not be possible to withdraw your data</li>
+                    </ul>
+                </p>
+
+                <p><h5>Follow up:</h5> To obtain results from the study, please contact Dmitry Alexandrovsky (<a href="mailto:dmitry.alexandrovsky@uni-bremen.de">dmitry.alexandrovsky@uni-bremen.de</a>).</p>
+
+                <p>
+                    <h5>Questions or Concerns: </h5>
+                    <ul>
+                        <li>Contact the researcher(s) using the information at the top.</li>
+                        <!-- <li>This research project has been approved on ethical grounds by the University of Bremen Research Ethics Board.  Any questions regarding your rights as a participant may be addressed to that committee through the Research Ethics Office <a href="mailto:ethics.office@usask.ca">ethics.office@usask.ca</a> (306) 966-2975. Out of town participants may call toll free (888) 966-2975.</li> -->
+                    </ul>
+                </p>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <form method='post' class="needs-validation">
+                <div class="form-group">
+                    <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+                    <label class="form-check-label" for="invalidCheck">
+                        I have read the consent agreement and I agree to terms and conditions.
+                    </label>
+                    <!-- <div class="invalid-feedback">
+                        You must agree before submitting.
+                    </div> -->
+                    </div>
+                </div>
+                <button class="btn btn-primary" type="submit">Submit form</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

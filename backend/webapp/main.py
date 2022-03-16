@@ -46,6 +46,7 @@ def fill_in_data():
     teamLBI.save()
     
     teamHB = Team(name='Bremen',)
+    teamHB.progressCalculationMode = TeamProgressCalculationMode.ABSOLUTE.name
     teamHB.save()
 
     challengeGaisberg = TeamChallenge()
@@ -80,7 +81,8 @@ def fill_in_data():
         {'username': 'jan', 'email': 'jan@shared-achievement.com', 'expoToken': 'NO_TOKEN', 'team': teamLBI, 'targetGoal': int(ChallengeDifficulty.EASY)},
         {'username': 'eva', 'email': 'eva@shared-achievement.com', 'expoToken': 'ExponentPushToken[Iy_BAtIcQN07ZSqppKdtmw]', 'team': teamLBI, 'targetGoal': int(ChallengeDifficulty.HARD)},
         {'username': 'daniela', 'email': 'daniela@shared-achievement.com', 'expoToken': 'NO_TOKEN', 'team': teamLBI, 'targetGoal': int(ChallengeDifficulty.NORMAL)},
-        {'username': 'dimi', 'email': 'dimi@shared-achievement.com', 'expoToken': 'ExponentPushToken[N7zzLwDwLjk6jZOrRmVbzW]', 'team': teamLBI, 'targetGoal': int(ChallengeDifficulty.NORMAL)},
+        {'username': 'dimi', 'email': 'dimi@shared-achievement.com', 'expoToken': 'ExponentPushToken[N7zzLwDwLjk6jZOrRmVbzW]', 'team': teamHB, 'targetGoal': int(ChallengeDifficulty.NORMAL)},
+        {'username': 'susanne', 'email': 'susanne@shared-achievement.com', 'expoToken': 'NO_TOKEN', 'team': teamHB, 'targetGoal': int(ChallengeDifficulty.NORMAL)},
     ]
 
     User.insert_many(user_data).execute()

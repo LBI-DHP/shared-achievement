@@ -99,12 +99,14 @@ def fill_in_data():
         userChallenge.user = u
         userChallenge.save()
 
+        teamChallenge = TeamChallenge.select().where((TeamChallenge.team == u.team) & (TeamChallenge.date == datetime.date.today())).get()
+
         for i in range(0,1):
             steps = StepCount()
             steps.user = u
             steps.team = u.team
             steps.steps = u.targetGoal * 0.1 #int(ChallengeDifficulty.NORMAL) * 0.5
-            steps.teamChallenge = challengeUntersberg
+            steps.teamChallenge = teamChallenge
             steps.userChallenge = userChallenge
             steps.timestamp = datetime.datetime.now()
             steps.save()

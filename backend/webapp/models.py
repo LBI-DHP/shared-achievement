@@ -41,6 +41,10 @@ class User(BaseModel, BaseUser):
     def __unicode__(self):
         return self.username
 
+class UserStudyResponse(BaseModel):
+    user = ForeignKeyField(User)
+    consent = BooleanField(default=False)
+
 
 class ChallengeStatus(Enum):
     NOT_STARTED = -1,
@@ -129,4 +133,4 @@ class Notification(BaseModel):
 # class AchievementTeam(Achievement):
 #     team = ForeignKeyField(Team)
 
-models = [User, Team, StepCount, Notification, UserChallenge, TeamChallenge]
+models = [User, UserStudyResponse, Team, StepCount, Notification, UserChallenge, TeamChallenge]

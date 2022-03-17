@@ -3,10 +3,10 @@ import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import { Surface, Button } from "react-native-paper";
 import configJSON from "../../config.json";
-import { Text } from "../../components/Themed";
+import { Text } from "../Themed";
 import dataManager from "../DataManager";
 import { UserDataContext } from "../UserDataProvider";
-import StepsBarChart from "../StepsBarChartRelative";
+import StepsBarChart from "./StepsBarChartRelative";
 import { style } from "../../constants/Styles";
 import { style as stepCounterStyles } from "./StepCounterStyles";
 

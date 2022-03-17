@@ -4,8 +4,8 @@ import Untersberg from "./Untersberg";
 import UntersbergHidden from "./UntersbergHidden";
 import Clouds from "./Clouds";
 import FlagTop from "./FlagTop";
-import { UserDataContext } from "./UserDataProvider";
-import dataManager from "./DataManager";
+import { UserDataContext } from "../UserDataProvider";
+import dataManager from "../DataManager";
 
 export default function Challenge({ isUserInATeam }) {
   const { userData, updated, setMode, mode } = useContext(UserDataContext);

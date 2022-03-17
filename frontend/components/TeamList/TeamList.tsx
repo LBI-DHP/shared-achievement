@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { View } from "react-native";
 import { UserDataContext } from "../UserDataProvider";
 import dataManager from "../DataManager";
-import SendMotivationMessageDialog from "../SendMotivationMessageDialog";
+import SendMotivationMessageDialog from "./SendMotivationMessageDialog";
 import TeamChartRelative from "./TeamChartRelative";
 import TeamChartAbsolute from "./TeamChartAbsolute";
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { Surface, Button } from "react-native-paper";
 import configJSON from "../../config.json";
 import { Text } from "../Themed";

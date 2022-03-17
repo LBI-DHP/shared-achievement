@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { ScrollView, Text, StyleSheet } from "react-native";
 import { Button, Surface } from "react-native-paper";
 import { style } from "../constants/Styles";
-import Challenge from "../components/Challenge";
+import Challenge from "../components/Challenge/Challenge";
 // @ts-ignore
 import StepCounterAbsolute from "../components/StepCounter/StepCounterAbsolute";
 // @ts-ignore

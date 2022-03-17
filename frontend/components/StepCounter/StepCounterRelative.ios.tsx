@@ -6,7 +6,7 @@ import { Pedometer } from "expo-sensors";
 import dataManager from "../DataManager";
 import { UserDataContext } from "../UserDataProvider";
 import { Text } from "react-native";
-import StepsBarChart from "../StepsBarChartRelative";
+import StepsBarChart from "./StepsBarChartRelative";
 import { style } from "../../constants/Styles";
 import { style as stepCounterStyles } from "./StepCounterStyles";
 

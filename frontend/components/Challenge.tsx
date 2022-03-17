@@ -11,33 +11,32 @@ export default function Challenge({ isUserInATeam }) {
   const { userData, updated, setMode, mode } = useContext(UserDataContext);
   const [teamRelativeStepCountToday, setTeamRelativeStepCountToday] =
     useState(0);
+  const [teamAbsoluteStepCountToday, setTeamAbsoluteStepCountToday] =
+    useState(0);
 
   useEffect(() => {
     let mounted = true;
     if (isUserInATeam) {
-      setTeamRelativeStepCountToday(0.8);
-
-      // dataManager
-      //   .getRelativeTeamStepCountOfToday(userData.team)
-      //   .then((relativeStepCount) => {
-      //     if (userData.team != null && mounted)
-      //       setTeamRelativeStepCountToday(relativeStepCount / 100);
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
-
-      console.log("mode", mode);
+      dataManager
+        .getTeamChallengeData(userData.team)
+        .then((data) => {
+          if (userData.team != null && mounted) console.log("Team data", data);
+          setTeamRelativeStepCountToday(data.progress / 100);
+          setTeamAbsoluteStepCountToday(data.total_steps);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
     return () => {
       mounted = false;
     };
-  }, [updated, userData.team]);
+  }, [updated, userData.team, mode]);
 
   const progress = teamRelativeStepCountToday;
   const { height, width } = useWindowDimensions();
   const windowHeight = height;
-  const windowWidth = width - 40;
+  const windowWidth = width - 60;
 
   let untersbergSvgWidth;
   let untersbergSvgHeight;
@@ -76,8 +75,8 @@ export default function Challenge({ isUserInATeam }) {
             untersbergSvgHeight / 3.5 +
             flagSvgHeight +
             10,
+          margin: 10,
           backgroundColor: "#99bfcf",
-          marginBottom: 10,
           justifyContent: "flex-end",
         }}
       >
@@ -127,10 +126,9 @@ export default function Challenge({ isUserInATeam }) {
 const style = StyleSheet.create({
   container: {
     paddingTop: 10,
-    width: "100%",
     alignItems: "center",
     backgroundColor: "#99bfcf",
-    marginBottom: 10,
+    margin: 10,
     justifyContent: "flex-end",
   },
   containerAbsolute: {

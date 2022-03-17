@@ -1,0 +1,47 @@
+import React from "react";
+import { useWindowDimensions } from "react-native";
+import Svg, { Rect, Mask } from "react-native-svg";
+
+export default function TeamMemberBarChartRelative({
+  absoluteMostSteps,
+  contributedSteps,
+}) {
+  const { width } = useWindowDimensions();
+  const windowWidth = width - 40;
+
+  const colorStepsContributed = "#ffbb00";
+
+  let progress = 0.01;
+
+  if (contributedSteps > 0 && absoluteMostSteps > 0) {
+    progress = contributedSteps / absoluteMostSteps;
+  }
+
+  return (
+    <Svg
+      height={10}
+      width={windowWidth}
+      viewBox={"0 0 " + windowWidth + " " + 10}
+    >
+      <Mask id="Mask" x="0" y="0" width={windowWidth} height="10">
+        <Rect
+          rx="5"
+          ry="5"
+          x="0"
+          y="0"
+          width={windowWidth * progress}
+          height="10"
+          fill={"white"}
+        />
+      </Mask>
+      <Rect
+        mask="url(#Mask)"
+        x="0"
+        y="0"
+        width={windowWidth * progress}
+        height="10"
+        fill={colorStepsContributed}
+      />
+    </Svg>
+  );
+}

@@ -20,4 +20,15 @@ export const style = StyleSheet.create({
     fontWeight: "bold",
     paddingBottom: 20,
   },
+  cardHeader: {
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+    width: "100%",
+    fontSize: 20,
+    fontWeight: "bold",
+    backgroundColor: "#3f5c7c",
+    color: "white",
+    padding: 10,
+    textAlign: "center",
+  },
 });

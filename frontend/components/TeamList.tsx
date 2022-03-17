@@ -1,15 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Text, View } from "react-native";
-import { Button } from "react-native-paper";
+import { View } from "react-native";
 import { UserDataContext } from "./UserDataProvider";
 import dataManager from "./DataManager";
-import TeamMemberBarChart from "./TeamMemberBarChart";
 import SendMotivationMessageDialog from "./SendMotivationMessageDialog";
+import TeamChartRelative from "./TeamChartRelative";
+import TeamChartAbsolute from "./TeamChartAbsolute";
+import { Surface } from "react-native-paper";
 
 export default function TeamStatistics() {
-  const { userData, updated } = useContext(UserDataContext);
+  const { userData, updated, mode } = useContext(UserDataContext);
   const [teamMembersAndStepCountsOfToday, setTeamMembersAndStepCountsOfToday] =
     useState([]);
+  const [absoluteMostSteps, setAbsoluteMostSteps] = useState(0);
 
   const [visible, setVisible] = React.useState(false);
 
@@ -31,12 +33,30 @@ export default function TeamStatistics() {
       .getTeamMembersAndStepCountOfToday(userData.team)
       .then((teamMembersStepCountOfToday) => {
         if (mounted && teamMembersStepCountOfToday !== null)
-          setTeamMembersAndStepCountsOfToday(teamMembersStepCountOfToday);
+          teamMembersStepCountOfToday.sort((a, b) =>
+            a.userProgress < b.userProgress
+              ? 1
+              : b.userProgress < a.userProgress
+              ? -1
+              : 0
+          );
+        console.log(teamMembersStepCountOfToday);
+        setTeamMembersAndStepCountsOfToday(teamMembersStepCountOfToday);
       });
     return () => {
       mounted = false;
     };
   }, [updated]);
+
+  useEffect(() => {
+    if (mode === "ABSOLUTE") {
+      let mostSteps = 0;
+      teamMembersAndStepCountsOfToday.forEach((member) => {
+        if (member.sumSteps > mostSteps) mostSteps = member.sumSteps;
+      });
+      setAbsoluteMostSteps(mostSteps);
+    }
+  }, [mode, teamMembersAndStepCountsOfToday]);
 
   return (
     <View
@@ -44,35 +64,31 @@ export default function TeamStatistics() {
         marginBottom: 30,
       }}
     >
-      {console.log(teamMembersAndStepCountsOfToday)}
       {teamMembersAndStepCountsOfToday.map((member) => {
-        return (
-          <View style={{ paddingBottom: 20 }} key={member.user}>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "flex-end",
-                paddingBottom: 10,
-              }}
-            >
-              <Text style={{ fontSize: 15, fontWeight: "bold" }}>
-                {member.username + " "}
-                <Text style={{ color: "#ffae00" }}>{(500 / 1000) * 100}%</Text>
-              </Text>
-              <Button
-                onPress={() => {
-                  setSelectedUser(member);
-                  showDialog();
-                }}
-                mode="contained"
-              >
-                motivate
-              </Button>
-            </View>
-            <TeamMemberBarChart goalSteps={1000} contributedSteps={500} />
-          </View>
-        );
+        if (mode === "RELATIVE") {
+          return (
+            // <Surface style={{ marginTop: 10}}>
+            <TeamChartRelative
+              member={member}
+              showDialog={showDialog}
+              setSelectedUser={setSelectedUser}
+              key={member.username}
+              currentUserName={userData.username}
+            />
+            // </Surface>
+          );
+        } else {
+          return (
+            <TeamChartAbsolute
+              member={member}
+              showDialog={showDialog}
+              setSelectedUser={setSelectedUser}
+              absoluteMostSteps={absoluteMostSteps}
+              key={member.username}
+              currentUserName={userData.username}
+            />
+          );
+        }
       })}
       <SendMotivationMessageDialog
         visible={visible}

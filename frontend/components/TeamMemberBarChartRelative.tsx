@@ -2,7 +2,10 @@ import React from "react";
 import { useWindowDimensions } from "react-native";
 import Svg, { Rect, Mask } from "react-native-svg";
 
-export default function TeamMemberBarChart({ goalSteps, contributedSteps }) {
+export default function TeamMemberBarChartRelative({
+  goalSteps,
+  contributedSteps,
+}) {
   const { width } = useWindowDimensions();
   const windowWidth = width - 40;
 

@@ -3,11 +3,12 @@ import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import { StyleSheet, View } from "react-native";
 import { Surface, Button } from "react-native-paper";
-import configJSON from "../config.json";
-import { Text } from "../components/Themed";
-import dataManager from "./DataManager";
-import { UserDataContext } from "./UserDataProvider";
-import StepsBarChart from "./StepsBarChart";
+import configJSON from "../../config.json";
+import { Text } from "../Themed";
+import dataManager from "../DataManager";
+import { UserDataContext } from "../UserDataProvider";
+import { style as stepCounterStyles } from "./StepCounterStyles";
+import { style } from "../../constants/Styles";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -39,8 +40,10 @@ export default function StepCounter() {
 
   useEffect(() => {
     let mounted = true;
-    dataManager.getUserStepCount(userData.id).then((userStepCount) => {
+    dataManager.getUserChallengeData(userData.id).then((data) => {
       if (mounted) {
+        let userStepCount = data.total_steps;
+        if (userStepCount === undefined) userStepCount = 0;
         setNewSteps(stepCountToday - userStepCount);
         setContributedSteps(userStepCount);
       }
@@ -169,13 +172,20 @@ export default function StepCounter() {
 
   return (
     <>
-      <Surface style={styles.surface}>
-        <StepsBarChart
-          goalSteps={1000}
-          contributedSteps={contributedSteps}
-          newSteps={newSteps}
-        />
-
+      <Surface style={stepCounterStyles.surface}>
+        <Text style={style.cardHeader}>Personal Contribution</Text>
+        <View style={{ padding: 10 }}>
+          <Text>
+            <Text style={stepCounterStyles.stepsContributed}>
+              {contributedSteps}
+            </Text>{" "}
+            steps already contributed
+          </Text>
+          <Text>
+            <Text style={stepCounterStyles.stepsNew}>{newSteps}</Text> new steps
+            since last contribution
+          </Text>
+        </View>
         <Button
           disabled={newSteps === 0}
           style={{ alignSelf: "stretch" }}
@@ -193,34 +203,3 @@ export default function StepCounter() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  viewWrapper: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-around",
-  },
-  wrapper: {
-    padding: 15,
-    alignItems: "center",
-    width: "33.33%",
-  },
-  header: {
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
-    width: "100%",
-    fontSize: 20,
-    fontWeight: "bold",
-    backgroundColor: "#3f5c7c",
-    color: "white",
-    padding: 10,
-    textAlign: "center",
-  },
-  headerText: { fontSize: 20, fontWeight: "bold" },
-  labelText: { textAlign: "center" },
-  surface: {
-    elevation: 4,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-});

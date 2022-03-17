@@ -9,7 +9,7 @@ import dataManager from "../components/DataManager";
 
 export default function Team() {
   const [isUserInATeam, setIsUserInATeam] = useState(false);
-  const { userData, setUserData, setMode } = useContext(UserDataContext);
+  const { userData, setUserData, mode, setMode } = useContext(UserDataContext);
   const [error, setError] = useState(false);
   const [teamName, setTeamName] = useState("");
 
@@ -32,6 +32,7 @@ export default function Team() {
       {isUserInATeam ? (
         <>
           <Text style={style.heading}>Team {teamName}</Text>
+          <Text>{mode}</Text>
           <TeamList />
           <Button
             disabled={!isUserInATeam}

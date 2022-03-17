@@ -22,11 +22,11 @@ export default function StepsBarChart({
   let contributedProgress = 0;
   let newProgress = 0;
 
-  if (contributedSteps > 0) {
+  if (contributedSteps > 0 && goalSteps > 0) {
     contributedProgress = contributedSteps / goalSteps;
   }
 
-  if (newSteps > 0) {
+  if (newSteps > 0 && goalSteps > 0) {
     newProgress = newSteps / goalSteps;
     newProgress += contributedProgress;
   }

@@ -19,4 +19,8 @@ export const style = StyleSheet.create({
     fontWeight: "bold",
     color: colorStepsContributed,
   },
+  absoluteView: {
+    padding: 10,
+    flexDirection: "row",
+  },
 });

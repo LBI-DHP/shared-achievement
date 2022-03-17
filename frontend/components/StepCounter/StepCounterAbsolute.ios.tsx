@@ -5,7 +5,7 @@ import { Button, Surface } from "react-native-paper";
 import { Pedometer } from "expo-sensors";
 import dataManager from "../DataManager";
 import { UserDataContext } from "../UserDataProvider";
-import { Text, StyleSheet, View } from "react-native";
+import { Text, View } from "react-native";
 import { style as stepCounterStyles } from "./StepCounterStyles";
 import { style } from "../../constants/Styles";
 

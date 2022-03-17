@@ -41,7 +41,6 @@ export default function ChallengeScreen() {
       </Surface>
       {isUserInATeam ? (
         <>
-          <Text>{mode}</Text>
           {mode === "RELATIVE" ? (
             <StepCounterRelative />
           ) : (

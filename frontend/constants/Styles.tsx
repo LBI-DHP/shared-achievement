@@ -31,4 +31,8 @@ export const style = StyleSheet.create({
     padding: 10,
     textAlign: "center",
   },
+  surface: {
+    elevation: 4,
+    borderRadius: 5,
+  },
 });

@@ -1,7 +1,8 @@
 import React from "react";
 import { Text, View } from "react-native";
-import { Button } from "react-native-paper";
-import TeamMemberBarChart from "./TeamMemberBarChartRelative";
+import { Button, Surface } from "react-native-paper";
+import TeamMemberBarChart from "./TeamMemberBarChart";
+import { style as TeamListStyle } from "./TeamListStyles";
 
 export default function TeamChartRelative({
   member,
@@ -9,20 +10,16 @@ export default function TeamChartRelative({
   setSelectedUser,
   currentUserName,
 }) {
+  let userProgress = Math.floor(member.userProgress * 100);
   return (
-    <View style={{ paddingBottom: 20 }} key={member.username}>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "flex-end",
-          paddingBottom: 10,
-        }}
-      >
+    <Surface style={TeamListStyle.surfaceRel} key={member.username}>
+      <View style={TeamListStyle.viewRel}>
         <Text style={{ fontSize: 15, fontWeight: "bold" }}>
           {member.username + " "}
-          {member.username === currentUserName && "(you) "}
-          <Text style={{ color: "#ffae00" }}>{member.userProgress * 100}%</Text>
+          {member.username === currentUserName && (
+            <Text style={{ fontWeight: "normal" }}>(you) </Text>
+          )}
+          <Text style={{ color: "#ffae00" }}>{userProgress}%</Text>
         </Text>
         {member.username !== currentUserName && (
           <Button
@@ -40,6 +37,6 @@ export default function TeamChartRelative({
         goalSteps={member.targetGoal}
         contributedSteps={member.sumSteps}
       />
-    </View>
+    </Surface>
   );
 }

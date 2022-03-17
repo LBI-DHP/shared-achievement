@@ -3,7 +3,7 @@ import { BackHandler, ScrollView, Text } from "react-native";
 import { Button } from "react-native-paper";
 import JoinOrCreateTeam from "../components/JoinTeam";
 import { UserDataContext } from "../components/UserDataProvider";
-import TeamList from "../components/TeamList";
+import TeamList from "../components/TeamList/TeamList";
 import { style } from "../constants/Styles";
 import dataManager from "../components/DataManager";
 
@@ -32,9 +32,11 @@ export default function Team() {
       {isUserInATeam ? (
         <>
           <Text style={style.heading}>Team {teamName}</Text>
-          <Text>{mode}</Text>
           <TeamList />
           <Button
+            style={{
+              marginBottom: 40,
+            }}
             disabled={!isUserInATeam}
             mode="contained"
             onPress={() => {

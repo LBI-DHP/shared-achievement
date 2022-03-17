@@ -5,8 +5,10 @@ import { Button, Surface } from "react-native-paper";
 import { Pedometer } from "expo-sensors";
 import dataManager from "../DataManager";
 import { UserDataContext } from "../UserDataProvider";
-import { Text, StyleSheet, View } from "react-native";
+import { Text } from "react-native";
 import StepsBarChart from "../StepsBarChartRelative";
+import { style } from "../../constants/Styles";
+import { style as stepCounterStyles } from "./StepCounterStyles";
 
 export default function StepCounter() {
   const [isPedometerAvailable, setIsPedometerAvailable] = useState(false);
@@ -96,8 +98,8 @@ export default function StepCounter() {
 
   return (
     <>
-      <Surface style={styles.surface}>
-        <Text style={styles.subheading}>Personal Progress</Text>
+      <Surface style={stepCounterStyles.surface}>
+        <Text style={style.cardHeader}>Personal Contribution</Text>
         <StepsBarChart
           goalSteps={goalSteps}
           contributedSteps={contributedSteps}
@@ -127,40 +129,3 @@ export default function StepCounter() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  viewWrapper: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-around",
-  },
-  wrapper: {
-    padding: 15,
-    alignItems: "center",
-    width: "33.33%",
-  },
-  header: {
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
-    width: "100%",
-    fontSize: 20,
-    fontWeight: "bold",
-    backgroundColor: "#3f5c7c",
-    color: "white",
-    padding: 10,
-    textAlign: "center",
-  },
-  headerText: { fontSize: 20, fontWeight: "bold" },
-  labelText: { textAlign: "center" },
-  surface: {
-    elevation: 4,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  subheading: {
-    fontSize: 20,
-    fontWeight: "bold",
-    margin: 10,
-    marginBottom: 0,
-  },
-});

@@ -1,4 +1,5 @@
 import datetime
+from email.policy import default
 from enum import Enum, IntEnum, unique
 import playhouse.signals as signals
 from flask_peewee.auth import BaseUser  # provides password helpers..
@@ -44,6 +45,7 @@ class User(BaseModel, BaseUser):
 class UserStudyResponse(BaseModel):
     user = ForeignKeyField(User)
     consent = BooleanField(default=False)
+    timestamp = DateTimeField(default=datetime.datetime.now())
 
 
 class ChallengeStatus(Enum):

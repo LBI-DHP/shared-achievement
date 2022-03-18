@@ -5,6 +5,7 @@ import dataManager from "../DataManager";
 import SendMotivationMessageDialog from "./SendMotivationMessageDialog";
 import TeamChartRelative from "./TeamChartRelative";
 import TeamChartAbsolute from "./TeamChartAbsolute";
+import { Surface } from "react-native-paper";
 
 export default function TeamStatistics() {
   const { userData, updated, mode } = useContext(UserDataContext);
@@ -37,7 +38,6 @@ export default function TeamStatistics() {
               ? -1
               : 0
           );
-        console.log(teamMembersStepCountOfToday);
         setTeamMembersAndStepCountsOfToday(teamMembersStepCountOfToday);
       });
     return () => {
@@ -46,7 +46,7 @@ export default function TeamStatistics() {
   }, [updated]);
 
   return (
-    <View>
+    <View style={{ paddingTop: 10 }}>
       {teamMembersAndStepCountsOfToday.map((member) => {
         if (mode === "RELATIVE") {
           return (

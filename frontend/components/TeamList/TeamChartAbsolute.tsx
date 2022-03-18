@@ -1,5 +1,5 @@
 import React from "react";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 import { Button, Surface } from "react-native-paper";
 import { style as TeamListStyle } from "./TeamListStyles";
 
@@ -10,14 +10,22 @@ export default function TeamChartAbsolute({
   currentUserName,
 }) {
   return (
-    <Surface style={TeamListStyle.surfaceAbs} key={member.username}>
-      <Text style={{ fontSize: 15, fontWeight: "bold" }}>
-        {member.username + " "}
-        {member.username === currentUserName && (
-          <Text style={{ fontWeight: "normal" }}>(you) </Text>
-        )}
-        <Text style={{ color: "#ffae00" }}>{member.sumSteps} steps</Text>
-      </Text>
+    <View style={TeamListStyle.surfaceAbs} key={member.username}>
+      <View
+        style={{
+          flexDirection: "column",
+        }}
+      >
+        <Text style={{ fontSize: 15, fontWeight: "bold" }}>
+          {member.username + " "}
+          {member.username === currentUserName && (
+            <Text style={{ fontWeight: "normal" }}>(me) </Text>
+          )}
+        </Text>
+        <Text style={{ color: "#ffae00", fontSize: 15, fontWeight: "bold" }}>
+          {member.sumSteps} steps
+        </Text>
+      </View>
       {member.username !== currentUserName && (
         <Button
           onPress={() => {
@@ -29,6 +37,6 @@ export default function TeamChartAbsolute({
           motivate
         </Button>
       )}
-    </Surface>
+    </View>
   );
 }

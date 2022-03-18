@@ -43,10 +43,6 @@ export default function Settings() {
             ...userData,
             username: newUserName,
           };
-
-          console.log("newUserData", newUserData);
-          console.log("userData", userData);
-
           dataManager.updateUserData(newUserData).then((data) => {
             if (data !== null) {
               setUserData(newUserData);

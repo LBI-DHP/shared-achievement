@@ -3,6 +3,7 @@ import { ScrollView, Text, StyleSheet } from "react-native";
 import { Button, Surface } from "react-native-paper";
 import { style } from "../constants/Styles";
 import Challenge from "../components/Challenge/Challenge";
+import TeamContributions from "../components/Challenge/TeamContributions";
 // @ts-ignore
 import StepCounterAbsolute from "../components/StepCounter/StepCounterAbsolute";
 // @ts-ignore
@@ -38,6 +39,7 @@ export default function ChallengeScreen() {
           <Text style={style.cardHeader}>Progress of Team {teamName}</Text>
         )}
         <Challenge isUserInATeam={isUserInATeam} />
+        {/* {isUserInATeam && <TeamContributions />} */}
       </Surface>
       {isUserInATeam ? (
         <>

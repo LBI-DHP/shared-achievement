@@ -2,24 +2,27 @@ import { StyleSheet } from "react-native";
 
 export const style = StyleSheet.create({
   surfaceAbs: {
-    marginBottom: 10,
-    padding: 5,
     alignItems: "center",
-    elevation: 4,
-    borderRadius: 5,
     flexDirection: "row",
     justifyContent: "space-between",
+    borderBottomColor: "black",
+    borderBottomWidth: 0.5,
+    margin: 10,
+    marginTop: 5,
+    marginBottom: 5,
+    paddingBottom: 10,
   },
   surfaceRel: {
-    marginBottom: 10,
-    padding: 5,
-    elevation: 4,
-    borderRadius: 5,
+    borderBottomColor: "black",
+    borderBottomWidth: 0.5,
+    margin: 10,
+    marginTop: 5,
+    marginBottom: 5,
+    paddingBottom: 10,
   },
   viewRel: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-end",
-    paddingBottom: 10,
   },
 });

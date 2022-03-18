@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
-import { BackHandler, ScrollView, Text } from "react-native";
-import { Button } from "react-native-paper";
+import { View, ScrollView, Text } from "react-native";
+import { Button, Surface } from "react-native-paper";
 import JoinOrCreateTeam from "../components/JoinTeam";
 import { UserDataContext } from "../components/UserDataProvider";
 import TeamList from "../components/TeamList/TeamList";
@@ -30,34 +30,33 @@ export default function Team() {
   return (
     <ScrollView style={style.container}>
       {isUserInATeam ? (
-        <>
-          <Text style={style.heading}>Team {teamName}</Text>
-          <TeamList />
-          <Button
-            style={{
-              marginBottom: 40,
-            }}
-            disabled={!isUserInATeam}
-            mode="contained"
-            onPress={() => {
-              setError(false);
-              const newUserData = {
-                ...userData,
-                team: null,
-              };
-              dataManager.updateUserData(newUserData).then((data) => {
-                if (data !== null) {
-                  setUserData(newUserData);
-                  setMode(null);
-                } else {
-                  setError(true);
-                }
-              });
-            }}
-          >
-            Leave Team
-          </Button>
-        </>
+        <View style={{ marginBottom: 30 }}>
+          <Surface style={style.surface}>
+            <Text style={style.cardHeader}>Team {teamName}</Text>
+            <TeamList />
+            <Button
+              disabled={!isUserInATeam}
+              mode="contained"
+              onPress={() => {
+                setError(false);
+                const newUserData = {
+                  ...userData,
+                  team: null,
+                };
+                dataManager.updateUserData(newUserData).then((data) => {
+                  if (data !== null) {
+                    setUserData(newUserData);
+                    setMode(null);
+                  } else {
+                    setError(true);
+                  }
+                });
+              }}
+            >
+              Leave Team
+            </Button>
+          </Surface>
+        </View>
       ) : (
         <JoinOrCreateTeam />
       )}

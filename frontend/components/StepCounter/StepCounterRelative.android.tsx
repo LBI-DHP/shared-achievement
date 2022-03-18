@@ -9,6 +9,7 @@ import { UserDataContext } from "../UserDataProvider";
 import StepsBarChart from "./StepsBarChartRelative";
 import { style } from "../../constants/Styles";
 import { style as stepCounterStyles } from "./StepCounterStyles";
+import ContributeButton from "./ContributeButton";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -111,7 +112,6 @@ export default function StepCounter() {
       }
     );
     const tokenInfoJSON = await tokenInfoResponse.json();
-    console.log(tokenInfoJSON);
   };
 
   const getSteps = async () => {
@@ -179,21 +179,13 @@ export default function StepCounter() {
           contributedSteps={contributedSteps}
           newSteps={newSteps}
         />
-
-        <Button
-          disabled={newSteps === 0}
-          style={{ alignSelf: "stretch" }}
-          mode="contained"
-          onPress={() => {
-            dataManager.pushSteps(userData.id, newSteps).then((worked) => {
-              if (worked) resetStepsAfterContribution();
-              else setError(true);
-            });
-          }}
-        >
-          Contribute new steps
-        </Button>
       </Surface>
+      <ContributeButton
+        newSteps={newSteps}
+        userData={userData}
+        resetStepsAfterContribution={() => resetStepsAfterContribution()}
+        setError={(set) => setError(set)}
+      />
     </>
   );
 }

@@ -263,10 +263,13 @@ def push_steps():
 ###### SURVEY
 @app.route('/consent/<user_id>', methods=['GET', 'POST'])
 def consent(user_id):
+    usr = User.get_or_none(User.id == int(user_id))
+    if usr is None:
+        return "User does not exist", 404
     if request.method == 'GET':        
         return render_template('consent.html')
-    else:
-        response = UserStudyResponse.get_or_create(UserStudyResponse.user==user_id)
+    else:        
+        response, created = UserStudyResponse.get_or_create(user=usr)
         response.consent = True
         response.save()
         return "Consent", 200

@@ -3,10 +3,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Button, Surface } from "react-native-paper";
 import { Pedometer } from "expo-sensors";
-import dataManager from "./DataManager";
-import { UserDataContext } from "./UserDataProvider";
-import { Text, StyleSheet, View } from "react-native";
-import StepsBarChart from "./StepsBarChart";
+import dataManager from "../DataManager";
+import { UserDataContext } from "../UserDataProvider";
+import { Text } from "react-native";
+import StepsBarChart from "./StepsBarChartRelative";
+import { style } from "../../constants/Styles";
+import { style as stepCounterStyles } from "./StepCounterStyles";
 
 export default function StepCounter() {
   const [isPedometerAvailable, setIsPedometerAvailable] = useState(false);
@@ -15,6 +17,7 @@ export default function StepCounter() {
   const [currentStepCountAdded, setCurrentStepCountAdded] = useState(0);
   const [contributedSteps, setContributedSteps] = useState(0);
   const [newSteps, setNewSteps] = useState(0);
+  const [goalSteps, setGoalSteps] = useState(0);
   const { userData, updated, setUpdated } = useContext(UserDataContext);
   const [error, setError] = useState(false);
 
@@ -31,12 +34,13 @@ export default function StepCounter() {
 
   useEffect(() => {
     let mounted = true;
-    dataManager.getUserStepCount(userData.id).then((userStepCount) => {
+    dataManager.getUserChallengeData(userData.id).then((data) => {
       if (mounted) {
+        let userStepCount = data.total_steps;
         if (userStepCount === undefined) userStepCount = 0;
-
         setNewSteps(stepCountToday - userStepCount);
         setContributedSteps(userStepCount);
+        if (data.goal) setGoalSteps(data.goal);
       }
     });
     return () => {
@@ -94,9 +98,10 @@ export default function StepCounter() {
 
   return (
     <>
-      <Surface style={styles.surface}>
+      <Surface style={stepCounterStyles.surface}>
+        <Text style={style.cardHeader}>Personal Contribution</Text>
         <StepsBarChart
-          goalSteps={5000}
+          goalSteps={goalSteps}
           contributedSteps={contributedSteps}
           newSteps={newSteps + (currentStepCount - currentStepCountAdded)}
         />
@@ -124,34 +129,3 @@ export default function StepCounter() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  viewWrapper: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-around",
-  },
-  wrapper: {
-    padding: 15,
-    alignItems: "center",
-    width: "33.33%",
-  },
-  header: {
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
-    width: "100%",
-    fontSize: 20,
-    fontWeight: "bold",
-    backgroundColor: "#3f5c7c",
-    color: "white",
-    padding: 10,
-    textAlign: "center",
-  },
-  headerText: { fontSize: 20, fontWeight: "bold" },
-  labelText: { textAlign: "center" },
-  surface: {
-    elevation: 4,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-});

@@ -6,7 +6,7 @@ import {
   Portal,
   TextInput,
 } from "react-native-paper";
-import dataManager from "./DataManager";
+import dataManager from "../DataManager";
 
 export default function SendMotivationMessageDialog({
   hideDialog,

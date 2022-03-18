@@ -212,10 +212,10 @@ export default class dataManager {
   //   }
   // };
 
-  static getUserStepCount = async (id) => {
+  static getUserChallengeData = async (id) => {
     try {
       const response = await fetch(
-        configJSON.serverConfig.root + "/stepcounttoday/user/" + id,
+        configJSON.serverConfig.root + "/challenge/user/" + id,
         {
           method: "GET",
           headers: {
@@ -229,9 +229,7 @@ export default class dataManager {
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.indexOf("application/json") !== -1) {
           const responseJSON = await response.json();
-          if (responseJSON.total_steps !== null) {
-            return responseJSON.total_steps;
-          }
+          return responseJSON;
         }
       }
       return null;
@@ -335,6 +333,33 @@ export default class dataManager {
     try {
       const response = await fetch(
         configJSON.serverConfig.root + "/api/team/" + teamid,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          const responseJSON = await response.json();
+          return responseJSON;
+        }
+      }
+      return null;
+    } catch (error) {
+      console.log("error on get team name:" + error);
+    } finally {
+      console.log("done with get team name request");
+    }
+  };
+  static getTeamChallengeData = async (teamid) => {
+    try {
+      const response = await fetch(
+        configJSON.serverConfig.root + "/challenge/team/" + teamid,
         {
           method: "GET",
           headers: {

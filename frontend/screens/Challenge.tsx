@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useContext } from "react";
-import { ScrollView } from "react-native";
-import { Button } from "react-native-paper";
+import { ScrollView, Text, StyleSheet } from "react-native";
+import { Button, Surface } from "react-native-paper";
 import { style } from "../constants/Styles";
-import Challenge from "../components/Challenge";
+import Challenge from "../components/Challenge/Challenge";
 // @ts-ignore
-import StepCounter from "../components/StepCounter";
+import StepCounterAbsolute from "../components/StepCounter/StepCounterAbsolute";
+// @ts-ignore
+import StepCounterRelative from "../components/StepCounter/StepCounterRelative";
 import dataManager from "../components/DataManager";
 import { UserDataContext } from "../components/UserDataProvider";
-import JoinOrCreateTeam from "../components/JoinTeam";
 
 export default function ChallengeScreen() {
   const [isUserInATeam, setIsUserInATeam] = useState(false);
-  const { userData, setUserData, setMode, setNavigationIndex } =
+  const { userData, mode, setMode, setNavigationIndex } =
     useContext(UserDataContext);
   const [error, setError] = useState(false);
   const [teamName, setTeamName] = useState("");
@@ -32,9 +33,20 @@ export default function ChallengeScreen() {
 
   return (
     <ScrollView style={style.container}>
-      <Challenge isUserInATeam={isUserInATeam} />
+      <Surface style={styles.surface}>
+        {isUserInATeam && (
+          <Text style={style.cardHeader}>Progress of Team {teamName}</Text>
+        )}
+        <Challenge isUserInATeam={isUserInATeam} />
+      </Surface>
       {isUserInATeam ? (
-        <StepCounter />
+        <>
+          {mode === "RELATIVE" ? (
+            <StepCounterRelative />
+          ) : (
+            <StepCounterAbsolute />
+          )}
+        </>
       ) : (
         <Button
           mode="contained"
@@ -51,3 +63,17 @@ export default function ChallengeScreen() {
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  surface: {
+    elevation: 4,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  subheading: {
+    fontSize: 20,
+    fontWeight: "bold",
+    margin: 10,
+    marginBottom: 0,
+  },
+});

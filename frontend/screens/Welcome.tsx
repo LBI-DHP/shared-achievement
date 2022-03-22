@@ -8,7 +8,7 @@ import { UserDataContext } from "../components/UserDataProvider";
 export default function Welcome() {
   const { userData, setUserData } = useContext(UserDataContext);
   const [userName, setUserName] = useState("");
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
 
   return (
     <View style={style.containerPaddingTop}>
@@ -20,22 +20,30 @@ export default function Welcome() {
       <TextInput
         value={userName}
         multiline={false}
-        placeholder="user name"
+        placeholder="username"
         autoComplete={false}
         onChangeText={(text) => setUserName(text)}
       />
       <Button
         mode="contained"
+        disabled={userName.length < 2}
         onPress={() => {
-          setError(false);
           const newUserData = {
             ...userData,
             username: userName,
           };
-
+          setError("");
           dataManager.registerUser(newUserData).then((data) => {
-            if (data === null) {
-              setError(true);
+            if (data === -1) {
+              setError("🚨 Error: Please check your internet connection.");
+            } else if (data === -2) {
+              setError(
+                "Sorry, this username is already taken. Please try another name."
+              );
+            } else if (data === null) {
+              setError(
+                "🚨 Internal Server Error: Please try again or contact the administrator."
+              );
             } else {
               setUserData(data);
             }
@@ -44,7 +52,7 @@ export default function Welcome() {
       >
         Set user name
       </Button>
-      {error && <Text>Error!</Text>}
+      {error.length > 0 && <Text style={{ marginTop: 2 }}>{error}</Text>}
     </View>
   );
 }

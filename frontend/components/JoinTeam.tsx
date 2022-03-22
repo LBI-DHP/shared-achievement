@@ -1,52 +1,65 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Text, StyleSheet } from "react-native";
-import { Button, TextInput, Surface } from "react-native-paper";
+import { Button, Surface } from "react-native-paper";
 import { UserDataContext } from "./UserDataProvider";
 import dataManager from "./DataManager";
 import { Picker } from "@react-native-picker/picker";
-import { style } from "../constants/Styles";
+import CenteredActivityIndicator from "./CenteredActivityIndicator";
 
 export default function JoinOrCreateTeam() {
   const { userData, setUserData } = useContext(UserDataContext);
   const [allTeams, setAllTeams] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorOnLoadTeams, setErrorOnLoadTeams] = useState("");
+  const [errorOnJoinTeam, setErrorOnJoinTeam] = useState("");
 
   useEffect(() => {
     let mounted = true;
     dataManager.getAllTeams().then((response) => {
-      if (response !== null && mounted) setAllTeams(response);
+      if (mounted) {
+        if (response === -1)
+          setErrorOnLoadTeams(
+            "🚨 Error: Please check your internet connection."
+          );
+        else if (response === null)
+          setErrorOnLoadTeams(
+            "🚨 Internal Server Error: Please try again or contact the administrator."
+          );
+        else setAllTeams(response);
+        setIsLoading(false);
+      }
     });
     return () => {
       mounted = false;
     };
   }, []);
 
+  if (isLoading) return <CenteredActivityIndicator height={50} />;
+
   return (
     <Surface style={styles.surface}>
       <Text style={styles.header}>Select your Team</Text>
-      <Picker
-        selectedValue={selectedTeam}
-        onValueChange={(itemValue, itemIndex) => setSelectedTeam(itemValue)}
-      >
-        <Picker.Item enabled={false} label="=== select a team ===" value="" />
-        {allTeams.map((team) => {
-          return (
-            <Picker.Item label={team.name} value={team.id} key={team.id} />
-          );
-        })}
-      </Picker>
-      {/* <Text style={styles.header}>Create/Join a team</Text> */}
-      {/* <TextInput
-        style={{
-          margin: 10,
-          marginBottom: 0,
-        }}
-        label={"Team name"}
-        value={teamName}
-        multiline={false}
-        autoComplete={false}
-        onChangeText={(text) => setTeamName(text)}
-      /> */}
+      {errorOnLoadTeams.length > 0 && (
+        <Text style={{ marginTop: 2, marginBottom: 2, textAlign: "center" }}>
+          {errorOnLoadTeams}
+        </Text>
+      )}
+      {isLoading ? (
+        <CenteredActivityIndicator height={65} />
+      ) : (
+        <Picker
+          selectedValue={selectedTeam}
+          onValueChange={(itemValue) => setSelectedTeam(itemValue)}
+        >
+          <Picker.Item enabled={false} label="=== select a team ===" value="" />
+          {allTeams.map((team) => {
+            return (
+              <Picker.Item label={team.name} value={team.id} key={team.id} />
+            );
+          })}
+        </Picker>
+      )}
       <Button
         mode="contained"
         style={{
@@ -55,15 +68,26 @@ export default function JoinOrCreateTeam() {
         onPress={() => {
           const updatedUserData = { ...userData, team: selectedTeam };
           dataManager.updateUserData(updatedUserData).then((data) => {
-            if (data) {
-              setUserData(data);
-            }
+            if (data === -1)
+              setErrorOnJoinTeam(
+                "🚨 Error: Please check your internet connection."
+              );
+            else if (data === null)
+              setErrorOnJoinTeam(
+                "🚨 Internal Server Error: Please try again or contact the administrator."
+              );
+            else setUserData(data);
           });
         }}
-        disabled={selectedTeam.length === 0}
+        disabled={selectedTeam.length === 0 || isLoading}
       >
         {"Join team"}
       </Button>
+      {errorOnJoinTeam.length > 0 && (
+        <Text style={{ marginTop: 2, marginBottom: 10, textAlign: "center" }}>
+          {errorOnJoinTeam}
+        </Text>
+      )}
     </Surface>
   );
 }

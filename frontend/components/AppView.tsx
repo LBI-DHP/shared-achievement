@@ -7,16 +7,32 @@ import ConnectToGoogleFit from "./ConnectToGoogleFit";
 import { UserDataContext } from "./UserDataProvider";
 import dataManager from "./DataManager";
 import { Platform } from "react-native";
+import CenteredActivityIndicator from "./CenteredActivityIndicator";
+import NoInternetConnection from "../screens/NoInternetConnection";
 
 export default function AppView() {
-  const { userData, setUserData, updated } = useContext(UserDataContext);
+  const {
+    userData,
+    setUserData,
+    updated,
+    isUserDataLoading,
+    userDataLoadingError,
+  } = useContext(UserDataContext);
   const [isUserNameSet, setIsUserNameSet] = useState(false);
   const [isConnectedToGoogleFit, setIsConnectedToGoogleFit] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    dataManager.getGoogleAuthInfo().then((authInfo) => {
-      if (authInfo != null) setIsConnectedToGoogleFit(true);
-    });
+    let mounted = true;
+    dataManager
+      .getGoogleAuthInfo()
+      .then((authInfo) => {
+        if (authInfo != null && mounted) setIsConnectedToGoogleFit(true);
+      })
+      .finally(() => setIsLoading(false));
+    return () => {
+      mounted = false;
+    };
   }, [updated]);
 
   useEffect(() => {
@@ -24,6 +40,9 @@ export default function AppView() {
       setIsUserNameSet(true);
     }
   }, [userData]);
+
+  if (isUserDataLoading || isLoading) return <CenteredActivityIndicator />;
+  if (userDataLoadingError) return <NoInternetConnection />;
 
   if (!isUserNameSet) return <WelcomeScreen />;
   else if (Platform.OS === "android" && !isConnectedToGoogleFit)

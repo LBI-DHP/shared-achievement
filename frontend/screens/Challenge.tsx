@@ -15,7 +15,6 @@ export default function ChallengeScreen() {
   const [isUserInATeam, setIsUserInATeam] = useState(false);
   const { userData, mode, setMode, setNavigationIndex } =
     useContext(UserDataContext);
-  const [error, setError] = useState(false);
   const [teamName, setTeamName] = useState("");
 
   useEffect(() => {

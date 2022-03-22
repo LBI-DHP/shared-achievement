@@ -10,7 +10,7 @@ import dataManager from "../components/DataManager";
 export default function Team() {
   const [isUserInATeam, setIsUserInATeam] = useState(false);
   const { userData, setUserData, mode, setMode } = useContext(UserDataContext);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
   const [teamName, setTeamName] = useState("");
 
   useEffect(() => {
@@ -18,13 +18,17 @@ export default function Team() {
   }, [userData.team]);
 
   useEffect(() => {
-    if (isUserInATeam)
+    let mounted = true;
+    if (isUserInATeam && mounted)
       dataManager.getTeamData(userData.team).then((data) => {
-        if (data !== null) {
+        if (mounted && data !== null) {
           setTeamName(data.name);
           setMode(data.progressCalculationMode);
         }
       });
+    return () => {
+      mounted = false;
+    };
   }, [isUserInATeam]);
 
   return (
@@ -38,23 +42,36 @@ export default function Team() {
               disabled={!isUserInATeam}
               mode="contained"
               onPress={() => {
-                setError(false);
+                setError("");
                 const newUserData = {
                   ...userData,
                   team: null,
                 };
                 dataManager.updateUserData(newUserData).then((data) => {
-                  if (data !== null) {
+                  if (data === -1)
+                    setError(
+                      "🚨 Error: Please check your internet connection."
+                    );
+                  else if (data === null)
+                    setError(
+                      "🚨 Internal Server Error: Please try again or contact the administrator."
+                    );
+                  else {
                     setUserData(newUserData);
                     setMode(null);
-                  } else {
-                    setError(true);
                   }
                 });
               }}
             >
               Leave Team
             </Button>
+            {error.length > 0 && (
+              <Text
+                style={{ marginTop: 2, marginBottom: 10, textAlign: "center" }}
+              >
+                {error}
+              </Text>
+            )}
           </Surface>
         </View>
       ) : (

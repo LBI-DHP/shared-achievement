@@ -5,13 +5,14 @@ import dataManager from "../DataManager";
 import SendMotivationMessageDialog from "./SendMotivationMessageDialog";
 import TeamChartRelative from "./TeamChartRelative";
 import TeamChartAbsolute from "./TeamChartAbsolute";
-import { Surface } from "react-native-paper";
+import CenteredActivityIndicator from "../CenteredActivityIndicator";
 
 export default function TeamStatistics() {
   const { userData, updated, mode } = useContext(UserDataContext);
   const [teamMembersAndStepCountsOfToday, setTeamMembersAndStepCountsOfToday] =
     useState([]);
-  const [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
@@ -30,7 +31,7 @@ export default function TeamStatistics() {
     dataManager
       .getTeamMembersAndStepCountOfToday(userData.team)
       .then((teamMembersStepCountOfToday) => {
-        if (mounted && teamMembersStepCountOfToday !== null)
+        if (mounted && teamMembersStepCountOfToday !== null) {
           teamMembersStepCountOfToday.sort((a, b) =>
             a.userProgress < b.userProgress
               ? 1
@@ -38,12 +39,16 @@ export default function TeamStatistics() {
               ? -1
               : 0
           );
-        setTeamMembersAndStepCountsOfToday(teamMembersStepCountOfToday);
+          setTeamMembersAndStepCountsOfToday(teamMembersStepCountOfToday);
+        }
+        setIsLoading(false);
       });
     return () => {
       mounted = false;
     };
   }, [updated]);
+
+  if (isLoading) return <CenteredActivityIndicator height={100} />;
 
   return (
     <View style={{ paddingTop: 10 }}>

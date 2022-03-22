@@ -10,7 +10,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function Settings() {
   const { userData, setUserData, updated, setUpdated } =
     useContext(UserDataContext);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
   const [isUserNameChanged, setIsUserNameChanged] = useState(false);
   const [newUserName, setNewUserName] = useState(userData.username);
 
@@ -38,22 +38,25 @@ export default function Settings() {
         disabled={!isUserNameChanged}
         mode="contained"
         onPress={() => {
-          setError(false);
+          setError("");
           const newUserData = {
             ...userData,
             username: newUserName,
           };
           dataManager.updateUserData(newUserData).then((data) => {
-            if (data !== null) {
-              setUserData(newUserData);
-            } else {
-              setError(true);
-            }
+            if (data === -1)
+              setError("🚨 Error: Please check your internet connection.");
+            else if (data === null)
+              setError(
+                "🚨 Internal Server Error: Please try again or contact the administrator."
+              );
+            else setUserData(data);
           });
         }}
       >
         Update user name
       </Button>
+      {error.length > 0 && <Text style={{ marginTop: 2 }}>{error}</Text>}
       <Button
         style={{ marginTop: 10 }}
         mode="contained"

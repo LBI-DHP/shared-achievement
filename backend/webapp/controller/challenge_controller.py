@@ -25,16 +25,12 @@ def updateTeamChallengeProgress(teamChallenge:TeamChallenge):
     teamChallenge.save()
 
 
-def updateTeamMembersGoal(teamChallenge:TeamChallenge):
-    if teamChallenge.team.progressCalculationMode == TeamProgressCalculationMode.ABSOLUTE.name:
-        teamChallenge.goal = int(ChallengeDifficulty.NORMAL)
-        teamChallenge.teamMembersGoal = teamChallenge.goal * len(teamChallenge.team.members)
-    elif teamChallenge.team.progressCalculationMode == TeamProgressCalculationMode.RELATIVE.name:
-        teamChallenge.goal = -1
-        sumGoal = 0            
-        for member in teamChallenge.team.members:
-            sumGoal += member.targetGoal
-        teamChallenge.teamMembersGoal = sumGoal
+def updateTeamMembersGoal(teamChallenge:TeamChallenge):    
+    sumGoal = 0            
+    for member in teamChallenge.team.members:
+        sumGoal += member.targetGoal
+    teamChallenge.teamMembersGoal = sumGoal
+    teamChallenge.goal = sumGoal
     teamChallenge.save()
 
 @post_save(sender=StepCount)

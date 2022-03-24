@@ -13,6 +13,12 @@ from app import db
 # UserAchievementRelationshipDeferred = DeferredThroughModel()
 # UserNotificationRelationshipDeferred = DeferredThroughModel()
 
+class ChallengeDifficulty(IntEnum):
+    EASY = 8000,
+    NORMAL = 10000,
+    HARD = 15000,
+    EXPERT = 20000
+
 class BaseModel(signals.Model):
      class Meta:
         database = db.database
@@ -38,7 +44,7 @@ class User(BaseModel, BaseUser):
     age = IntegerField()
     weight = IntegerField()
     currentActivityLevel = IntegerField()
-    targetGoal = IntegerField(default=10000)
+    targetGoal = IntegerField(default=int(ChallengeDifficulty.NORMAL))
     def __unicode__(self):
         return self.username
 
@@ -53,11 +59,7 @@ class ChallengeStatus(Enum):
     IN_PROGRESS = 1
     FINISHED = 2
 
-class ChallengeDifficulty(IntEnum):
-    EASY = 8000,
-    NORMAL = 10000,
-    HARD = 15000,
-    EXPERT = 20000
+
 
 
 class Challenge(BaseModel): # Abstract class for UserChallenge and TeamChallenge

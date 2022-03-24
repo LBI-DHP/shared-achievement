@@ -21,27 +21,27 @@ def schedule_notifications():
 scheduler.add_job(schedule_notifications,'cron',hour=16, minute=16)
 
 
-def schedule_create_new_daily_challenges():
-    ### create personal challenges
-    users = (User.select())
-    for user in users:
-        userChallenge = UserChallenge()
-        userChallenge.name = f"{user.username}_daily_challenge"
-        userChallenge.date = datetime.now()
-        userChallenge.goal = user.targetGoal
-        userChallenge.progress = 0
-        userChallenge.user = user
-        userChallenge.save()
+# def schedule_create_new_daily_challenges():
+#     ### create personal challenges
+#     users = (User.select())
+#     for user in users:
+#         userChallenge = UserChallenge()
+#         userChallenge.name = f"{user.username}_daily_challenge"
+#         userChallenge.date = datetime.now()
+#         userChallenge.goal = user.targetGoal
+#         userChallenge.progress = 0
+#         userChallenge.user = user
+#         userChallenge.save()
 
-    ### create team challenges
-    teams = (Team.select())
-    for team in teams:
-        teamChallenge = TeamChallenge()
-        teamChallenge.name = 'Untersberg'
-        teamChallenge.goal = int(ChallengeDifficulty.NORMAL)
-        teamChallenge.team = team
-        teamChallenge.date = datetime.now()
-        teamChallenge.save()
+#     ### create team challenges
+#     teams = (Team.select())
+#     for team in teams:
+#         teamChallenge = TeamChallenge()
+#         teamChallenge.name = 'Untersberg'
+#         teamChallenge.goal = int(ChallengeDifficulty.NORMAL)
+#         teamChallenge.team = team
+#         teamChallenge.date = datetime.now()
+#         teamChallenge.save()
 
 # scheduler.add_job(schedule_create_new_daily_challenges,'cron',hour=16, minute=52)
 # scheduler.add_job(schedule_create_new_daily_challenges,'cron',hour=0, minute=1)

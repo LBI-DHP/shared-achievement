@@ -20,7 +20,6 @@ export default function ConnectToGoogleFit({ setIsConnectedToGoogleFit }) {
     token_type: null,
     requested_at_timestamp: null,
   });
-
   const [authRequest, authResponse, authPromptAsync] = Google.useAuthRequest({
     androidClientId: configJSON.googleConfig.clientID,
     expoClientId: configJSON.googleConfig.clientID,
@@ -29,6 +28,7 @@ export default function ConnectToGoogleFit({ setIsConnectedToGoogleFit }) {
     responseType: "code",
     scopes: configJSON.googleConfig.scopes,
   });
+  const [error, setError] = useState("");
 
   const getFirstToken = async () => {
     try {
@@ -54,9 +54,15 @@ export default function ConnectToGoogleFit({ setIsConnectedToGoogleFit }) {
         dataManager.setGoogleAuthInfo(newAuthInfo);
         setIsConnectedToGoogleFit(true);
       } else {
+        setError(
+          "🚨 Error: Could not connect to Google Fit. Please try again or contact the administrator."
+        );
         console.log("get first token response status: ", tokenResponseStatus);
       }
     } catch (error) {
+      setError(
+        "🚨 Error: Could not connect to Google Fit. Please check your internet connection."
+      );
       console.log("error on get first token:" + error);
     } finally {
       console.log("done with get first token request");
@@ -92,13 +98,16 @@ export default function ConnectToGoogleFit({ setIsConnectedToGoogleFit }) {
         onChangeText={(input) => setAuthorizationCode(input)}
       />
       <Button
+        disabled={authorizationCode.length < 1}
         mode="contained"
         onPress={() => {
+          setError("");
           getFirstToken();
         }}
       >
         Save Authorization Code
       </Button>
+      {error.length > 0 && <Text style={{ marginTop: 2 }}>{error}</Text>}
     </View>
   );
 }

@@ -9,6 +9,7 @@ import dataManager from "../DataManager";
 import { UserDataContext } from "../UserDataProvider";
 import { style as stepCounterStyles } from "./StepCounterStyles";
 import { style } from "../../constants/Styles";
+import ContributeButton from "./ContributeButton";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -186,20 +187,13 @@ export default function StepCounter() {
             since last contribution
           </Text>
         </View>
-        <Button
-          disabled={newSteps === 0}
-          style={{ alignSelf: "stretch" }}
-          mode="contained"
-          onPress={() => {
-            dataManager.pushSteps(userData.id, newSteps).then((worked) => {
-              if (worked) resetStepsAfterContribution();
-              else setError(true);
-            });
-          }}
-        >
-          Contribute new steps
-        </Button>
       </Surface>
+      <ContributeButton
+        newSteps={newSteps}
+        userData={userData}
+        resetStepsAfterContribution={() => resetStepsAfterContribution()}
+        setError={(set) => setError(set)}
+      />
     </>
   );
 }

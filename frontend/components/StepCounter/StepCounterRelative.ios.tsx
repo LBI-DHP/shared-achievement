@@ -9,6 +9,7 @@ import { Text } from "react-native";
 import StepsBarChart from "./StepsBarChartRelative";
 import { style } from "../../constants/Styles";
 import { style as stepCounterStyles } from "./StepCounterStyles";
+import ContributeButton from "./ContributeButton";
 
 export default function StepCounter() {
   const [isPedometerAvailable, setIsPedometerAvailable] = useState(false);
@@ -84,9 +85,7 @@ export default function StepCounter() {
   };
 
   const resetStepsAfterContribution = () => {
-    setContributedSteps(
-      stepCountToday + currentStepCount - currentStepCountAdded
-    );
+    setContributedSteps(stepCountToday + currentStepCount);
     setNewSteps(0);
     setCurrentStepCountAdded(currentStepCount);
     setUpdated(!updated);
@@ -105,27 +104,13 @@ export default function StepCounter() {
           contributedSteps={contributedSteps}
           newSteps={newSteps + (currentStepCount - currentStepCountAdded)}
         />
-        <Button
-          disabled={
-            newSteps === 0 && currentStepCount - currentStepCountAdded === 0
-          }
-          style={{ alignSelf: "stretch" }}
-          mode="contained"
-          onPress={() => {
-            dataManager
-              .pushSteps(
-                userData.id,
-                newSteps + (currentStepCount - currentStepCountAdded)
-              )
-              .then((worked) => {
-                if (worked) resetStepsAfterContribution();
-                else setError(true);
-              });
-          }}
-        >
-          Contribute new steps
-        </Button>
       </Surface>
+      <ContributeButton
+        newSteps={newSteps + (currentStepCount - currentStepCountAdded)}
+        userData={userData}
+        resetStepsAfterContribution={() => resetStepsAfterContribution()}
+        setError={(set) => setError(set)}
+      />
     </>
   );
 }

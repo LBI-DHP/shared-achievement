@@ -7,7 +7,7 @@ export default function TeamMemberBarChartRelative({
   contributedSteps,
 }) {
   const { width } = useWindowDimensions();
-  const windowWidth = width - 50;
+  const windowWidth = width - 60;
 
   const colorStepsGoal = "#bebdbd";
   const colorStepsContributed = "#ffbb00";

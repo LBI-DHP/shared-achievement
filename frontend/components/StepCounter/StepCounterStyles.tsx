@@ -23,4 +23,31 @@ export const style = StyleSheet.create({
     padding: 10,
     flexDirection: "row",
   },
+  contributeStepsButton: {
+    backgroundColor: colorNewSteps,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
+  },
+  contributeStepsButtonDisabled: {
+    backgroundColor: "#6d6d6d",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
+  },
+
+  icons: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "white",
+    textAlign: "center",
+    textTransform: "uppercase",
+    fontSize: 15,
+    fontWeight: "bold",
+    padding: 25,
+  },
 });

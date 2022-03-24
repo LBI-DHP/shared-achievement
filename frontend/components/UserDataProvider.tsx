@@ -19,6 +19,8 @@ export const UserDataContext = React.createContext({
   setMode: ({}) => {},
   navigationIndex: null,
   setNavigationIndex: ({}) => {},
+  isUserDataLoading: true,
+  userDataLoadingError: false,
 });
 
 export const UserDataProvider = (props) => {
@@ -34,6 +36,9 @@ export const UserDataProvider = (props) => {
   const [mode, setMode] = useState(null);
   const [navigationIndex, setNavigationIndex] = useState(null);
   const [notification, setNotification] = useState(null);
+  const [isUserDataLoading, setIsUserDataLoading] = useState(true);
+  const [userDataLoadingError, setUserDataLoadingError] = useState(false);
+
   const notificationListener = useRef(null);
   const responseListener = useRef(null);
 
@@ -46,24 +51,30 @@ export const UserDataProvider = (props) => {
   });
 
   const createNewUser = (mounted) => {
-    dataManager.getUserPassword().then((password) => {
-      registerForPushNotificationsAsync()
-        .then((token) => {
-          if (mounted)
-            setUserData({
-              ...userData,
-              expoToken: token,
-              password: password,
-            });
-        })
-        .catch((e) => {
-          console.log("Could not register for push notifications", e);
-          setUserData({
-            ...userData,
-            password: password,
+    dataManager
+      .getUserPassword()
+      .then((password) => {
+        registerForPushNotificationsAsync()
+          .then((token) => {
+            if (mounted)
+              setUserData({
+                ...userData,
+                expoToken: token,
+                password: password,
+              });
+          })
+          .catch((e) => {
+            console.log("Could not register for push notifications", e);
+            if (mounted)
+              setUserData({
+                ...userData,
+                password: password,
+              });
           });
-        });
-    });
+      })
+      .finally(() => {
+        if (mounted) setIsUserDataLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -73,10 +84,16 @@ export const UserDataProvider = (props) => {
       .then((id) => {
         if (id) {
           dataManager.getUserData(id).then((data) => {
-            if (data === null) {
-              createNewUser(mounted);
-            } else {
-              if (mounted) setUserData(data);
+            if (mounted) {
+              if (data === -1) {
+                setUserDataLoadingError(true);
+                setIsUserDataLoading(false);
+              } else if (data === null) {
+                createNewUser(mounted);
+              } else {
+                setUserData(data);
+                setIsUserDataLoading(false);
+              }
             }
           });
         } else {
@@ -87,7 +104,7 @@ export const UserDataProvider = (props) => {
 
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
-        setNotification(notification);
+        if (mounted) setNotification(notification);
       });
 
     responseListener.current =
@@ -115,6 +132,8 @@ export const UserDataProvider = (props) => {
         setMode,
         navigationIndex,
         setNavigationIndex,
+        isUserDataLoading,
+        userDataLoadingError,
       }}
     >
       {props.children}

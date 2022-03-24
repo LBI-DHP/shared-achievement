@@ -107,6 +107,7 @@ export default class dataManager {
       return null;
     } catch (error) {
       console.log("error on get user data:" + error);
+      return -1;
     } finally {
       console.log("done with get user request");
     }
@@ -137,9 +138,11 @@ export default class dataManager {
           return await this.mapResponseUserDataToUserData(responseJSON);
         }
       }
+      if (response.status === 409) return -2;
       return null;
     } catch (error) {
       console.log("error on register user:" + error);
+      return -1;
     } finally {
       console.log("done with register user request");
     }
@@ -147,7 +150,6 @@ export default class dataManager {
 
   static updateUserData = async (userData) => {
     try {
-      console.log("Auth", userData.username, userData.password);
       const response = await fetch(
         configJSON.serverConfig.root + "/api/user/" + userData.id + "/",
         {
@@ -179,6 +181,7 @@ export default class dataManager {
       return null;
     } catch (error) {
       console.log("error on update user:" + error);
+      return -1;
     } finally {
       console.log("done with update user request");
     }
@@ -290,12 +293,13 @@ export default class dataManager {
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.indexOf("application/json") !== -1) {
           const responseJSON = await response.json();
-          if (responseJSON.objects) return responseJSON.objects;
+          if (responseJSON.objects !== undefined) return responseJSON.objects;
         }
       }
       return null;
     } catch (error) {
       console.log("error on get all teams:" + error);
+      return -1;
     } finally {
       console.log("done with get all teams request");
     }

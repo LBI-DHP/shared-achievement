@@ -6,6 +6,7 @@ import Clouds from "./Clouds";
 import FlagTop from "./FlagTop";
 import { UserDataContext } from "../UserDataProvider";
 import dataManager from "../DataManager";
+import CenteredActivityIndicator from "../CenteredActivityIndicator";
 
 export default function Challenge({ isUserInATeam }) {
   const { userData, updated, setMode, mode } = useContext(UserDataContext);
@@ -13,6 +14,7 @@ export default function Challenge({ isUserInATeam }) {
     useState(0);
   const [teamAbsoluteStepCountToday, setTeamAbsoluteStepCountToday] =
     useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
@@ -20,13 +22,17 @@ export default function Challenge({ isUserInATeam }) {
       dataManager
         .getTeamChallengeData(userData.team)
         .then((data) => {
-          if (userData.team != null && mounted) console.log("Team data", data);
-          setTeamRelativeStepCountToday(data.progress / 100);
-          setTeamAbsoluteStepCountToday(data.total_steps);
+          if (mounted) {
+            setTeamRelativeStepCountToday(data.progress / 100);
+            setTeamAbsoluteStepCountToday(data.total_steps);
+            setIsLoading(false);
+          }
         })
         .catch((error) => {
           console.log(error);
         });
+    } else {
+      setIsLoading(false);
     }
     return () => {
       mounted = false;
@@ -64,6 +70,9 @@ export default function Challenge({ isUserInATeam }) {
     untersbergSvgViewBoxHeight -
     10 -
     (untersbergSvgViewBoxHeight - 10 - 7.5) * progress;
+
+  if (isLoading)
+    return <CenteredActivityIndicator height={untersbergSvgViewBoxHeight} />;
 
   if (!isUserInATeam) {
     return (

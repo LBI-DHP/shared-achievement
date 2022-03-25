@@ -1,6 +1,7 @@
 """
 views imports app, auth, and models, but none of these import views
 """
+import io
 from asyncio.log import logger
 from crypt import methods
 from http.client import HTTPResponse
@@ -19,9 +20,11 @@ import json
 import datetime
 from controller.push_notifications import send_push_notification
 from controller.challenge_controller import updateTeamChallengeProgress, updateTeamMembersGoal
-
-
-
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+import pandas as pd
+import seaborn as sns
 
 @app.route('/')
 def homepage():
@@ -248,6 +251,35 @@ def push_steps():
     steps.save()
     
     return Response(json.dumps(model_to_dict(steps, recurse=False), default=str, indent=4, sort_keys=True), mimetype='application/json')    
+    
+
+@app.route('/streaks/team/<team_id>')
+def team_streaks(team_id):
+    team = Team.get_or_none(Team.id == team_id)
+    if team is None:
+        return "Team does not exist", 404
+
+    query = TeamChallenge.select().where(TeamChallenge.team == team_id).order_by(TeamChallenge.date.desc()).limit(7)
+    
+    if team.progressCalculationMode == TeamProgressCalculationMode.ABSOLUTE.name:
+        y='total_steps'
+        y_label = '# Steps'
+    else:
+        y = 'progress'
+        y_label = 'Progress in %'
+    #res = list(query.dicts())
+    #return jsonify(res)
+    df = pd.DataFrame(list(query.dicts()))
+
+    fig = Figure()
+    axis = fig.add_subplot(1, 1, 1)
+    ax = sns.barplot(data=df, x='date',y=y, ax=axis, color='#2f95dc')
+    ax.set_ylabel(y_label)
+    #plt.xticks(fontsize=10, rotation=0)
+    ax.xaxis.set_tick_params(labelsize=8)
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    return Response(output.getvalue(), mimetype='image/png')
     
 
 

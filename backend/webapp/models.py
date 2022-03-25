@@ -44,7 +44,8 @@ class User(BaseModel, BaseUser):
     age = IntegerField()
     weight = IntegerField()
     currentActivityLevel = IntegerField()
-    targetGoal = IntegerField(default=int(ChallengeDifficulty.NORMAL))
+    targetGoal = IntegerField(default=int(ChallengeDifficulty.NORMAL))    
+    
     def __unicode__(self):
         return self.username
 

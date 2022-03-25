@@ -6,7 +6,7 @@ blueprints here too.
 then when you want to run your app, you point to main.py or `main.app`
 """
 import logging
-from random import random
+import random
 from unicodedata import name
 from xmlrpc.client import DateTime
 from app import app, db
@@ -49,12 +49,15 @@ def fill_in_data():
     teamHB.progressCalculationMode = TeamProgressCalculationMode.ABSOLUTE.name
     teamHB.save()
 
-    challengeGaisberg = TeamChallenge()
-    challengeGaisberg.name = 'Gaisberg'
-    challengeGaisberg.goal = int(ChallengeDifficulty.NORMAL)
-    challengeGaisberg.team = teamLBI
-    challengeGaisberg.date = datetime.date.today() - datetime.timedelta(days=1) #datetime.now() 
-    challengeGaisberg.save()
+    for i in range(1, 10):
+        challengeGaisberg = TeamChallenge()
+        challengeGaisberg.name = 'Gaisberg'
+        challengeGaisberg.goal = int(ChallengeDifficulty.NORMAL)
+        challengeGaisberg.team = teamLBI
+        challengeGaisberg.total_steps = int(challengeGaisberg.goal * random.random())
+        challengeGaisberg.progress = (challengeGaisberg.total_steps / challengeGaisberg.goal) * 100
+        challengeGaisberg.date = datetime.date.today() - datetime.timedelta(days=i) #datetime.now() 
+        challengeGaisberg.save()
 
 
     challengeUntersberg = TeamChallenge()
@@ -90,7 +93,9 @@ def fill_in_data():
     users = User.select().where(~User.team.is_null()).execute()
 
     for u in users:
-        
+        u.set_password(u.username)
+        u.save()
+
         userChallenge = UserChallenge()
         userChallenge.name = f"{u.username}_daily_challenge"
         userChallenge.date = datetime.datetime.now()

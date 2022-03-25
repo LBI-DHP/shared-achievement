@@ -10,7 +10,7 @@ export default function TeamChartRelative({
   setSelectedUser,
   currentUserName,
 }) {
-  let userProgress = Math.floor(member.userProgress * 100);
+  let userProgress = Math.round(member.userProgress * 100);
   return (
     <View style={TeamListStyle.surfaceRel} key={member.username}>
       <View style={TeamListStyle.viewRel}>

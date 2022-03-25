@@ -40,14 +40,16 @@ export default function StepCounter() {
   }, []);
 
   useEffect(() => {
+    let mounted = true;
     if (googleAuthInfo.access_token) {
       isTokenValid().then((isValid) => {
-        if (isValid) setIsGoogleTokenValid(true);
-        else {
-          getNewToken();
-        }
+        if (isValid && mounted) setIsGoogleTokenValid(true);
+        else getNewToken(mounted);
       });
     }
+    return () => {
+      mounted = false;
+    };
   }, [googleAuthInfo]);
 
   useEffect(() => {
@@ -69,9 +71,15 @@ export default function StepCounter() {
   }, [stepCountToday]);
 
   useEffect(() => {
-    if (isGoogleTokenValid && googleAuthInfo) {
+    let mounted = true;
+    if (!isGoogleTokenValid && googleAuthInfo.access_token)
+      getNewToken(mounted);
+    else if (isGoogleTokenValid && googleAuthInfo.access_token) {
       getSteps();
     }
+    return () => {
+      mounted = false;
+    };
   }, [isGoogleTokenValid, updated]);
 
   const resetStepsAfterContribution = () => {
@@ -80,7 +88,7 @@ export default function StepCounter() {
     setUpdated(!updated);
   };
 
-  const getNewToken = async () => {
+  const getNewToken = async (mounted) => {
     try {
       const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
         method: "POST",
@@ -101,9 +109,11 @@ export default function StepCounter() {
           refresh_token: googleAuthInfo.refresh_token,
           requested_at_timestamp: dateNow.valueOf(),
         };
-        setGoogleAuthInfo(newAuthInfo);
-        dataManager.setGoogleAuthInfo(newAuthInfo);
-        setIsGoogleTokenValid(true);
+        if (mounted) {
+          setGoogleAuthInfo(newAuthInfo);
+          dataManager.setGoogleAuthInfo(newAuthInfo);
+          setIsGoogleTokenValid(true);
+        }
       } else {
         setError(
           "🚨 Error (1): Get new Google Fit token request failed. Response status: " +
@@ -195,24 +205,14 @@ export default function StepCounter() {
           stepsResponseJSON.bucket[0].dataset[0].point[0].value.length !== 0 &&
           stepsResponseJSON.bucket[0].dataset[0].point[0].value[0].intVal
         ) {
-          console.log("jaaaaaaaaaaajaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-          console.log(
-            stepsResponseJSON.bucket[0].dataset[0].point[0].value[0].intVal
-          );
-
           setStepCountToday(
             stepsResponseJSON.bucket[0].dataset[0].point[0].value[0].intVal
           );
         } else setIsLoading(false);
-      } else {
-        setError(
-          "🚨 Error (4): Fetch steps from Google Fit request failed. Response status: " +
-            stepsResponseStatus
-        );
-      }
+      } else setIsGoogleTokenValid(false);
     } catch (error) {
       setError(
-        "🚨 Error (5): Fetch steps from Google Fit request failed. Please check your internet connection. Error info: " +
+        "🚨 Error (4): Fetch steps from Google Fit request failed. Please check your internet connection. Error info: " +
           error
       );
     }

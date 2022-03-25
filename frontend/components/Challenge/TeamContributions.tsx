@@ -44,19 +44,23 @@ export default function TeamContributions() {
       {teamMembersAndStepCountsOfToday.map((member) => {
         if (mode === "RELATIVE") {
           return (
-            <View style={style.viewMember} key={member.username}>
+            <View
+              style={
+                member.username !== userData.username
+                  ? style.viewMember
+                  : style.viewMe
+              }
+              key={member.username}
+            >
               <View style={style.viewContribution}>
                 <Text style={style.textContribution}>
-                  {Math.floor(member.userProgress * 100)}
+                  {Math.round(member.userProgress * 100)}
                 </Text>
                 <Text style={style.unitContribution}> %</Text>
               </View>
               <Text style={style.name}>
                 {member.username === userData.username ? (
-                  <>
-                    {truncateString(member.username, 1)}
-                    <Text style={{ fontWeight: "normal" }}> (me)</Text>
-                  </>
+                  <Text style={{ fontWeight: "normal" }}>me</Text>
                 ) : (
                   truncateString(member.username, 4)
                 )}
@@ -65,9 +69,16 @@ export default function TeamContributions() {
           );
         } else {
           return (
-            <View style={style.viewMember} key={member.username}>
+            <View
+              style={
+                member.username !== userData.username
+                  ? style.viewMember
+                  : style.viewMe
+              }
+              key={member.username}
+            >
               <View style={style.viewContribution}>
-                <Text style={style.textContribution}>10000</Text>
+                <Text style={style.textContribution}>{member.sumSteps}</Text>
                 <Text style={style.unitContribution}>
                   {" "}
                   <Foundation name="foot" size={15} color="black" />
@@ -75,10 +86,7 @@ export default function TeamContributions() {
               </View>
               <Text style={style.name}>
                 {member.username === userData.username ? (
-                  <>
-                    {truncateString(member.username, 1)}
-                    <Text style={{ fontWeight: "normal" }}> (me)</Text>
-                  </>
+                  <Text style={{ fontWeight: "normal" }}>me</Text>
                 ) : (
                   truncateString(member.username, 4)
                 )}
@@ -115,12 +123,22 @@ export const style = StyleSheet.create({
   viewMember: {
     flexDirection: "column",
     padding: 5,
-    // backgroundColor: "#dae7ec",
     borderWidth: 1,
-    borderColor: "#dae7ec",
+    borderColor: "#7ebdd8",
     borderRadius: 5,
     width: 70,
     marginRight: 5,
     marginBottom: 5,
+  },
+  viewMe: {
+    flexDirection: "column",
+    padding: 5,
+    borderWidth: 1,
+    borderColor: "#ffbb00",
+    borderRadius: 5,
+    width: 70,
+    marginRight: 5,
+    marginBottom: 5,
+    fontWeight: "normal",
   },
 });

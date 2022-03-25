@@ -1,5 +1,5 @@
 import * as React from "react";
-import Svg, { Polygon, Circle, Rect } from "react-native-svg";
+import Svg, { Polygon, Circle, Rect, Text } from "react-native-svg";
 
 export default function FlagTop(props) {
   const {
@@ -8,6 +8,8 @@ export default function FlagTop(props) {
     svgViewBoxWidth,
     svgViewBoxHeight,
     progressPercent,
+    teamAbsoluteStepGoal,
+    mode,
   } = props;
 
   return (
@@ -16,6 +18,11 @@ export default function FlagTop(props) {
       width={svgWidth}
       viewBox={"0 0 " + svgViewBoxWidth + " " + svgViewBoxHeight}
     >
+      {mode === "ABSOLUTE" && (
+        <Text x="235" y="18" fontSize={20} fontWeight="bold" fill={"white"}>
+          {teamAbsoluteStepGoal} steps
+        </Text>
+      )}
       <Rect fill="black" x="207.63" y="1.27" width="1.27" height="31.73" />
       <Polygon
         fill={progressPercent === 1 ? "#1300bd" : "#a12b2b"}

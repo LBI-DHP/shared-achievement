@@ -9,12 +9,13 @@ import dataManager from "../DataManager";
 import CenteredActivityIndicator from "../CenteredActivityIndicator";
 
 export default function Challenge({ isUserInATeam }) {
-  const { userData, updated, setMode, mode } = useContext(UserDataContext);
+  const { userData, updated, mode } = useContext(UserDataContext);
   const [teamRelativeStepCountToday, setTeamRelativeStepCountToday] =
     useState(0);
   const [teamAbsoluteStepCountToday, setTeamAbsoluteStepCountToday] =
     useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [teamAbsoluteStepGoal, setTeamAbsoluteStepGoal] = useState(0);
 
   useEffect(() => {
     let mounted = true;
@@ -25,6 +26,7 @@ export default function Challenge({ isUserInATeam }) {
           if (mounted) {
             setTeamRelativeStepCountToday(data.progress / 100);
             setTeamAbsoluteStepCountToday(data.total_steps);
+            setTeamAbsoluteStepGoal(data.teamMembersGoal);
             setIsLoading(false);
           }
         })
@@ -119,6 +121,8 @@ export default function Challenge({ isUserInATeam }) {
         svgViewBoxWidth={untersbergSvgViewBoxWidth}
         svgViewBoxHeight={flagSvgViewBoxHeight}
         progressPercent={progress}
+        teamAbsoluteStepGoal={teamAbsoluteStepGoal}
+        mode={mode}
       />
       <Untersberg
         svgWidth={untersbergSvgWidth}
@@ -127,6 +131,8 @@ export default function Challenge({ isUserInATeam }) {
         svgViewBoxHeight={untersbergSvgViewBoxHeight}
         progressPosition={progressPosition}
         progressPercent={progress}
+        mode={mode}
+        teamAbsoluteStepCountToday={teamAbsoluteStepCountToday}
       />
     </View>
   );

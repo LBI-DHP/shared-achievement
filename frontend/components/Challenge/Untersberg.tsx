@@ -10,6 +10,8 @@ export default function Untersberg(props) {
     svgViewBoxHeight,
     progressPosition,
     progressPercent,
+    mode,
+    teamAbsoluteStepCountToday,
   } = props;
 
   const startPoint = { x: 217, y: 237 };
@@ -218,7 +220,9 @@ export default function Untersberg(props) {
             : progressPosition + 25
         }
       >
-        {Math.round(progressPercent * 100)}%
+        {mode === "RELATIVE"
+          ? Math.round(progressPercent * 100) + "%"
+          : teamAbsoluteStepCountToday + " steps"}
       </Text>
       <Circle
         fill={progressPercent != 1 ? "#004A99" : "none"}

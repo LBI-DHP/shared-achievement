@@ -1,24 +1,27 @@
 // https://snack.expo.dev/@yoobit0616/pedometer-functional
 
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import dataManager from "../DataManager";
 import { Text, View, TouchableOpacity } from "react-native";
 import { style as stepCounterStyles } from "./StepCounterStyles";
 import { Foundation, FontAwesome } from "@expo/vector-icons";
+import { UserDataContext } from "../UserDataProvider";
 
 export default function ContributeButton({
+  isLoadingStepCounter,
   newSteps,
-  userData,
   resetStepsAfterContribution,
-  setError,
 }) {
   const [isLoading, setIsLoading] = useState(false);
+  const { userData, updated, setUpdated } = useContext(UserDataContext);
+  const disabled = newSteps === 0 || isLoading || isLoadingStepCounter;
+  const [error, setError] = useState("");
 
   return (
     <TouchableOpacity
-      disabled={newSteps === 0 || isLoading}
+      disabled={disabled}
       style={
-        newSteps === 0
+        disabled
           ? stepCounterStyles.contributeStepsButtonDisabled
           : stepCounterStyles.contributeStepsButton
       }
@@ -26,8 +29,10 @@ export default function ContributeButton({
         if (!isLoading) {
           setIsLoading(true);
           dataManager.pushSteps(userData.id, newSteps).then((worked) => {
-            if (worked) resetStepsAfterContribution();
-            else setError(true);
+            if (worked) {
+              resetStepsAfterContribution();
+              setUpdated(updated!);
+            } else setError("true");
             setIsLoading(false);
           });
         }

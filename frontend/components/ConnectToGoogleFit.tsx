@@ -11,15 +11,6 @@ WebBrowser.maybeCompleteAuthSession();
 
 export default function ConnectToGoogleFit({ setIsConnectedToGoogleFit }) {
   const [authorizationCode, setAuthorizationCode] = useState("");
-  const [googleAuthInfo, setGoogleAuthInfo] = useState({
-    access_token: null,
-    expires_in: null,
-    id_token: null,
-    refresh_token: null,
-    scope: null,
-    token_type: null,
-    requested_at_timestamp: null,
-  });
   const [authRequest, authResponse, authPromptAsync] = Google.useAuthRequest({
     androidClientId: configJSON.googleConfig.clientID,
     expoClientId: configJSON.googleConfig.clientID,
@@ -50,7 +41,6 @@ export default function ConnectToGoogleFit({ setIsConnectedToGoogleFit }) {
           ...tokenResponseJSON,
           requested_at_timestamp: dateNow.valueOf(),
         };
-        setGoogleAuthInfo(newAuthInfo);
         dataManager.setGoogleAuthInfo(newAuthInfo);
         setIsConnectedToGoogleFit(true);
       } else {

@@ -4,15 +4,6 @@ import configJSON from "../config.json";
 import base64 from "react-native-base64";
 
 export default class dataManager {
-  /*
-   * Usage:
-   *  import DataManager: import dataManager from "../components/DataManager"
-   *  call getUserId (returns a promise): dataManager.getUserId()
-   *
-   * TODO:
-   *  some more error handling
-   */
-
   static mapResponseUserDataToUserData = async (responseUserData) => {
     if (!responseUserData.password) {
       responseUserData.password = await this.getUserPassword();
@@ -186,34 +177,6 @@ export default class dataManager {
       console.log("done with update user request");
     }
   };
-
-  // static getTeamStepCount = async (id) => {
-  //   try {
-  //     const response = await fetch(
-  //       configJSON.serverConfig.root + "/stepcounttoday/team/" + id,
-  //       {
-  //         method: "GET",
-  //         headers: {
-  //           Accept: "application/json",
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
-
-  //     if (response.ok) {
-  //       const contentType = response.headers.get("content-type");
-  //       if (contentType && contentType.indexOf("application/json") !== -1) {
-  //         const responseJSON = await response.json();
-  //         if (responseJSON.total_steps) return responseJSON.total_steps;
-  //       }
-  //     }
-  //     return null;
-  //   } catch (error) {
-  //     console.log("error on get team step count data:" + error);
-  //   } finally {
-  //     console.log("done with get team step count request");
-  //   }
-  // };
 
   static getUserChallengeData = async (id) => {
     try {

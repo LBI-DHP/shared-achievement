@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-import { ScrollView, Text, StyleSheet } from "react-native";
+import { ScrollView, View, Text, StyleSheet } from "react-native";
 import { Button, Surface } from "react-native-paper";
 import { style } from "../constants/Styles";
 import Challenge from "../components/Challenge/Challenge";
 import TeamContributions from "../components/Challenge/TeamContributions";
 // @ts-ignore
-import StepCounterAbsolute from "../components/StepCounter/StepCounterAbsolute";
-// @ts-ignore
-import StepCounterRelative from "../components/StepCounter/StepCounterRelative";
+import StepCounter from "../components/StepCounter/StepCounter";
 import dataManager from "../components/DataManager";
 import { UserDataContext } from "../components/UserDataProvider";
 
@@ -32,36 +30,38 @@ export default function ChallengeScreen() {
   }, [isUserInATeam]);
 
   return (
-    <ScrollView style={style.container}>
-      <Surface style={styles.surface}>
-        {isUserInATeam && (
-          <Text style={style.cardHeader}>Progress of Team {teamName}</Text>
-        )}
-        <Challenge isUserInATeam={isUserInATeam} />
-        {/* {isUserInATeam && <TeamContributions />} */}
-      </Surface>
-      {isUserInATeam ? (
-        <>
-          {mode === "RELATIVE" ? (
-            <StepCounterRelative />
-          ) : (
-            <StepCounterAbsolute />
-          )}
-        </>
-      ) : (
-        <Button
-          mode="contained"
+    <>
+      <ScrollView style={styles.container}>
+        <View
           style={{
-            marginTop: 10,
-          }}
-          onPress={() => {
-            setNavigationIndex(1);
+            paddingBottom: 35,
           }}
         >
-          Select a team
-        </Button>
-      )}
-    </ScrollView>
+          <Surface style={styles.surface}>
+            {isUserInATeam && (
+              <Text style={style.cardHeader}>Progress of Team {teamName}</Text>
+            )}
+            <Challenge isUserInATeam={isUserInATeam} />
+            {isUserInATeam && <TeamContributions />}
+          </Surface>
+          {isUserInATeam ? (
+            <StepCounter />
+          ) : (
+            <Button
+              mode="contained"
+              style={{
+                marginTop: 10,
+              }}
+              onPress={() => {
+                setNavigationIndex(1);
+              }}
+            >
+              Select a team
+            </Button>
+          )}
+        </View>
+      </ScrollView>
+    </>
   );
 }
 
@@ -70,6 +70,12 @@ const styles = StyleSheet.create({
     elevation: 4,
     borderRadius: 5,
     marginBottom: 10,
+  },
+  container: {
+    padding: 20,
+    flex: 1,
+    // minHeight: "100%",
+    // backgroundColor: "red",
   },
   subheading: {
     fontSize: 20,

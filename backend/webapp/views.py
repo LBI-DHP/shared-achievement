@@ -28,7 +28,7 @@ import seaborn as sns
 
 @app.route('/')
 def homepage():
-    return "hello"
+    return "hello shared achievements"
 
 
 @app.route('/register', methods=['POST'])

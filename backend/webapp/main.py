@@ -125,6 +125,7 @@ if __name__ == '__main__':
     logger.log(logging.INFO, "start logger")
     create_tables()
     fill_in_data()
+    print("start shared achievements server server")
     #app.run()
     # app.run(port=11883)
-    app.run(host="0.0.0.0", port=80)
+    app.run(host="0.0.0.0", port=11883)

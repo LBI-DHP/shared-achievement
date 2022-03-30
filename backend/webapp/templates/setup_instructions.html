@@ -1,0 +1,69 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}Instructions{% endblock %}
+
+{% block content %}
+
+    {% if os == 'ios' %}
+    <h2>Setup Pedometer for iOS Instructions</h2>
+    <ul class="list-group">
+        <li class="list-group-item">
+            1. Open the <i>Settings</i> app
+            <img src="{{url_for('static', filename='instructions/ios/01_open_settings.PNG')}}" width="100" class="rounded mx-auto d-block" align="middle"/>
+
+        </li>
+        <li class="list-group-item">
+            2. Navigate to <i>Privacy</i>
+            <img src="{{url_for('static', filename='instructions/ios/02_open_settings_privacy.PNG')}}" width="100" class="rounded mx-auto d-block" align="middle"/>
+        </li>
+        <li class="list-group-item">
+            3. Select <i>Motion and Fitness</i>
+            <img src="{{url_for('static', filename='instructions/ios/03_open_setting_privacy_motion.PNG')}}" width="100" class="rounded mx-auto d-block" align="middle"/>
+        </li>
+        <li class="list-group-item">
+            4. Enable <i>Fitness Tracking</i>
+            <img src="{{url_for('static', filename='instructions/ios/04_enable_fitness_tracking.PNG')}}" width="100" class="rounded mx-auto d-block" align="middle"/>
+        </li>
+        <li class="list-group-item">
+            5. Open the <i>Health</i> app
+            <img src="{{url_for('static', filename='instructions/ios/05_open_health_app.PNG')}}" width="100" class="rounded mx-auto d-block" align="middle"/>
+        </li>
+        <li class="list-group-item">
+            6. In the Health app, navigate to the <i>Browse</i> tab. There you should be able to see your steps.
+            <img src="{{url_for('static', filename='instructions/ios/06_open_health_activity.PNG')}}" width="100" class="rounded mx-auto d-block" align="middle"/>
+        </li>
+      </ul>
+    {% endif %}
+
+
+    {% if os == 'android' %}
+    <h2>Setup Pedometer for Android Instructions</h2>
+    <ul class="list-group">
+        <li class="list-group-item">
+            1. Install the Google Fit:<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.fitness"> Activity Tracking app</a> from the play store.
+            <img src="{{url_for('static', filename='instructions/android/01_install_google_fit_phone.png')}}" width="100" class="rounded mx-auto d-block" align="middle"/>
+
+        </li>
+        <li class="list-group-item">
+            2. Open the Google Fit app. Log in with your Google account, enter your biometric data, and give permission to assess your step count.
+            <img src="{{url_for('static', filename='instructions/android/02_open_google_fit.png')}}" width="100" class="rounded mx-auto d-block" align="middle"/>
+            <img src="{{url_for('static', filename='instructions/android/03_enter_your_biometrics.png')}}" width="100" class="rounded mx-auto d-block" align="middle"/>
+        </li>
+        <li class="list-group-item">
+            3. Give permission to track your activities
+            <img src="{{url_for('static', filename='instructions/android/04_turn_on_tracking.png')}}" width="100" class="rounded mx-auto d-block" align="middle"/>
+            <img src="{{url_for('static', filename='instructions/android/05_allow_tracking.png')}}" width="100" class="rounded mx-auto d-block" align="middle"/>
+        </li>
+        <li class="list-group-item">
+            4. (Optional) Allow to use location services.
+            <img src="{{url_for('static', filename='instructions/android/06_turn_on_location.png')}}" width="100" class="rounded mx-auto d-block" align="middle"/>
+        </li>
+        <li class="list-group-item">
+            5. Set your personal goals. This is a required step to set up Google Fit. However, it will not be assessed in the study.
+            <img src="{{url_for('static', filename='instructions/android/07_set_activity_goals.png')}}" width="100" class="rounded mx-auto d-block" align="middle"/>
+        </li>
+        
+      </ul>
+    {% endif %}
+
+{% endblock %}

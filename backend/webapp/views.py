@@ -281,7 +281,7 @@ def team_streaks(team_id):
 ###### HELP/INSTRUCTIONS
 @app.route('/setup_instructions')
 def setup_instructions():
-    os = request.json['operating_system']    
+    os = str.lower(request.args.get('os'))
     return render_template('setup_instructions.html', os=os)
 
 @app.route('/manual')

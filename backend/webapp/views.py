@@ -38,18 +38,11 @@ def register_user():
     if existingUsr.count_ids > 0:
         return 'Username already exists', 409
     
-
-    usr = User()
-    usr = User.create(request.json)
+        
+    usr = User.create(**request.json)
     usr.set_password(request.json['password'])
-
-    # usr.username = request.json['username']
-    # usr.set_password(request.json['password'])            
-    # usr.expoToken = request.json['expoToken']
-    # if 'targetGoal' in request.json:
-    #     usr.targetGoal = request.json['targetGoal']
-    # usr.active = True
-    # usr.admin = True
+    usr.active = True
+    usr.admin = False
     usr.save()
 
     res = model_to_dict(usr, recurse=False, exclude=['password',"email"])

@@ -41,7 +41,9 @@ class User(BaseModel, BaseUser):
     active = BooleanField(default=True)
     admin = BooleanField(default=False)
     showDeveloperSettings = BooleanField(default=False)
-    operatingSystem = CharField()    
+    device = CharField()
+    operatingSystem = CharField()
+    operatingSystemVersion = CharField()    
     currentActivityLevel = IntegerField()
     targetGoal = IntegerField(default=int(ChallengeDifficulty.NORMAL))    
     

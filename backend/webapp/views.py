@@ -40,13 +40,16 @@ def register_user():
     
 
     usr = User()
-    usr.username = request.json['username']
-    usr.set_password(request.json['password'])            
-    usr.expoToken = request.json['expoToken']
-    if 'targetGoal' in request.json:
-        usr.targetGoal = request.json['targetGoal']
-    usr.active = True
-    usr.admin = True
+    usr = User.create(request.json)
+    usr.set_password(request.json['password'])
+
+    # usr.username = request.json['username']
+    # usr.set_password(request.json['password'])            
+    # usr.expoToken = request.json['expoToken']
+    # if 'targetGoal' in request.json:
+    #     usr.targetGoal = request.json['targetGoal']
+    # usr.active = True
+    # usr.admin = True
     usr.save()
 
     res = model_to_dict(usr, recurse=False, exclude=['password',"email"])
@@ -282,6 +285,17 @@ def team_streaks(team_id):
     return Response(output.getvalue(), mimetype='image/png')
     
 
+###### HELP/INSTRUCTIONS
+@app.route('/setup_instructions')
+def setup_instructions():
+    os = request.json['operating_system']    
+    return render_template('setup_instructions.html', os=os)
+
+@app.route('/manual')
+def manual():
+    os = request.json['operating_system']
+    progressCalculationMode = request.json['progress_calculation_mode']
+    return render_template('setup_instructions.html', os=os, mode=progressCalculationMode)
 
 ###### SURVEY
 @app.route('/consent/<user_id>', methods=['GET', 'POST'])

@@ -45,7 +45,8 @@ class User(BaseModel, BaseUser):
     operatingSystem = CharField()
     operatingSystemVersion = CharField()    
     currentActivityLevel = IntegerField()
-    targetGoal = IntegerField(default=int(ChallengeDifficulty.NORMAL))    
+    targetGoal = IntegerField(default=int(ChallengeDifficulty.NORMAL))
+    averageSteps = IntegerField(default=0)    
     
     def __unicode__(self):
         return self.username

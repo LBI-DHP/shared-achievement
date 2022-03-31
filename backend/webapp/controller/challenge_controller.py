@@ -20,8 +20,8 @@ def updateTeamChallengeProgress(teamChallenge:TeamChallenge):
             member_total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.user == member) & (StepCount.teamChallenge == teamChallenge)).get())
             if member_total_steps.total_steps is None:
                 member_total_steps.total_steps = 0
-            sumProgress += round(float(member_total_steps.total_steps / member.targetGoal) * (member.targetGoal/teamChallenge.teamMembersGoal)  * 100)
-        teamChallenge.progress = sumProgress
+            sumProgress += round(float(member_total_steps.total_steps / member.targetGoal)  * 100)
+        teamChallenge.progress = sumProgress / len(teamChallenge.team.members)
     teamChallenge.save()
 
 

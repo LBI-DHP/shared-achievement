@@ -50,7 +50,7 @@ def on_save_steps(sender, instance: StepCount, created):
     
     msg_title = "New steps contributed"
     for row in list(team_users.dicts()):
-        msg_body = f"""Awesome! {contributor.username} contributed {instance.steps} to your challenge."""
+        msg_body = f"""Awesome! {contributor.username} contributed {instance.steps} steps to your challenge."""
         msg_type = 'STEPS_CONTRIBUTION'
         send_push_notification(sender_user_id=contributor.id, receiver_user_id=row['user_id'], title=msg_title, body=msg_body, type=msg_type)
         logger.log(logging.INFO, f"post save hook send mesage to {row}")

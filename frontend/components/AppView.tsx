@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import Header from "./Header";
 import Navigation from "./SABottomNavigation";
+import NavigationSettingsON from "./SABottomNavigationSettingsON";
 import { StatusBar } from "expo-status-bar";
 import WelcomeScreen from "../screens/Welcome";
 import ConnectToGoogleFit from "./ConnectToGoogleFit";
@@ -57,7 +58,11 @@ export default function AppView() {
   return (
     <>
       <Header />
-      <Navigation />
+      {userData.showDeveloperSettings ? (
+        <NavigationSettingsON />
+      ) : (
+        <Navigation />
+      )}
       <StatusBar />
     </>
   );

@@ -93,7 +93,7 @@ export default function StepsBarChart({
         <View style={{ margin: 5, flexDirection: "column" }}>
           <Text>steps already contributed</Text>
           <Text>new steps since last contribution</Text>
-          <Text>steps left to reach your daily goal</Text>
+          <Text>steps remaining to fulfill your share</Text>
         </View>
       </View>
     </View>

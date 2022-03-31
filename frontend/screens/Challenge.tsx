@@ -4,30 +4,49 @@ import { Button, Surface } from "react-native-paper";
 import { style } from "../constants/Styles";
 import Challenge from "../components/Challenge/Challenge";
 import TeamContributions from "../components/Challenge/TeamContributions";
-// @ts-ignore
-import StepCounter from "../components/StepCounter/StepCounter";
+import ConfettiCannon from "react-native-confetti-cannon";
 import dataManager from "../components/DataManager";
 import { UserDataContext } from "../components/UserDataProvider";
+// @ts-ignore
+import StepCounter from "../components/StepCounter/StepCounter";
 
 export default function ChallengeScreen() {
   const [isUserInATeam, setIsUserInATeam] = useState(false);
-  const { userData, mode, setMode, setNavigationIndex } =
+  const { userData, setMode, setNavigationIndex, updated } =
     useContext(UserDataContext);
   const [teamName, setTeamName] = useState("");
+  const [teamReachedSummit, setTeamReachedSummit] = useState(false);
 
   useEffect(() => {
     setIsUserInATeam(userData.team !== null);
   }, [userData.team]);
 
   useEffect(() => {
-    if (isUserInATeam)
+    let mounted = true;
+    if (isUserInATeam) {
       dataManager.getTeamData(userData.team).then((data) => {
         if (data !== null) {
           setTeamName(data.name);
           setMode(data.progressCalculationMode);
         }
       });
-  }, [isUserInATeam]);
+      dataManager
+        .getTeamChallengeData(userData.team)
+        .then((data) => {
+          if (mounted && data.progress) {
+            console.log(data.progress);
+            setTeamReachedSummit(data.progress >= 100);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
+    return () => {
+      mounted = false;
+    };
+  }, [isUserInATeam, updated]);
 
   return (
     <>
@@ -61,6 +80,9 @@ export default function ChallengeScreen() {
           )}
         </View>
       </ScrollView>
+      {teamReachedSummit && (
+        <ConfettiCannon count={200} origin={{ x: -10, y: 0 }} />
+      )}
     </>
   );
 }
@@ -74,8 +96,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     flex: 1,
-    // minHeight: "100%",
-    // backgroundColor: "red",
   },
   subheading: {
     fontSize: 20,

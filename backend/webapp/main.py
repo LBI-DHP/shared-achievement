@@ -81,41 +81,41 @@ def fill_in_data():
     # tcr.team = teamLBI    
     # tcr.save()
 
-    user_data = [
-        {'username': 'jan', 'email': 'jan@shared-achievement.com', 'expoToken': 'NO_TOKEN', 'team': teamLBI, 'targetGoal': int(ChallengeDifficulty.EASY)},
-        # {'username': 'eva', 'email': 'eva@shared-achievement.com', 'expoToken': 'ExponentPushToken[Iy_BAtIcQN07ZSqppKdtmw]', 'team': teamLBI, 'targetGoal': int(ChallengeDifficulty.HARD)},
-        {'username': 'daniela', 'email': 'daniela@shared-achievement.com', 'expoToken': 'NO_TOKEN', 'team': teamLBI, 'targetGoal': int(ChallengeDifficulty.NORMAL)},
-        {'username': 'dimi', 'email': 'dimi@shared-achievement.com', 'expoToken': 'ExponentPushToken[N7zzLwDwLjk6jZOrRmVbzW]', 'team': teamHB, 'targetGoal': int(ChallengeDifficulty.NORMAL)},
-        {'username': 'susanne', 'email': 'susanne@shared-achievement.com', 'expoToken': 'NO_TOKEN', 'team': teamHB, 'targetGoal': int(ChallengeDifficulty.NORMAL)},
-    ]
+    # user_data = [
+    #     {'username': 'jan', 'email': 'jan@shared-achievement.com', 'expoToken': 'NO_TOKEN', 'team': teamLBI, 'targetGoal': int(ChallengeDifficulty.EASY)},
+    #     # {'username': 'eva', 'email': 'eva@shared-achievement.com', 'expoToken': 'ExponentPushToken[Iy_BAtIcQN07ZSqppKdtmw]', 'team': teamLBI, 'targetGoal': int(ChallengeDifficulty.HARD)},
+    #     {'username': 'daniela', 'email': 'daniela@shared-achievement.com', 'expoToken': 'NO_TOKEN', 'team': teamLBI, 'targetGoal': int(ChallengeDifficulty.NORMAL)},
+    #     {'username': 'dimi', 'email': 'dimi@shared-achievement.com', 'expoToken': 'ExponentPushToken[N7zzLwDwLjk6jZOrRmVbzW]', 'team': teamHB, 'targetGoal': int(ChallengeDifficulty.NORMAL)},
+    #     {'username': 'susanne', 'email': 'susanne@shared-achievement.com', 'expoToken': 'NO_TOKEN', 'team': teamHB, 'targetGoal': int(ChallengeDifficulty.NORMAL)},
+    # ]
 
-    User.insert_many(user_data).execute()
+    # User.insert_many(user_data).execute()
 
-    users = User.select().where(~User.team.is_null()).execute()
+    # users = User.select().where(~User.team.is_null()).execute()
 
-    for u in users:
-        u.set_password(u.username)
-        u.save()
+    # for u in users:
+    #     u.set_password(u.username)
+    #     u.save()
 
-        userChallenge = UserChallenge()
-        userChallenge.name = f"{u.username}_daily_challenge"
-        userChallenge.date = datetime.datetime.now()
-        userChallenge.goal = u.targetGoal
-        userChallenge.progress = 0
-        userChallenge.user = u
-        userChallenge.save()
+    #     userChallenge = UserChallenge()
+    #     userChallenge.name = f"{u.username}_daily_challenge"
+    #     userChallenge.date = datetime.datetime.now()
+    #     userChallenge.goal = u.targetGoal
+    #     userChallenge.progress = 0
+    #     userChallenge.user = u
+    #     userChallenge.save()
 
-        teamChallenge = TeamChallenge.select().where((TeamChallenge.team == u.team) & (TeamChallenge.date == datetime.date.today())).get()
+    #     teamChallenge = TeamChallenge.select().where((TeamChallenge.team == u.team) & (TeamChallenge.date == datetime.date.today())).get()
 
-        for i in range(0,1):
-            steps = StepCount()
-            steps.user = u
-            steps.team = u.team
-            steps.steps = u.targetGoal * 0.1 #int(ChallengeDifficulty.NORMAL) * 0.5
-            steps.teamChallenge = teamChallenge
-            steps.userChallenge = userChallenge
-            steps.timestamp = datetime.datetime.now()
-            steps.save()
+    #     for i in range(0,1):
+    #         steps = StepCount()
+    #         steps.user = u
+    #         steps.team = u.team
+    #         steps.steps = u.targetGoal * 0.1 #int(ChallengeDifficulty.NORMAL) * 0.5
+    #         steps.teamChallenge = teamChallenge
+    #         steps.userChallenge = userChallenge
+    #         steps.timestamp = datetime.datetime.now()
+    #         steps.save()
 
 
 

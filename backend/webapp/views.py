@@ -78,7 +78,12 @@ def get_team_challenge(team_id):
     team = Team.get_or_none(Team.id == team_id)
     if team is None:
         return "Team does not exist", 404
-    teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=datetime.date.today())    
+    if request.args.get('date') is not None:
+        date_str = request.args.get('date')
+        date_time_obj = datetime.datetime.strptime(date_str, '%Y-%m-%d')
+    else:
+        date_time_obj = datetime.date.today()
+    teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=date_time_obj)    
     updateTeamMembersGoal(teamChallenge=teamChallenge)
     updateTeamMembersGoal(teamChallenge=teamChallenge)
     

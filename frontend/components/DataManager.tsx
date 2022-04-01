@@ -14,6 +14,8 @@ export default class dataManager {
       team: responseUserData.team,
       expoToken: responseUserData.expoToken,
       password: responseUserData.password,
+      targetGoal: responseUserData.targetGoal,
+      showDeveloperSettings: responseUserData.showDeveloperSettings,
     };
   };
 

@@ -67,11 +67,17 @@ export default function Challenge({ isUserInATeam }) {
     untersbergSvgHeight = untersbergSvgWidth / untersbergRelation;
     flagSvgHeight = untersbergSvgWidth / flagRelation;
   }
+  let progressPosition;
 
-  const progressPosition =
-    untersbergSvgViewBoxHeight -
-    10 -
-    (untersbergSvgViewBoxHeight - 10 - 7.5) * progress;
+  if (progress <= 100) {
+    progressPosition =
+      untersbergSvgViewBoxHeight - 10 - (untersbergSvgViewBoxHeight - 10 - 7.5);
+  } else {
+    progressPosition =
+      untersbergSvgViewBoxHeight -
+      10 -
+      (untersbergSvgViewBoxHeight - 10 - 7.5) * progress;
+  }
 
   if (isLoading)
     return <CenteredActivityIndicator height={untersbergSvgViewBoxHeight} />;

@@ -10,6 +10,7 @@ export default function SABottomNavigation() {
   const [routes] = React.useState([
     { key: "challenge", title: "Challenge", icon: "image-filter-hdr" },
     { key: "team", title: "Team", icon: "account-group" },
+    { key: "settings", title: "Settings", icon: "cog" },
   ]);
   const { updated, setUpdated, navigationIndex, setNavigationIndex } =
     React.useContext(UserDataContext);
@@ -24,6 +25,7 @@ export default function SABottomNavigation() {
   const renderScene = BottomNavigation.SceneMap({
     challenge: ChallengeScreen,
     team: TeamScreen,
+    settings: SettingsScreen,
   });
 
   return (

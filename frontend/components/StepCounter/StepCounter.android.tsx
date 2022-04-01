@@ -32,6 +32,7 @@ export default function StepCounter() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isGoogleTokenValid, setIsGoogleTokenValid] = useState(false);
+  const [goalSteps, setGoalSteps] = useState(0);
 
   useEffect(() => {
     dataManager.getGoogleAuthInfo().then((authInfo) => {
@@ -61,6 +62,7 @@ export default function StepCounter() {
           if (userStepCount === undefined) userStepCount = 0;
           setNewSteps(stepCountToday - userStepCount);
           setContributedSteps(userStepCount);
+          if (data.goal) setGoalSteps(data.goal);
           setIsLoading(false);
         }
       });
@@ -229,7 +231,7 @@ export default function StepCounter() {
             <Text style={{ margin: 10 }}>{error}</Text>
           ) : (
             <StepsBarChart
-              goalSteps={1000}
+              goalSteps={goalSteps}
               contributedSteps={contributedSteps}
               newSteps={newSteps}
             />

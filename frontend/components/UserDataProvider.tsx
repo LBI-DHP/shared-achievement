@@ -11,6 +11,8 @@ export const UserDataContext = React.createContext({
     team: null,
     expoToken: null,
     password: null,
+    targetGoal: null,
+    showDeveloperSettings: false,
   },
   setUserData: ({}) => {},
   updated: false,
@@ -30,6 +32,8 @@ export const UserDataProvider = (props) => {
     team: null,
     expoToken: null,
     password: null,
+    targetGoal: null,
+    showDeveloperSettings: false,
   });
 
   const [updated, setUpdated] = useState(false);

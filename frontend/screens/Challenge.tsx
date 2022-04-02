@@ -11,19 +11,14 @@ import { UserDataContext } from "../components/UserDataProvider";
 import StepCounter from "../components/StepCounter/StepCounter";
 
 export default function ChallengeScreen() {
-  const [isUserInATeam, setIsUserInATeam] = useState(false);
-  const { userData, setMode, setNavigationIndex, updated } =
+  const { userData, setMode, setNavigationIndex, updated, isUserDataLoading } =
     useContext(UserDataContext);
   const [teamName, setTeamName] = useState("");
   const [teamReachedSummit, setTeamReachedSummit] = useState(false);
 
   useEffect(() => {
-    setIsUserInATeam(userData.team !== null);
-  }, [userData.team]);
-
-  useEffect(() => {
     let mounted = true;
-    if (isUserInATeam) {
+    if (!isUserDataLoading && userData.team) {
       dataManager.getTeamData(userData.team).then((data) => {
         if (data !== null) {
           setTeamName(data.name);
@@ -46,7 +41,7 @@ export default function ChallengeScreen() {
     return () => {
       mounted = false;
     };
-  }, [isUserInATeam, updated]);
+  }, [updated, userData.team]);
 
   return (
     <>
@@ -57,13 +52,13 @@ export default function ChallengeScreen() {
           }}
         >
           <Surface style={styles.surface}>
-            {isUserInATeam && (
+            {userData.team && (
               <Text style={style.cardHeader}>Progress of Team {teamName}</Text>
             )}
-            <Challenge isUserInATeam={isUserInATeam} />
-            {isUserInATeam && <TeamContributions />}
+            <Challenge />
+            {userData.team && <TeamContributions />}
           </Surface>
-          {isUserInATeam ? (
+          {userData.team ? (
             <StepCounter />
           ) : (
             <Button

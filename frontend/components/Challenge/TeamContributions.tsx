@@ -67,7 +67,7 @@ export default function TeamContributions() {
               </Text>
             </View>
           );
-        } else {
+        } else if (mode === "ABSOLUTE") {
           return (
             <View
               style={

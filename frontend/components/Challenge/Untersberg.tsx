@@ -68,6 +68,9 @@ export default function Untersberg(props) {
     point = lineIntersect(lineFourthQuarter, lineProgress);
     lineStart = { x: lineFourthQuarter.x1, y: lineFourthQuarter.y1 };
   }
+
+  if (point.y < pointFourthQuarter.y) point = pointFourthQuarter;
+
   return (
     <Svg
       height={svgHeight}
@@ -220,9 +223,8 @@ export default function Untersberg(props) {
             : progressPosition + 25
         }
       >
-        {mode === "RELATIVE"
-          ? Math.round(progressPercent * 100) + "%"
-          : teamAbsoluteStepCountToday + " steps"}
+        {mode === "RELATIVE" && Math.round(progressPercent * 100) + "%"}
+        {mode === "ABSOLUTE" && teamAbsoluteStepCountToday + " steps"}
       </Text>
       <Circle
         fill={progressPercent != 1 ? "#004A99" : "none"}

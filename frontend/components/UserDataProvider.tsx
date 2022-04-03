@@ -19,7 +19,7 @@ export const UserDataContext = React.createContext({
   setUpdated: ({}) => {},
   mode: null,
   setMode: ({}) => {},
-  navigationIndex: null,
+  navigationIndex: 0,
   setNavigationIndex: ({}) => {},
   isUserDataLoading: true,
   userDataLoadingError: false,
@@ -38,7 +38,7 @@ export const UserDataProvider = (props) => {
 
   const [updated, setUpdated] = useState(false);
   const [mode, setMode] = useState(null);
-  const [navigationIndex, setNavigationIndex] = useState(null);
+  const [navigationIndex, setNavigationIndex] = useState(0);
   const [notification, setNotification] = useState(null);
   const [isUserDataLoading, setIsUserDataLoading] = useState(true);
   const [userDataLoadingError, setUserDataLoadingError] = useState(false);

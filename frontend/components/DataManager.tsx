@@ -77,6 +77,36 @@ export default class dataManager {
     return password.toString();
   };
 
+  static getShowTodaysPopUp = async () => {
+    const today = new Date();
+    const date = today.getDate();
+    const month = today.getMonth() + 1;
+    const year = today.getFullYear();
+    const dateStringToday = date + "." + month + "." + year;
+
+    let datePopUpLastSeen = await AsyncStorage.getItem(
+      "dateTodaysPopUpLastSeen"
+    );
+
+    if (!datePopUpLastSeen) {
+      this.setTodaysPopUp(dateStringToday);
+      return true;
+    } else if (datePopUpLastSeen === dateStringToday) {
+      return false;
+    } else {
+      this.setTodaysPopUp(dateStringToday);
+      return true;
+    }
+  };
+
+  static setTodaysPopUp = async (dateString) => {
+    try {
+      await AsyncStorage.setItem("dateTodaysPopUpLastSeen", dateString);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   static getUserData = async (userid) => {
     try {
       const response = await fetch(
@@ -123,11 +153,9 @@ export default class dataManager {
         console.log(contentType);
         if (contentType && contentType.indexOf("application/json") !== -1) {
           const responseJSON = await response.json();
-          console.log("responseJSON", responseJSON);
           if (responseJSON && responseJSON.id) {
             this.setUserId(responseJSON.id);
           }
-          console.log("responseJSON", responseJSON);
           return await this.mapResponseUserDataToUserData(responseJSON);
         }
       }

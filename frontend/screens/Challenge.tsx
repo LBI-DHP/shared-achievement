@@ -7,8 +7,10 @@ import TeamContributions from "../components/Challenge/TeamContributions";
 import ConfettiCannon from "react-native-confetti-cannon";
 import dataManager from "../components/DataManager";
 import { UserDataContext } from "../components/UserDataProvider";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 // @ts-ignore
 import StepCounter from "../components/StepCounter/StepCounter";
+import { white } from "react-native-paper/lib/typescript/styles/colors";
 
 export default function ChallengeScreen() {
   const {
@@ -18,16 +20,25 @@ export default function ChallengeScreen() {
     updated,
     isUserDataLoading,
     navigationIndex,
+    mode,
   } = useContext(UserDataContext);
   const [teamName, setTeamName] = useState("");
   const [teamReachedSummit, setTeamReachedSummit] = useState(false);
   const [isTodaysPopUpVisible, setIsTodaysPopUpVisible] = useState(false);
   const [showConfettiCannon, setShowConfettiCannon] = useState(false);
+  const [
+    isYesterdaysProgressPopUpVisible,
+    setIsYesterdaysProgressPopUpVisible,
+  ] = useState(false);
+  const [yesterdaysProgress, setYesterdaysProgress] = useState(null);
+  const [yesterdaysSteps, setYesterdaysSteps] = useState(null);
+  const [didChallengeExistYesterday, setDidChallengeExistYesterday] =
+    useState(false);
 
   useEffect(() => {
     let mounted = true;
-    if (teamReachedSummit) {
-      dataManager.getShowTodaysPopUp().then((showPopUp) => {
+    if (teamReachedSummit && navigationIndex === 0) {
+      dataManager.getShowReachedSummitPopUp().then((showPopUp) => {
         if (mounted) setIsTodaysPopUpVisible(showPopUp);
       });
     }
@@ -37,7 +48,19 @@ export default function ChallengeScreen() {
     return () => {
       mounted = false;
     };
-  }, [teamReachedSummit]);
+  }, [teamReachedSummit, updated]);
+
+  useEffect(() => {
+    let mounted = true;
+    if (!isUserDataLoading && userData.team) {
+      dataManager.getShowYesterdaysProgressPopUp().then((showPopUp) => {
+        if (mounted) setIsYesterdaysProgressPopUpVisible(showPopUp);
+      });
+    }
+    return () => {
+      mounted = false;
+    };
+  }, [userData.team]);
 
   useEffect(() => {
     let mounted = true;
@@ -52,8 +75,33 @@ export default function ChallengeScreen() {
         .getTeamChallengeData(userData.team)
         .then((data) => {
           if (mounted && data.progress) {
-            console.log(data.progress);
             setTeamReachedSummit(data.progress >= 100);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      const newDate = new Date();
+      newDate.setDate(newDate.getDate() - 1);
+      const date = newDate.getDate();
+      const month = newDate.getMonth() + 1;
+      const year = newDate.getFullYear();
+      let dateString = date.toString();
+      if (dateString.length === 1) dateString = "0" + dateString;
+      let monthString = month.toString();
+      if (monthString.length === 1) monthString = "0" + monthString;
+      const dateStringYesterday = year + "-" + monthString + "-" + dateString;
+
+      dataManager
+        .getTeamChallengeData(userData.team, dateStringYesterday)
+        .then((data) => {
+          if (mounted && data === -1) {
+            setDidChallengeExistYesterday(false);
+          } else if (mounted && data && data.progress) {
+            setYesterdaysProgress(data.progress);
+            setYesterdaysSteps(data.total_steps);
+            setDidChallengeExistYesterday(true);
           }
         })
         .catch((error) => {
@@ -77,6 +125,28 @@ export default function ChallengeScreen() {
           <Surface style={styles.surface}>
             {userData.team && (
               <Text style={style.cardHeader}>Progress of Team {teamName}</Text>
+            )}
+            {teamReachedSummit && (
+              <View
+                style={{
+                  borderWidth: 1,
+                  borderColor: "#99bfcf",
+                  borderRadius: 15,
+                  backgroundColor: "white",
+                  width: 32,
+                  padding: 5,
+                  marginLeft: 18,
+                  marginTop: 17,
+                  marginBottom: -50,
+                  zIndex: 100,
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="trophy"
+                  size={20}
+                  color="#ffae00"
+                />
+              </View>
             )}
             <Challenge />
             {userData.team && <TeamContributions />}
@@ -102,12 +172,50 @@ export default function ChallengeScreen() {
             <Dialog visible={isTodaysPopUpVisible}>
               <Dialog.Content>
                 <Paragraph style={{ paddingBottom: 10 }}>
-                  Well done!👏 Your team made it to the summit of the Untersberg
-                  today. 🥳🎉 Keep collecting and contributing steps.
+                  Well done!👏 Your team made it to the summit today. 🥳🎉 Keep
+                  collecting and contributing steps.
                 </Paragraph>
               </Dialog.Content>
               <Dialog.Actions>
                 <Button onPress={() => setIsTodaysPopUpVisible(false)}>
+                  Okay
+                </Button>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
+        )}
+        {isYesterdaysProgressPopUpVisible && didChallengeExistYesterday && (
+          <Portal>
+            <Dialog visible={isYesterdaysProgressPopUpVisible}>
+              <Dialog.Content>
+                <Paragraph style={{ paddingBottom: 10 }}>
+                  {yesterdaysProgress >= 100 ? (
+                    <>
+                      Well done!👏Your team made it to the summit yesterday.🥳🎉{" "}
+                    </>
+                  ) : (
+                    <>
+                      Unfortunately, your team did not make it to the summit
+                      yesterday.{" "}
+                    </>
+                  )}
+                  {mode === "ABSOLUTE" ? (
+                    <>
+                      You made it up {yesterdaysProgress}% and collected{" "}
+                      {yesterdaysSteps} steps. ⛰️
+                    </>
+                  ) : (
+                    <>You made it up {yesterdaysProgress}%. ⛰️</>
+                  )}
+                  {yesterdaysProgress < 100 && (
+                    <> Try it again today. You can do it. 💪</>
+                  )}
+                </Paragraph>
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button
+                  onPress={() => setIsYesterdaysProgressPopUpVisible(false)}
+                >
                   Okay
                 </Button>
               </Dialog.Actions>

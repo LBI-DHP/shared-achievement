@@ -77,7 +77,7 @@ export default class dataManager {
     return password.toString();
   };
 
-  static getShowTodaysPopUp = async () => {
+  static getShowReachedSummitPopUp = async () => {
     const today = new Date();
     const date = today.getDate();
     const month = today.getMonth() + 1;
@@ -85,23 +85,59 @@ export default class dataManager {
     const dateStringToday = date + "." + month + "." + year;
 
     let datePopUpLastSeen = await AsyncStorage.getItem(
-      "dateTodaysPopUpLastSeen"
+      "dateShowReachedSummitPopUpLastSeen"
     );
 
     if (!datePopUpLastSeen) {
-      this.setTodaysPopUp(dateStringToday);
+      this.setShowReachedSummitPopUp(dateStringToday);
       return true;
     } else if (datePopUpLastSeen === dateStringToday) {
       return false;
     } else {
-      this.setTodaysPopUp(dateStringToday);
+      this.setShowReachedSummitPopUp(dateStringToday);
       return true;
     }
   };
 
-  static setTodaysPopUp = async (dateString) => {
+  static setShowReachedSummitPopUp = async (dateString) => {
     try {
-      await AsyncStorage.setItem("dateTodaysPopUpLastSeen", dateString);
+      await AsyncStorage.setItem(
+        "dateShowReachedSummitPopUpLastSeen",
+        dateString
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  static getShowYesterdaysProgressPopUp = async () => {
+    const today = new Date();
+    const date = today.getDate();
+    const month = today.getMonth() + 1;
+    const year = today.getFullYear();
+    const dateStringToday = date + "." + month + "." + year;
+
+    let datePopUpLastSeen = await AsyncStorage.getItem(
+      "dateShowYesterdaysProgressPopUpLastSeen"
+    );
+
+    if (!datePopUpLastSeen) {
+      this.setShowYesterdaysProgressPopUp(dateStringToday);
+      return true;
+    } else if (datePopUpLastSeen === dateStringToday) {
+      return false;
+    } else {
+      this.setShowYesterdaysProgressPopUp(dateStringToday);
+      return true;
+    }
+  };
+
+  static setShowYesterdaysProgressPopUp = async (dateString) => {
+    try {
+      await AsyncStorage.setItem(
+        "dateShowYesterdaysProgressPopUpLastSeen",
+        dateString
+      );
     } catch (e) {
       console.log(e);
     }
@@ -353,10 +389,15 @@ export default class dataManager {
       console.log("done with get team name request");
     }
   };
-  static getTeamChallengeData = async (teamid) => {
+  static getTeamChallengeData = async (teamid, date = "") => {
+    let completeRequestString = teamid;
+    if (date.length !== 0) completeRequestString += "?date=" + date;
+
     try {
       const response = await fetch(
-        configJSON.serverConfig.root + "/challenge/team/" + teamid,
+        configJSON.serverConfig.root +
+          "/challenge/team/" +
+          completeRequestString,
         {
           method: "GET",
           headers: {
@@ -372,6 +413,8 @@ export default class dataManager {
           const responseJSON = await response.json();
           return responseJSON;
         }
+      } else if (response.status === 400) {
+        return -1;
       }
       return null;
     } catch (error) {

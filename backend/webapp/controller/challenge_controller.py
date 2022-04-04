@@ -45,12 +45,17 @@ def on_save_steps(sender, instance: StepCount, created):
     team_users = User.select(User.id.alias('user_id'), 
                 User.username.alias('user_name')
     ).where(
-        User.team == instance.team
+        (User.team == instance.team) & (User.id != instance.user)
     )
     
     msg_title = "New steps contributed"
     for row in list(team_users.dicts()):
-        msg_body = f"""Awesome! {contributor.username} contributed {instance.steps} steps to your challenge."""
+        msg_body = ""
+        if instance.team.progressCalculationMode == TeamProgressCalculationMode.ABSOLUTE.name:
+            msg_body = f"""Awesome! {contributor.username} contributed {instance.steps} steps to your challenge."""
+        else:
+            progress  = (instance.steps / instance.user.targetGoal) * 100
+            msg_body = f"""Awesome! {contributor.username} contributed {progress} % to your challenge."""
         msg_type = 'STEPS_CONTRIBUTION'
         send_push_notification(sender_user_id=contributor.id, receiver_user_id=row['user_id'], title=msg_title, body=msg_body, type=msg_type)
         logger.log(logging.INFO, f"post save hook send mesage to {row}")

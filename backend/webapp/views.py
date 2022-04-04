@@ -83,7 +83,10 @@ def get_team_challenge(team_id):
         date_time_obj = datetime.datetime.strptime(date_str, '%Y-%m-%d')
     else:
         date_time_obj = datetime.date.today()
-    teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=date_time_obj)    
+    # teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=date_time_obj)
+    teamChallenge = TeamChallenge.get_or_none(team=team_id, date=date_time_obj)
+    if teamChallenge is None:
+        return "Team challenge does not exist", 400
     updateTeamMembersGoal(teamChallenge=teamChallenge)
     updateTeamMembersGoal(teamChallenge=teamChallenge)
     

@@ -90,7 +90,7 @@ def on_save_steps(sender, instance: StepCount, created):
     if teamChallenge.status != ChallengeStatus.FINISHED.name and teamChallenge.progress >= 100:
         teamChallenge.status = ChallengeStatus.FINISHED.name
         msg_title = "Team Challenge Completed"
-        msg_body = f"""Awesome, you did it today!!! Keep your spirit up."""
+        msg_body = f"""Awesome, your team reached the summit!!! Keep your spirit up."""
         send_push_notification(sender_user_id=1, receiver_user_id=contributor.id, title=msg_title, body=msg_body, type=msg_type)
     else:
         teamChallenge.status = ChallengeStatus.IN_PROGRESS.name

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { ScrollView, View, Text, StyleSheet } from "react-native";
-import { Button, Surface } from "react-native-paper";
+import { Button, Surface, Paragraph, Dialog, Portal } from "react-native-paper";
 import { style } from "../constants/Styles";
 import Challenge from "../components/Challenge/Challenge";
 import TeamContributions from "../components/Challenge/TeamContributions";
@@ -11,19 +11,37 @@ import { UserDataContext } from "../components/UserDataProvider";
 import StepCounter from "../components/StepCounter/StepCounter";
 
 export default function ChallengeScreen() {
-  const [isUserInATeam, setIsUserInATeam] = useState(false);
-  const { userData, setMode, setNavigationIndex, updated } =
-    useContext(UserDataContext);
+  const {
+    userData,
+    setMode,
+    setNavigationIndex,
+    updated,
+    isUserDataLoading,
+    navigationIndex,
+  } = useContext(UserDataContext);
   const [teamName, setTeamName] = useState("");
   const [teamReachedSummit, setTeamReachedSummit] = useState(false);
-
-  useEffect(() => {
-    setIsUserInATeam(userData.team !== null);
-  }, [userData.team]);
+  const [isTodaysPopUpVisible, setIsTodaysPopUpVisible] = useState(false);
+  const [showConfettiCannon, setShowConfettiCannon] = useState(false);
 
   useEffect(() => {
     let mounted = true;
-    if (isUserInATeam) {
+    if (teamReachedSummit) {
+      dataManager.getShowTodaysPopUp().then((showPopUp) => {
+        if (mounted) setIsTodaysPopUpVisible(showPopUp);
+      });
+    }
+    if (teamReachedSummit && navigationIndex === 0) {
+      if (mounted) setShowConfettiCannon(true);
+    }
+    return () => {
+      mounted = false;
+    };
+  }, [teamReachedSummit]);
+
+  useEffect(() => {
+    let mounted = true;
+    if (!isUserDataLoading && userData.team) {
       dataManager.getTeamData(userData.team).then((data) => {
         if (data !== null) {
           setTeamName(data.name);
@@ -46,7 +64,7 @@ export default function ChallengeScreen() {
     return () => {
       mounted = false;
     };
-  }, [isUserInATeam, updated]);
+  }, [updated, userData.team]);
 
   return (
     <>
@@ -57,13 +75,13 @@ export default function ChallengeScreen() {
           }}
         >
           <Surface style={styles.surface}>
-            {isUserInATeam && (
+            {userData.team && (
               <Text style={style.cardHeader}>Progress of Team {teamName}</Text>
             )}
-            <Challenge isUserInATeam={isUserInATeam} />
-            {isUserInATeam && <TeamContributions />}
+            <Challenge />
+            {userData.team && <TeamContributions />}
           </Surface>
-          {isUserInATeam ? (
+          {userData.team ? (
             <StepCounter />
           ) : (
             <Button
@@ -79,8 +97,25 @@ export default function ChallengeScreen() {
             </Button>
           )}
         </View>
+        {isTodaysPopUpVisible && navigationIndex === 0 && (
+          <Portal>
+            <Dialog visible={isTodaysPopUpVisible}>
+              <Dialog.Content>
+                <Paragraph style={{ paddingBottom: 10 }}>
+                  Well done!👏 Your team made it to the summit of the Untersberg
+                  today. 🥳🎉 Keep collecting and contributing steps.
+                </Paragraph>
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button onPress={() => setIsTodaysPopUpVisible(false)}>
+                  Okay
+                </Button>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
+        )}
       </ScrollView>
-      {teamReachedSummit && (
+      {showConfettiCannon && (
         <ConfettiCannon count={200} origin={{ x: -10, y: 0 }} />
       )}
     </>

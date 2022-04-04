@@ -8,7 +8,8 @@ import TeamChartAbsolute from "./TeamChartAbsolute";
 import CenteredActivityIndicator from "../CenteredActivityIndicator";
 
 export default function TeamStatistics() {
-  const { userData, updated, mode } = useContext(UserDataContext);
+  const { userData, updated, mode, isUserDataLoading } =
+    useContext(UserDataContext);
   const [teamMembersAndStepCountsOfToday, setTeamMembersAndStepCountsOfToday] =
     useState([]);
   const [visible, setVisible] = useState(false);
@@ -48,7 +49,8 @@ export default function TeamStatistics() {
     };
   }, [updated]);
 
-  if (isLoading) return <CenteredActivityIndicator height={100} />;
+  if (isLoading || isUserDataLoading)
+    return <CenteredActivityIndicator height={100} />;
 
   return (
     <View style={{ paddingTop: 10 }}>
@@ -63,7 +65,7 @@ export default function TeamStatistics() {
               currentUserName={userData.username}
             />
           );
-        } else {
+        } else if (mode === "ABSOLUTE") {
           return (
             <TeamChartAbsolute
               member={member}

@@ -8,40 +8,42 @@ import { UserDataContext } from "../UserDataProvider";
 import dataManager from "../DataManager";
 import CenteredActivityIndicator from "../CenteredActivityIndicator";
 
-export default function Challenge({ isUserInATeam }) {
-  const { userData, updated, mode } = useContext(UserDataContext);
+export default function Challenge() {
+  const { userData, updated, mode, isUserDataLoading } =
+    useContext(UserDataContext);
   const [teamRelativeStepCountToday, setTeamRelativeStepCountToday] =
-    useState(0);
+    useState(null);
   const [teamAbsoluteStepCountToday, setTeamAbsoluteStepCountToday] =
-    useState(0);
+    useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [teamAbsoluteStepGoal, setTeamAbsoluteStepGoal] = useState(0);
+  const [teamAbsoluteStepGoal, setTeamAbsoluteStepGoal] = useState(null);
 
   useEffect(() => {
     let mounted = true;
-    if (isUserInATeam) {
-      dataManager
-        .getTeamChallengeData(userData.team)
-        .then((data) => {
-          if (mounted) {
-            setTeamRelativeStepCountToday(data.progress / 100);
-            setTeamAbsoluteStepCountToday(data.total_steps);
-            setTeamAbsoluteStepGoal(data.teamMembersGoal);
-            setIsLoading(false);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } else {
-      setIsLoading(false);
+    if (!isUserDataLoading) {
+      if (userData.team) {
+        dataManager
+          .getTeamChallengeData(userData.team)
+          .then((data) => {
+            if (mounted) {
+              setTeamRelativeStepCountToday(data.progress / 100);
+              setTeamAbsoluteStepCountToday(data.total_steps);
+              setTeamAbsoluteStepGoal(data.teamMembersGoal);
+              setIsLoading(false);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        setIsLoading(false);
+      }
     }
     return () => {
       mounted = false;
     };
   }, [updated, userData.team, mode]);
 
-  const progress = teamRelativeStepCountToday;
   const { height, width } = useWindowDimensions();
   const windowHeight = height;
   const windowWidth = width - 60;
@@ -69,20 +71,20 @@ export default function Challenge({ isUserInATeam }) {
   }
   let progressPosition;
 
-  if (progress <= 100) {
+  if (teamRelativeStepCountToday >= 100) {
     progressPosition =
       untersbergSvgViewBoxHeight - 10 - (untersbergSvgViewBoxHeight - 10 - 7.5);
   } else {
     progressPosition =
       untersbergSvgViewBoxHeight -
       10 -
-      (untersbergSvgViewBoxHeight - 10 - 7.5) * progress;
+      (untersbergSvgViewBoxHeight - 10 - 7.5) * teamRelativeStepCountToday;
   }
 
   if (isLoading)
     return <CenteredActivityIndicator height={untersbergSvgViewBoxHeight} />;
 
-  if (!isUserInATeam) {
+  if (!userData.team) {
     return (
       <View
         style={{
@@ -126,7 +128,7 @@ export default function Challenge({ isUserInATeam }) {
         svgHeight={flagSvgHeight}
         svgViewBoxWidth={untersbergSvgViewBoxWidth}
         svgViewBoxHeight={flagSvgViewBoxHeight}
-        progressPercent={progress}
+        progressPercent={teamRelativeStepCountToday}
         teamAbsoluteStepGoal={teamAbsoluteStepGoal}
         mode={mode}
       />
@@ -136,7 +138,7 @@ export default function Challenge({ isUserInATeam }) {
         svgViewBoxWidth={untersbergSvgViewBoxWidth}
         svgViewBoxHeight={untersbergSvgViewBoxHeight}
         progressPosition={progressPosition}
-        progressPercent={progress}
+        progressPercent={teamRelativeStepCountToday}
         mode={mode}
         teamAbsoluteStepCountToday={teamAbsoluteStepCountToday}
       />

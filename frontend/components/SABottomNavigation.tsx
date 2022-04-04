@@ -17,7 +17,6 @@ export default function SABottomNavigation() {
   useEffect(() => {
     if (navigationIndex) {
       setIndex(navigationIndex);
-      setNavigationIndex(null);
     }
   }, [navigationIndex]);
 
@@ -32,6 +31,7 @@ export default function SABottomNavigation() {
       onIndexChange={(newIndex) => {
         setUpdated(!updated);
         setIndex(newIndex);
+        setNavigationIndex(newIndex);
       }}
       renderScene={renderScene}
     />

@@ -12,13 +12,8 @@ import CenteredActivityIndicator from "./CenteredActivityIndicator";
 import NoInternetConnection from "../screens/NoInternetConnection";
 
 export default function AppView() {
-  const {
-    userData,
-    setUserData,
-    updated,
-    isUserDataLoading,
-    userDataLoadingError,
-  } = useContext(UserDataContext);
+  const { userData, updated, isUserDataLoading, userDataLoadingError } =
+    useContext(UserDataContext);
   const [isUserNameSet, setIsUserNameSet] = useState(false);
   const [isConnectedToGoogleFit, setIsConnectedToGoogleFit] = useState(false);
   const [isLoading, setIsLoading] = useState(true);

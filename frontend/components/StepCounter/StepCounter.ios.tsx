@@ -10,6 +10,7 @@ import StepsBarChart from "./StepsBarChartRelative";
 import { style } from "../../constants/Styles";
 import { style as stepCounterStyles } from "./StepCounterStyles";
 import ContributeButton from "./ContributeButton";
+import CenteredActivityIndicator from "../CenteredActivityIndicator";
 
 export default function StepCounter() {
   const [isPedometerAvailable, setIsPedometerAvailable] = useState(false);
@@ -20,7 +21,6 @@ export default function StepCounter() {
   const [newSteps, setNewSteps] = useState(0);
   const [goalSteps, setGoalSteps] = useState(0);
   const { userData, updated, setUpdated, mode } = useContext(UserDataContext);
-  const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   let _subscription;
@@ -108,6 +108,15 @@ export default function StepCounter() {
     );
   }
 
+  if (!mode) {
+    return (
+      <Surface style={stepCounterStyles.surface}>
+        <Text style={style.cardHeader}>Personal Contribution</Text>
+        <CenteredActivityIndicator height={100} />
+      </Surface>
+    );
+  }
+
   if (mode === "RELATIVE") {
     return (
       <>
@@ -126,7 +135,7 @@ export default function StepCounter() {
         />
       </>
     );
-  } else {
+  } else if (mode === "ABSOLUTE") {
     return (
       <>
         <Surface style={stepCounterStyles.surface}>
@@ -154,4 +163,5 @@ export default function StepCounter() {
       </>
     );
   }
+  return null;
 }

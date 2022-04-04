@@ -25,14 +25,14 @@ export default function StepCounter() {
     token_type: null,
     requested_at_timestamp: null,
   });
-  const [stepCountToday, setStepCountToday] = useState(null);
+  const [stepCountToday, setStepCountToday] = useState(0);
   const [contributedSteps, setContributedSteps] = useState(0);
   const [newSteps, setNewSteps] = useState(0);
   const { userData, updated, setUpdated, mode } = useContext(UserDataContext);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isGoogleTokenValid, setIsGoogleTokenValid] = useState(false);
-  const [goalSteps, setGoalSteps] = useState(0);
+  const [goalSteps, setGoalSteps] = useState(null);
 
   useEffect(() => {
     dataManager.getGoogleAuthInfo().then((authInfo) => {
@@ -60,7 +60,8 @@ export default function StepCounter() {
         if (mounted) {
           let userStepCount = data.total_steps;
           if (userStepCount === undefined) userStepCount = 0;
-          setNewSteps(stepCountToday - userStepCount);
+          const stepsNew = stepCountToday - userStepCount;
+          if (stepsNew > 0) setNewSteps(stepCountToday - userStepCount);
           setContributedSteps(userStepCount);
           if (data.goal) setGoalSteps(data.goal);
           setIsLoading(false);
@@ -220,6 +221,15 @@ export default function StepCounter() {
     }
   };
 
+  if (!mode) {
+    return (
+      <Surface style={stepCounterStyles.surface}>
+        <Text style={style.cardHeader}>Personal Contribution</Text>
+        <CenteredActivityIndicator height={100} />
+      </Surface>
+    );
+  }
+
   if (mode === "RELATIVE") {
     return (
       <>
@@ -244,7 +254,7 @@ export default function StepCounter() {
         />
       </>
     );
-  } else {
+  } else if (mode === "ABSOLUTE") {
     return (
       <>
         <Surface style={stepCounterStyles.surface}>
@@ -276,4 +286,5 @@ export default function StepCounter() {
       </>
     );
   }
+  return null;
 }

@@ -2,7 +2,7 @@
   "expo": {
     "name": "shared-achievement",
     "slug": "shared-achievement",
-    "version": "1.0.3",
+    "version": "1.0.5",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "shared-achievement",
@@ -15,9 +15,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "at.ac.lbg.dhp.shared-achievement"
@@ -34,6 +32,15 @@
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": ["expo-notifications"]
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/icon.png",
+          "color": "#ffffff",
+          "mode": "production"
+        }
+      ]
+    ]
   }
 }

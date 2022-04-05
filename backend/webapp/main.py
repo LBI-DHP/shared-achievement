@@ -33,7 +33,7 @@ def create_tables():
     # Use the underlying peewee database object instead of the
     # flask-peewee database wrapper:
     
-    db.database.drop_tables(models)
+    #db.database.drop_tables(models)
     db.database.create_tables(models)    
     
 
@@ -124,8 +124,8 @@ def fill_in_data():
 if __name__ == '__main__':
     configure_logging()
     logger.log(logging.INFO, "start logger")
-    create_tables()
-    fill_in_data()
+    # create_tables()
+    # fill_in_data()
     print("start shared achievements server server")
     app.run(debug=True)
     # app.run(port=11883)

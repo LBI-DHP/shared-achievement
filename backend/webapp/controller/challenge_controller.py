@@ -55,7 +55,7 @@ def on_save_steps(sender, instance: StepCount, created):
             msg_body = f"""Awesome! {contributor.username} contributed {instance.steps} steps to your challenge."""
         else:
             progress  = (instance.steps / instance.user.targetGoal) * 100
-            msg_body = f"""Awesome! {contributor.username} contributed {progress} % to your challenge."""
+            msg_body = f"""Awesome! {contributor.username} contributed {int(round(progress))} % to your challenge."""
         msg_type = 'STEPS_CONTRIBUTION'
         send_push_notification(sender_user_id=contributor.id, receiver_user_id=row['user_id'], title=msg_title, body=msg_body, type=msg_type)
         logger.log(logging.INFO, f"post save hook send mesage to {row}")

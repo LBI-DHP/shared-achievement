@@ -1,0 +1,512 @@
+[2022-03-07 16:07:29,944] {main.py:116} INFO - test logger
+[2022-03-07 16:08:41,396] {main.py:116} INFO - test logger
+[2022-03-07 16:08:41,586] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 41, 585147), 1, 0]
+[2022-03-07 16:08:41,589] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 41, 588371), 1, 0]
+[2022-03-07 16:08:41,597] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 2 team:1
+[2022-03-07 16:08:42,093] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:08:42,119] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 42, 117703), 1, 0]
+[2022-03-07 16:08:42,125] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 42, 124002), 1, 0]
+[2022-03-07 16:08:42,133] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 42, 132429), 1, 0]
+[2022-03-07 16:08:42,141] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 3 team:1
+[2022-03-07 16:08:42,607] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:08:43,097] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:08:43,121] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 43, 120405), 1, 0]
+[2022-03-07 16:08:43,128] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 43, 126928), 1, 0]
+[2022-03-07 16:08:43,135] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 43, 133755), 1, 0]
+[2022-03-07 16:08:43,139] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 43, 138150), 1, 0]
+[2022-03-07 16:08:43,146] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 4 team:1
+[2022-03-07 16:08:43,615] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:08:44,132] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:08:44,601] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 4, 'user_name': 'daniela'}
+[2022-03-07 16:08:44,620] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 44, 619209), 1, 0]
+[2022-03-07 16:08:44,625] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 44, 623261), 1, 0]
+[2022-03-07 16:08:44,633] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 44, 632005), 1, 0]
+[2022-03-07 16:08:44,637] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 44, 636695), 1, 0]
+[2022-03-07 16:08:44,643] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 44, 640805), 1, 0]
+[2022-03-07 16:08:44,653] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 5 team:1
+[2022-03-07 16:08:45,127] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:08:45,626] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:08:46,084] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 4, 'user_name': 'daniela'}
+[2022-03-07 16:08:46,582] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 5, 'user_name': 'dimi'}
+[2022-03-07 16:08:46,601] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 46, 599945), 1, 0]
+[2022-03-07 16:08:46,614] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 46, 612957), 1, 0]
+[2022-03-07 16:08:46,619] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 46, 617764), 1, 0]
+[2022-03-07 16:08:46,630] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 46, 628952), 1, 0]
+[2022-03-07 16:08:46,635] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 46, 633514), 1, 0]
+[2022-03-07 16:08:46,644] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 46, 642612), 1, 0]
+[2022-03-07 16:08:46,651] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 6 team:1
+[2022-03-07 16:08:47,190] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:08:47,677] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:08:48,134] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 4, 'user_name': 'daniela'}
+[2022-03-07 16:08:48,624] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 5, 'user_name': 'dimi'}
+[2022-03-07 16:08:49,091] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 6, 'user_name': 'testy'}
+[2022-03-07 16:08:49,133] {_internal.py:225} WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+[2022-03-07 16:08:49,134] {_internal.py:225} INFO -  * Running on http://192.168.0.116:11883/ (Press CTRL+C to quit)
+[2022-03-07 16:08:49,137] {_internal.py:225} INFO -  * Restarting with stat
+[2022-03-07 16:08:50,734] {main.py:116} INFO - test logger
+[2022-03-07 16:08:50,955] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 50, 953657), 1, 0]
+[2022-03-07 16:08:50,961] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 50, 960220), 1, 0]
+[2022-03-07 16:08:50,969] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 2 team:1
+[2022-03-07 16:08:51,476] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:08:51,497] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 51, 495987), 1, 0]
+[2022-03-07 16:08:51,504] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 51, 503336), 1, 0]
+[2022-03-07 16:08:51,513] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 51, 511612), 1, 0]
+[2022-03-07 16:08:51,526] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 3 team:1
+[2022-03-07 16:08:51,997] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:08:52,496] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:08:52,522] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 52, 519236), 1, 0]
+[2022-03-07 16:08:52,535] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 52, 531996), 1, 0]
+[2022-03-07 16:08:52,548] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 52, 545783), 1, 0]
+[2022-03-07 16:08:52,560] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 52, 556593), 1, 0]
+[2022-03-07 16:08:52,578] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 4 team:1
+[2022-03-07 16:08:53,172] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:08:54,379] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:08:54,854] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 4, 'user_name': 'daniela'}
+[2022-03-07 16:08:54,876] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 54, 874903), 1, 0]
+[2022-03-07 16:08:54,882] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 54, 880782), 1, 0]
+[2022-03-07 16:08:54,895] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 54, 893771), 1, 0]
+[2022-03-07 16:08:54,900] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 54, 898358), 1, 0]
+[2022-03-07 16:08:54,906] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 54, 903222), 1, 0]
+[2022-03-07 16:08:54,912] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 5 team:1
+[2022-03-07 16:08:55,386] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:08:56,098] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:08:56,569] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 4, 'user_name': 'daniela'}
+[2022-03-07 16:08:57,114] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 5, 'user_name': 'dimi'}
+[2022-03-07 16:08:57,135] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 57, 133471), 1, 0]
+[2022-03-07 16:08:57,146] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 57, 145286), 1, 0]
+[2022-03-07 16:08:57,150] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 57, 149653), 1, 0]
+[2022-03-07 16:08:57,160] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 57, 158960), 1, 0]
+[2022-03-07 16:08:57,164] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 57, 163533), 1, 0]
+[2022-03-07 16:08:57,172] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 8, 57, 168069), 1, 0]
+[2022-03-07 16:08:57,184] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 6 team:1
+[2022-03-07 16:08:57,660] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:08:58,145] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:08:58,616] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 4, 'user_name': 'daniela'}
+[2022-03-07 16:08:59,123] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 5, 'user_name': 'dimi'}
+[2022-03-07 16:08:59,601] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 6, 'user_name': 'testy'}
+[2022-03-07 16:08:59,627] {_internal.py:225} WARNING -  * Debugger is active!
+[2022-03-07 16:08:59,629] {_internal.py:225} INFO -  * Debugger PIN: 375-848-732
+[2022-03-07 16:13:47,550] {main.py:116} INFO - test logger
+[2022-03-07 16:13:47,740] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 47, 739929), 1, 0]
+[2022-03-07 16:13:47,744] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 47, 743493), 1, 0]
+[2022-03-07 16:13:47,751] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 2 team:1
+[2022-03-07 16:13:48,244] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:13:48,293] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 48, 291248), 1, 0]
+[2022-03-07 16:13:48,301] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 48, 299880), 1, 0]
+[2022-03-07 16:13:48,305] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 48, 304449), 1, 0]
+[2022-03-07 16:13:48,317] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 3 team:1
+[2022-03-07 16:13:48,815] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:13:49,346] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:13:49,385] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 49, 383095), 1, 0]
+[2022-03-07 16:13:49,394] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 49, 393223), 1, 0]
+[2022-03-07 16:13:49,399] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 49, 398117), 1, 0]
+[2022-03-07 16:13:49,405] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 49, 404681), 1, 0]
+[2022-03-07 16:13:49,412] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 4 team:1
+[2022-03-07 16:13:49,895] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:13:50,462] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:13:50,955] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 4, 'user_name': 'daniela'}
+[2022-03-07 16:13:51,003] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 51, 2091), 1, 0]
+[2022-03-07 16:13:51,008] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 51, 7832), 1, 0]
+[2022-03-07 16:13:51,019] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 51, 17884), 1, 0]
+[2022-03-07 16:13:51,023] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 51, 22522), 1, 0]
+[2022-03-07 16:13:51,030] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 51, 29510), 1, 0]
+[2022-03-07 16:13:51,037] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 5 team:1
+[2022-03-07 16:13:51,513] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:13:52,059] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:13:52,777] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 4, 'user_name': 'daniela'}
+[2022-03-07 16:13:53,356] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 5, 'user_name': 'dimi'}
+[2022-03-07 16:13:53,389] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 53, 387566), 1, 0]
+[2022-03-07 16:13:53,397] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 53, 395778), 1, 0]
+[2022-03-07 16:13:53,405] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 53, 404265), 1, 0]
+[2022-03-07 16:13:53,413] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 53, 410495), 1, 0]
+[2022-03-07 16:13:53,420] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 53, 418933), 1, 0]
+[2022-03-07 16:13:53,424] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 53, 423478), 1, 0]
+[2022-03-07 16:13:53,437] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 6 team:1
+[2022-03-07 16:13:53,918] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:13:54,455] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:13:54,962] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 4, 'user_name': 'daniela'}
+[2022-03-07 16:13:55,563] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 5, 'user_name': 'dimi'}
+[2022-03-07 16:13:56,078] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 6, 'user_name': 'testy'}
+[2022-03-07 16:13:56,135] {_internal.py:225} WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+[2022-03-07 16:13:56,138] {_internal.py:225} INFO -  * Running on http://192.168.0.116:11883/ (Press CTRL+C to quit)
+[2022-03-07 16:13:56,140] {_internal.py:225} INFO -  * Restarting with stat
+[2022-03-07 16:13:57,146] {main.py:116} INFO - test logger
+[2022-03-07 16:13:57,342] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 57, 340202), 1, 0]
+[2022-03-07 16:13:57,346] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 57, 345427), 1, 0]
+[2022-03-07 16:13:57,353] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 2 team:1
+[2022-03-07 16:13:58,184] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:13:58,221] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 58, 220031), 1, 0]
+[2022-03-07 16:13:58,226] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 58, 225063), 1, 0]
+[2022-03-07 16:13:58,228] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 58, 227978), 1, 0]
+[2022-03-07 16:13:58,236] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 3 team:1
+[2022-03-07 16:13:59,409] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:13:59,960] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:13:59,982] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 59, 980941), 1, 0]
+[2022-03-07 16:13:59,993] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 59, 990754), 1, 0]
+[2022-03-07 16:13:59,997] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 13, 59, 996071), 1, 0]
+[2022-03-07 16:14:00,003] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 14, 0, 2339), 1, 0]
+[2022-03-07 16:14:00,011] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 4 team:1
+[2022-03-07 16:14:00,510] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:14:01,012] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:14:01,586] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 4, 'user_name': 'daniela'}
+[2022-03-07 16:14:01,641] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 14, 1, 638570), 1, 0]
+[2022-03-07 16:14:01,646] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 14, 1, 644090), 1, 0]
+[2022-03-07 16:14:01,650] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 14, 1, 648556), 1, 0]
+[2022-03-07 16:14:01,660] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 14, 1, 659690), 1, 0]
+[2022-03-07 16:14:01,664] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 14, 1, 663716), 1, 0]
+[2022-03-07 16:14:01,672] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 5 team:1
+[2022-03-07 16:14:02,197] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:14:02,720] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:14:03,226] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 4, 'user_name': 'daniela'}
+[2022-03-07 16:14:03,762] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 5, 'user_name': 'dimi'}
+[2022-03-07 16:14:03,784] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 14, 3, 783085), 1, 0]
+[2022-03-07 16:14:03,788] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 14, 3, 786197), 1, 0]
+[2022-03-07 16:14:03,792] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 14, 3, 790471), 1, 0]
+[2022-03-07 16:14:03,802] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 14, 3, 800891), 1, 0]
+[2022-03-07 16:14:03,806] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 14, 3, 805422), 1, 0]
+[2022-03-07 16:14:03,813] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 14, 3, 812638), 1, 0]
+[2022-03-07 16:14:03,819] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 6 team:1
+[2022-03-07 16:14:04,313] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:14:04,831] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:14:05,317] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 4, 'user_name': 'daniela'}
+[2022-03-07 16:14:06,157] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 5, 'user_name': 'dimi'}
+[2022-03-07 16:14:06,667] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 6, 'user_name': 'testy'}
+[2022-03-07 16:14:06,721] {_internal.py:225} WARNING -  * Debugger is active!
+[2022-03-07 16:14:06,723] {_internal.py:225} INFO -  * Debugger PIN: 375-848-732
+[2022-03-07 16:16:00,005] {base.py:123} INFO - Running job "schedule_notifications (trigger: cron[hour='16', minute='16'], next run at: 2022-03-07 16:16:00 CET)" (scheduled at 2022-03-07 16:16:00+01:00)
+[2022-03-07 16:16:00,005] {base.py:123} INFO - Running job "schedule_notifications (trigger: cron[hour='16', minute='16'], next run at: 2022-03-07 16:16:00 CET)" (scheduled at 2022-03-07 16:16:00+01:00)
+[2022-03-07 16:16:02,639] {base.py:144} INFO - Job "schedule_notifications (trigger: cron[hour='16', minute='16'], next run at: 2022-03-08 16:16:00 CET)" executed successfully
+[2022-03-07 16:16:02,665] {base.py:144} INFO - Job "schedule_notifications (trigger: cron[hour='16', minute='16'], next run at: 2022-03-08 16:16:00 CET)" executed successfully
+[2022-03-07 16:18:08,303] {main.py:116} INFO - test logger
+[2022-03-07 16:18:08,491] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 8, 490569), 1, 0]
+[2022-03-07 16:18:08,495] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 8, 494150), 1, 0]
+[2022-03-07 16:18:08,501] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 2 team:1
+[2022-03-07 16:18:08,999] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:18:09,028] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 9, 26315), 1, 0]
+[2022-03-07 16:18:09,033] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 9, 31990), 1, 0]
+[2022-03-07 16:18:09,037] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 9, 35984), 1, 0]
+[2022-03-07 16:18:09,044] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 3 team:1
+[2022-03-07 16:18:09,541] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:18:10,129] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:18:10,170] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 10, 168057), 1, 0]
+[2022-03-07 16:18:10,181] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 10, 180477), 1, 0]
+[2022-03-07 16:18:10,186] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 10, 185097), 1, 0]
+[2022-03-07 16:18:10,191] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 10, 189723), 1, 0]
+[2022-03-07 16:18:10,199] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 4 team:1
+[2022-03-07 16:18:10,696] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:18:11,218] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:18:11,725] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 4, 'user_name': 'daniela'}
+[2022-03-07 16:18:11,752] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 11, 750016), 1, 0]
+[2022-03-07 16:18:11,761] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 11, 760735), 1, 0]
+[2022-03-07 16:18:11,768] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 11, 767103), 1, 0]
+[2022-03-07 16:18:11,774] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 11, 772862), 1, 0]
+[2022-03-07 16:18:11,778] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 11, 777073), 1, 0]
+[2022-03-07 16:18:11,788] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 5 team:1
+[2022-03-07 16:18:12,288] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:18:12,821] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:18:13,332] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 4, 'user_name': 'daniela'}
+[2022-03-07 16:18:13,859] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 5, 'user_name': 'dimi'}
+[2022-03-07 16:18:13,897] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 13, 894922), 1, 0]
+[2022-03-07 16:18:13,905] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 13, 903293), 1, 0]
+[2022-03-07 16:18:13,911] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 13, 910424), 1, 0]
+[2022-03-07 16:18:13,916] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 13, 914842), 1, 0]
+[2022-03-07 16:18:13,924] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 13, 923612), 1, 0]
+[2022-03-07 16:18:13,928] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 13, 927352), 1, 0]
+[2022-03-07 16:18:13,936] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 6 team:1
+[2022-03-07 16:18:14,414] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:18:15,044] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:18:15,554] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 4, 'user_name': 'daniela'}
+[2022-03-07 16:18:16,087] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 5, 'user_name': 'dimi'}
+[2022-03-07 16:18:16,627] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 6, 'user_name': 'testy'}
+[2022-03-07 16:18:16,687] {_internal.py:225} WARNING -  * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+[2022-03-07 16:18:16,689] {_internal.py:225} INFO -  * Running on http://192.168.0.116:11883/ (Press CTRL+C to quit)
+[2022-03-07 16:18:16,694] {_internal.py:225} INFO -  * Restarting with stat
+[2022-03-07 16:18:23,102] {main.py:116} INFO - test logger
+[2022-03-07 16:18:23,304] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 23, 303464), 1, 0]
+[2022-03-07 16:18:23,307] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 23, 306662), 1, 0]
+[2022-03-07 16:18:23,314] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 2 team:1
+[2022-03-07 16:18:23,946] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:18:23,991] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 23, 988107), 1, 0]
+[2022-03-07 16:18:23,997] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 23, 995147), 1, 0]
+[2022-03-07 16:18:24,004] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 24, 2895), 1, 0]
+[2022-03-07 16:18:24,014] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 3 team:1
+[2022-03-07 16:18:24,553] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:18:25,065] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:18:25,110] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 25, 107673), 1, 0]
+[2022-03-07 16:18:25,117] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 25, 115849), 1, 0]
+[2022-03-07 16:18:25,125] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 25, 124750), 1, 0]
+[2022-03-07 16:18:25,129] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 25, 128594), 1, 0]
+[2022-03-07 16:18:25,138] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 4 team:1
+[2022-03-07 16:18:25,623] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:18:26,241] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:18:26,765] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 4, 'user_name': 'daniela'}
+[2022-03-07 16:18:26,806] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 26, 802670), 1, 0]
+[2022-03-07 16:18:26,812] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 26, 809818), 1, 0]
+[2022-03-07 16:18:26,820] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 26, 819410), 1, 0]
+[2022-03-07 16:18:26,828] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 26, 827152), 1, 0]
+[2022-03-07 16:18:26,833] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 26, 831880), 1, 0]
+[2022-03-07 16:18:26,843] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 5 team:1
+[2022-03-07 16:18:27,347] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:18:27,870] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:18:28,389] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 4, 'user_name': 'daniela'}
+[2022-03-07 16:18:28,937] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 5, 'user_name': 'dimi'}
+[2022-03-07 16:18:29,000] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 28, 997905), 1, 0]
+[2022-03-07 16:18:29,007] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 29, 5877), 1, 0]
+[2022-03-07 16:18:29,013] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 29, 11401), 1, 0]
+[2022-03-07 16:18:29,018] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 29, 17399), 1, 0]
+[2022-03-07 16:18:29,022] {challenge_controller.py:90} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 29, 21558), 1, 0]
+[2022-03-07 16:18:29,027] {challenge_controller.py:101} ERROR - <Model: TeamChallenge> instance matching query does not exist:
+SQL: SELECT `t1`.`id`, `t1`.`name`, `t1`.`goal`, `t1`.`total_steps`, `t1`.`progress`, `t1`.`status`, `t1`.`date`, `t1`.`team_id`, `t1`.`teamMembersGoal` FROM `teamchallenge` AS `t1` WHERE (((`t1`.`team_id` = %s) AND `t1`.`date`) = %s) LIMIT %s OFFSET %s
+Params: [1, datetime.datetime(2022, 3, 7, 16, 18, 29, 25846), 1, 0]
+[2022-03-07 16:18:29,037] {challenge_controller.py:16} INFO - post save hook for <class 'peewee.ModelBase'> created=True user 6 team:1
+[2022-03-07 16:18:29,529] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 2, 'user_name': 'jan'}
+[2022-03-07 16:18:30,055] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 3, 'user_name': 'eva'}
+[2022-03-07 16:18:30,541] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 4, 'user_name': 'daniela'}
+[2022-03-07 16:18:31,083] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 5, 'user_name': 'dimi'}
+[2022-03-07 16:18:31,590] {challenge_controller.py:32} INFO - post save hook send mesage to {'user_id': 6, 'user_name': 'testy'}
+[2022-03-07 16:18:31,640] {_internal.py:225} WARNING -  * Debugger is active!
+[2022-03-07 16:18:31,642] {_internal.py:225} INFO -  * Debugger PIN: 375-848-732
+[2022-03-07 16:18:45,134] {_internal.py:225} INFO - 192.168.0.116 - - [07/Mar/2022 16:18:45] "[32mGET /api/user/1 HTTP/1.1[0m" 308 -
+[2022-03-07 16:18:45,168] {_internal.py:225} INFO - 192.168.0.116 - - [07/Mar/2022 16:18:45] "GET /api/user/1/ HTTP/1.1" 200 -
+[2022-03-07 16:18:45,383] {_internal.py:225} INFO - 192.168.0.116 - - [07/Mar/2022 16:18:45] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -

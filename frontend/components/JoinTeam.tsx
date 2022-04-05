@@ -55,7 +55,11 @@ export default function JoinOrCreateTeam() {
           <Picker.Item enabled={false} label="=== select a team ===" value="" />
           {allTeams.map((team) => {
             return (
-              <Picker.Item label={team.name} value={team.id} key={team.id} />
+              <Picker.Item
+                label={"Team " + team.name}
+                value={team.id}
+                key={team.id}
+              />
             );
           })}
         </Picker>

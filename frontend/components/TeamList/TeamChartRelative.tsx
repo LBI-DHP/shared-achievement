@@ -26,7 +26,7 @@ export default function TeamChartRelative({
             )}
           </Text>
           <Text style={{ color: "#ffae00", fontSize: 15, fontWeight: "bold" }}>
-            {userProgress}%
+            {userProgress} %
           </Text>
         </View>
         {member.username !== currentUserName && (

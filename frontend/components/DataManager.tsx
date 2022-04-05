@@ -365,7 +365,7 @@ export default class dataManager {
   static getTeamData = async (teamid) => {
     try {
       const response = await fetch(
-        configJSON.serverConfig.root + "/api/team/" + teamid,
+        configJSON.serverConfig.root + "/api/team/" + teamid + "/",
         {
           method: "GET",
           headers: {

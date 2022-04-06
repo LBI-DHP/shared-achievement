@@ -71,7 +71,7 @@ export default function Challenge() {
   }
   let progressPosition;
 
-  if (teamRelativeStepCountToday >= 100) {
+  if (teamRelativeStepCountToday >= 1) {
     progressPosition =
       untersbergSvgViewBoxHeight - 10 - (untersbergSvgViewBoxHeight - 10 - 7.5);
   } else {

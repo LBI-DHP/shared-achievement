@@ -40,7 +40,8 @@ export default function StepCounter() {
       if (mounted) {
         let userStepCount = data.total_steps;
         if (userStepCount === undefined) userStepCount = 0;
-        setNewSteps(stepCountToday - userStepCount);
+        const stepsNew = stepCountToday - userStepCount;
+        if (stepsNew > 0) setNewSteps(stepCountToday - userStepCount);
         setContributedSteps(userStepCount);
         if (data.goal) setGoalSteps(data.goal);
         setIsLoading(false);

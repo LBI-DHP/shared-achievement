@@ -2,8 +2,8 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 from controller.push_notifications import send_push_notification
-from models import User, Team, UserChallenge, TeamChallenge, ChallengeDifficulty
-from webapp.models import StepCount
+from models import User, Team, UserChallenge, TeamChallenge, ChallengeDifficulty, StepCount
+
 
 scheduler = BackgroundScheduler(daemon=True)
 

@@ -38,43 +38,46 @@ def create_tables():
     
 
 def fill_in_data():
-    adminUsr = auth.User(username='admin', email='dimi@uni-bremen.de', admin=True, active=True)
-    adminUsr.set_password('admin')
-    adminUsr.save()
 
-    teamLBI = Team(name='LBI',)
-    teamLBI.progressCalculationMode = TeamProgressCalculationMode.RELATIVE.name
-    teamLBI.save()
+    adminUsr = User.get_or_none(User.username == 'admin')
+    if adminUsr is None:
+        adminUsr = auth.User(username='admin', email='dimi@uni-bremen.de', admin=True, active=True)
+        adminUsr.set_password('admin')
+        adminUsr.save()
+
+    # teamLBI = Team(name='LBI',)
+    # teamLBI.progressCalculationMode = TeamProgressCalculationMode.RELATIVE.name
+    # teamLBI.save()
     
-    teamHB = Team(name='Bremen',)
-    teamHB.progressCalculationMode = TeamProgressCalculationMode.ABSOLUTE.name
-    teamHB.save()
+    # teamHB = Team(name='Bremen',)
+    # teamHB.progressCalculationMode = TeamProgressCalculationMode.ABSOLUTE.name
+    # teamHB.save()
 
-    for i in range(1, 10):
-        challengeGaisberg = TeamChallenge()
-        challengeGaisberg.name = 'Gaisberg'
-        challengeGaisberg.goal = int(ChallengeDifficulty.NORMAL)
-        challengeGaisberg.team = teamLBI
-        challengeGaisberg.total_steps = int(challengeGaisberg.goal * random.random())
-        challengeGaisberg.progress = (challengeGaisberg.total_steps / challengeGaisberg.goal) * 100
-        challengeGaisberg.date = datetime.date.today() - datetime.timedelta(days=i) #datetime.now() 
-        challengeGaisberg.save()
+    # for i in range(1, 10):
+    #     challengeGaisberg = TeamChallenge()
+    #     challengeGaisberg.name = 'Gaisberg'
+    #     challengeGaisberg.goal = int(ChallengeDifficulty.NORMAL)
+    #     challengeGaisberg.team = teamLBI
+    #     challengeGaisberg.total_steps = int(challengeGaisberg.goal * random.random())
+    #     challengeGaisberg.progress = (challengeGaisberg.total_steps / challengeGaisberg.goal) * 100
+    #     challengeGaisberg.date = datetime.date.today() - datetime.timedelta(days=i) #datetime.now() 
+    #     challengeGaisberg.save()
 
 
-    challengeUntersberg = TeamChallenge()
-    challengeUntersberg.name = 'Untersberg'    
-    challengeUntersberg.goal = int(ChallengeDifficulty.NORMAL)
-    challengeUntersberg.team = teamLBI
-    challengeUntersberg.date = datetime.datetime.now()
-    challengeUntersberg.save()
+    # challengeUntersberg = TeamChallenge()
+    # challengeUntersberg.name = 'Untersberg'    
+    # challengeUntersberg.goal = int(ChallengeDifficulty.NORMAL)
+    # challengeUntersberg.team = teamLBI
+    # challengeUntersberg.date = datetime.datetime.now()
+    # challengeUntersberg.save()
     
 
-    challengeKlockerin = TeamChallenge()
-    challengeKlockerin.name = 'Klockerin'
-    challengeKlockerin.goal = int(ChallengeDifficulty.EASY)
-    challengeKlockerin.team = teamHB
-    challengeKlockerin.date = datetime.datetime.now()
-    challengeKlockerin.save()
+    # challengeKlockerin = TeamChallenge()
+    # challengeKlockerin.name = 'Klockerin'
+    # challengeKlockerin.goal = int(ChallengeDifficulty.EASY)
+    # challengeKlockerin.team = teamHB
+    # challengeKlockerin.date = datetime.datetime.now()
+    # challengeKlockerin.save()
 
     # tcr = TeamChallengeRelationship()
     # tcr.challenge = challengeUntersberg
@@ -125,9 +128,9 @@ if __name__ == '__main__':
     configure_logging()
     logger.log(logging.INFO, "start logger")
     # create_tables()
-    # fill_in_data()
+    fill_in_data()
     print("start shared achievements server server")
     #app.run(debug=True)
     app.run(port=11883)
-    
+
     #app.run(host="0.0.0.0", port=11883)

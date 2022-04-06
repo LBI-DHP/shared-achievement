@@ -3,6 +3,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 from controller.push_notifications import send_push_notification
 from models import User, Team, UserChallenge, TeamChallenge, ChallengeDifficulty
+from webapp.models import StepCount
 
 scheduler = BackgroundScheduler(daemon=True)
 
@@ -11,14 +12,25 @@ def schedule_notifications():
     
     type = "DAILY_REMINDER"
     for usr in User.select().where(User.id > 1):
-        body = f"""Hi, {usr.username}, 
-        you haven't done enough sports today!!!"""
+        userChallenge = UserChallenge.get_or_none((UserChallenge.user == usr) & (UserChallenge.date == datetime.date.today()))
+        if userChallenge is not None:
+            steps = StepCount.get_or_none((StepCount.userChallenge == userChallenge))
+            if steps is not None:
+                if userChallenge.progress < 100:
+                    body = f"Hi {usr.username}, fantastic, you made some progress today! Are you sure you contributed all your steps today?"
+                else:
+                    body = f"Hi {usr.username}, fantastic, you fulfilled your share today! Keep the spirit up!"        
+            else:
+                body = f"Hi {usr.username}, you haven't contributed your steps today yet."    
+        else:
+            body = f"Hi {usr.username}, you haven't contributed your steps today yet."    
+        #body = f"""Hi, {usr.username}, you haven't done enough sports today!!!"""
         send_push_notification(sender_user_id=1, receiver_user_id=usr.id, title=title, body=body, type=type)
     print("schedule notifications")
 
 
 
-scheduler.add_job(schedule_notifications,'cron',hour=16, minute=16)
+scheduler.add_job(schedule_notifications,'cron',hour=18, minute=1)
 
 
 # def schedule_create_new_daily_challenges():

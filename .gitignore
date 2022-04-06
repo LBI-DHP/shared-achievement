@@ -14,7 +14,9 @@ config.json
 
 # backend
 *.env
+*.pyc
 */venv/*
+*/__pycache__/*
 */__pycache__/*
 backend/webapp/__pycache__/*
 backend/shared_achievements.db

@@ -25,6 +25,12 @@ def updateTeamChallengeProgress(teamChallenge:TeamChallenge):
     teamChallenge.save()
 
 
+def updateUserChallengeProgress(userChallenge:UserChallenge):
+    total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.userChallenge == userChallenge)).get())
+    userChallenge.total_steps = total_steps.total_steps
+    userChallenge.progress = round(float(total_steps.total_steps / userChallenge.user.targetGoal)  * 100)
+    userChallenge.save()
+
 def updateTeamMembersGoal(teamChallenge:TeamChallenge):    
     sumGoal = 0            
     for member in teamChallenge.team.members:
@@ -68,14 +74,17 @@ def on_save_steps(sender, instance: StepCount, created):
     print(total_steps.total_steps)
     userChallenge.total_steps = total_steps.total_steps 
     userChallenge.progress = round( (float(total_steps.total_steps) / max(float(userChallenge.goal), 1.0) ) * 100)
-    if userChallenge.status != ChallengeStatus.FINISHED.name and userChallenge.progress >= 100:
-        userChallenge.status = ChallengeStatus.FINISHED.name
-        msg_title = "Personal Challenge achieved"
-        msg_body = f"""Awesome, you did it today!!! Keep your spirit up."""
-        send_push_notification(sender_user_id=1, receiver_user_id=contributor.id, title=msg_title, body=msg_body, type=msg_type)
-    else:    
-        userChallenge.status = ChallengeStatus.IN_PROGRESS.name
     userChallenge.save()
+
+    # if userChallenge.status != ChallengeStatus.FINISHED.name and userChallenge.progress >= 100:
+    #     userChallenge.status = ChallengeStatus.FINISHED.name
+    #     userChallenge.save()
+    #     # msg_title = "Personal Challenge achieved"
+    #     # msg_body = f"""Awesome, you did it today!!! Keep your spirit up."""
+    #     # send_push_notification(sender_user_id=1, receiver_user_id=contributor.id, title=msg_title, body=msg_body, type=msg_type)
+    # else:    
+    #     userChallenge.status = ChallengeStatus.IN_PROGRESS.name
+    #     userChallenge.save()
     
 
     ### Evaluate team challenge

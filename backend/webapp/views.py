@@ -19,7 +19,7 @@ from achievements import *
 import json
 import datetime
 from controller.push_notifications import send_push_notification
-from controller.challenge_controller import updateTeamChallengeProgress, updateTeamMembersGoal
+from controller.challenge_controller import updateTeamChallengeProgress, updateTeamMembersGoal, updateUserChallengeProgress
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -202,7 +202,7 @@ def push_steps():
         userChallenge.name = f"{user.username}_daily_challenge"
         userChallenge.date = datetime.date.today()
         userChallenge.goal = user.targetGoal
-        userChallenge.progress = 0
+        userChallenge.progress = 0 # int(request.json['steps']) / user.targetGoal
         userChallenge.user = user
         userChallenge.save()
 
@@ -253,6 +253,8 @@ def push_steps():
     steps.userChallenge = user_challenge
     steps.timestamp = datetime.datetime.now()
     steps.save()
+
+    updateUserChallengeProgress(user_challenge)
     
     return Response(json.dumps(model_to_dict(steps, recurse=False), default=str, indent=4, sort_keys=True), mimetype='application/json')    
     

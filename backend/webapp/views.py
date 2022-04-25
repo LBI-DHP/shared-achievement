@@ -9,7 +9,7 @@ import imp
 import logging
 from unicodedata import name
 from urllib.request import Request
-from urllib import parse as url_parese
+from urllib import parse as url_parse
 from flask import Response, jsonify, render_template, request  # ...etc , redirect, request, url_for
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from sqlalchemy import null
@@ -304,7 +304,12 @@ def manual():
 
 @app.route('/redirect_uri')
 def redirect_uri():
+
+    return jsonify(dict(url_parse.parse_qsl(url_parse.urlsplit(request.url).query)))
     return request.url
+
+
+
     #return "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"
 
 ###### SURVEY

@@ -301,9 +301,9 @@ def manual():
     return render_template('setup_instructions.html', os=os, mode=progressCalculationMode)
 
 
-# @app.route('/redirect_uri')
-# def redirect_uri():
-#     return "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"
+@app.route('/redirect_uri')
+def redirect_uri():
+    return "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"
 
 ###### SURVEY
 # @app.route('/consent', methods=['GET', 'POST'])

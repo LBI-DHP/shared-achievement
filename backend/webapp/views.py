@@ -9,6 +9,7 @@ import imp
 import logging
 from unicodedata import name
 from urllib.request import Request
+from urllib import parse as url_parese
 from flask import Response, jsonify, render_template, request  # ...etc , redirect, request, url_for
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from sqlalchemy import null
@@ -303,7 +304,8 @@ def manual():
 
 @app.route('/redirect_uri')
 def redirect_uri():
-    return "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"
+    return request.url
+    #return "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"
 
 ###### SURVEY
 # @app.route('/consent', methods=['GET', 'POST'])

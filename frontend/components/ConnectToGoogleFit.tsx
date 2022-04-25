@@ -22,12 +22,14 @@ export default function ConnectToGoogleFit({ setIsConnectedToGoogleFit }) {
   const [error, setError] = useState("");
 
   const getFirstToken = async () => {
+    //here
     try {
       const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
         method: "POST",
         body: JSON.stringify({
           code: authorizationCode,
           client_id: configJSON.googleConfig.clientID,
+          client_secret: configJSON.googleConfig.clientSecret,
           grant_type: "authorization_code",
           code_verifier: authRequest.codeVerifier,
           redirect_uri: configJSON.googleConfig.redirectUri,

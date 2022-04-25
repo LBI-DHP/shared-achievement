@@ -261,8 +261,6 @@ export default function StepCounter() {
           <Text style={style.cardHeader}>Personal Contribution</Text>
           {isLoading && error.length === 0 ? (
             <CenteredActivityIndicator height={100} />
-          ) : error.length > 0 ? (
-            <Text style={{ margin: 10 }}>{error}</Text>
           ) : (
             <View style={{ padding: 10 }}>
               <Text>

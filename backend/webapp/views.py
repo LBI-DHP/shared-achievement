@@ -9,6 +9,7 @@ import imp
 import logging
 from unicodedata import name
 from urllib.request import Request
+from urllib import parse as url_parse
 from flask import Response, jsonify, render_template, request  # ...etc , redirect, request, url_for
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from sqlalchemy import null
@@ -300,7 +301,24 @@ def manual():
     progressCalculationMode = request.json['progress_calculation_mode']
     return render_template('setup_instructions.html', os=os, mode=progressCalculationMode)
 
+
+@app.route('/redirect_uri')
+def redirect_uri():
+
+    return jsonify(dict(url_parse.parse_qsl(url_parse.urlsplit(request.url).query)))
+    return request.url
+
+
+
+    #return "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"
+
 ###### SURVEY
+# @app.route('/consent', methods=['GET', 'POST'])
+# def consent(user_id):
+#     return render_template('consent.html')
+    
+
+
 @app.route('/consent/<user_id>', methods=['GET', 'POST'])
 def consent(user_id):
     usr = User.get_or_none(User.id == int(user_id))

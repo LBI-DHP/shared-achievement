@@ -300,7 +300,18 @@ def manual():
     progressCalculationMode = request.json['progress_calculation_mode']
     return render_template('setup_instructions.html', os=os, mode=progressCalculationMode)
 
+
+@app.route('/redirect_uri')
+def redirect_uri():
+    return "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"
+
 ###### SURVEY
+@app.route('/consent', methods=['GET', 'POST'])
+def consent(user_id):
+    return render_template('consent.html')
+    
+
+
 @app.route('/consent/<user_id>', methods=['GET', 'POST'])
 def consent(user_id):
     usr = User.get_or_none(User.id == int(user_id))

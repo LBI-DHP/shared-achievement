@@ -22,7 +22,6 @@ export default function ConnectToGoogleFit({ setIsConnectedToGoogleFit }) {
   const [error, setError] = useState("");
 
   const getFirstToken = async () => {
-    //here
     try {
       const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
         method: "POST",

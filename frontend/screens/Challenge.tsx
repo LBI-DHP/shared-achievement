@@ -10,7 +10,6 @@ import { UserDataContext } from "../components/UserDataProvider";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 // @ts-ignore
 import StepCounter from "../components/StepCounter/StepCounter";
-import { white } from "react-native-paper/lib/typescript/styles/colors";
 
 export default function ChallengeScreen() {
   const {
@@ -76,6 +75,7 @@ export default function ChallengeScreen() {
         .then((data) => {
           if (mounted && data.progress) {
             setTeamReachedSummit(data.progress >= 100);
+            setShowConfettiCannon(data.progress >= 100);
           }
         })
         .catch((error) => {
@@ -107,6 +107,9 @@ export default function ChallengeScreen() {
         .catch((error) => {
           console.log(error);
         });
+    } else {
+      setTeamReachedSummit(false);
+      setShowConfettiCannon(false);
     }
 
     return () => {

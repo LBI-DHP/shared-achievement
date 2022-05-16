@@ -1,6 +1,6 @@
 // https://snack.expo.dev/@yoobit0616/pedometer-functional
 
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import dataManager from "../DataManager";
 import { Text, View, TouchableOpacity } from "react-native";
 import { style as stepCounterStyles } from "./StepCounterStyles";
@@ -14,14 +14,20 @@ export default function ContributeButton({
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const { userData, updated, setUpdated } = useContext(UserDataContext);
-  const disabled = newSteps === 0 || isLoading || isLoadingStepCounter;
+  const [isDisabled, setIsDisabled] = useState(true);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    setIsDisabled(newSteps === 0 || isLoading || isLoadingStepCounter);
+  }, [newSteps, isLoading, isLoadingStepCounter]);
+
+  console.log("isLoadingStepCounter", isLoadingStepCounter);
 
   return (
     <TouchableOpacity
-      disabled={disabled}
+      disabled={isDisabled}
       style={
-        disabled
+        isDisabled
           ? stepCounterStyles.contributeStepsButtonDisabled
           : stepCounterStyles.contributeStepsButton
       }

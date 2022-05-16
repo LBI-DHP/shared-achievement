@@ -21,8 +21,6 @@ export default function ContributeButton({
     setIsDisabled(newSteps === 0 || isLoading || isLoadingStepCounter);
   }, [newSteps, isLoading, isLoadingStepCounter]);
 
-  console.log("isLoadingStepCounter", isLoadingStepCounter);
-
   return (
     <TouchableOpacity
       disabled={isDisabled}

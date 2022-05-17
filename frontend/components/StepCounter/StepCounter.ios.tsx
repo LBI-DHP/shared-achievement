@@ -1,11 +1,11 @@
 // https://snack.expo.dev/@yoobit0616/pedometer-functional
 
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { Surface } from "react-native-paper";
 import { Pedometer } from "expo-sensors";
 import dataManager from "../DataManager";
 import { UserDataContext } from "../UserDataProvider";
-import { Text, View } from "react-native";
+import { Text, View, AppState } from "react-native";
 import StepsBarChart from "./StepsBarChartRelative";
 import { style } from "../../constants/Styles";
 import { style as stepCounterStyles } from "./StepCounterStyles";
@@ -18,10 +18,37 @@ export default function StepCounter() {
   const [currentStepCount, setCurrentStepCount] = useState(0);
   const [currentStepCountAdded, setCurrentStepCountAdded] = useState(0);
   const [contributedSteps, setContributedSteps] = useState(0);
-  const [newSteps, setNewSteps] = useState(0);
+  const [newSteps, setNewSteps] = useState(null);
   const [goalSteps, setGoalSteps] = useState(0);
   const { userData, updated, setUpdated, mode } = useContext(UserDataContext);
   const [isLoading, setIsLoading] = useState(true);
+  const [isApiLoading, setIsApiLoading] = useState(true);
+  const [isPedometerLoading, setIsPedometerLoading] = useState(true);
+
+  useEffect(() => {
+    setIsLoading(isApiLoading || isPedometerLoading);
+  }, [isApiLoading, isPedometerLoading]);
+
+  const [currentAppState, setCurrentAppState] = useState("active");
+  const appState = useRef(AppState.currentState);
+
+  useEffect(() => {
+    AppState.addEventListener("change", _handleAppStateChange);
+    return () => {
+      AppState.removeEventListener("change", _handleAppStateChange);
+    };
+  }, []);
+
+  const _handleAppStateChange = (nextAppState) => {
+    if (
+      appState.current.match(/inactive|background/) &&
+      nextAppState === "active"
+    ) {
+      console.log("App has come to the foreground!");
+    }
+    setCurrentAppState(nextAppState);
+    appState.current = nextAppState;
+  };
 
   let _subscription;
 
@@ -32,31 +59,42 @@ export default function StepCounter() {
       mounted = false;
       _unsubscribe();
     };
-  }, []);
+  }, [currentAppState]);
 
   useEffect(() => {
     let mounted = true;
+    setIsApiLoading(true);
     dataManager.getUserChallengeData(userData.id).then((data) => {
       if (mounted) {
         let userStepCount = data.total_steps;
         if (userStepCount === undefined) userStepCount = 0;
         const stepsNew = stepCountToday - userStepCount;
         if (stepsNew > 0) setNewSteps(stepCountToday - userStepCount);
+        else setNewSteps(0);
         setContributedSteps(userStepCount);
         if (data.goal) setGoalSteps(data.goal);
-        setIsLoading(false);
+        setIsApiLoading(false);
       }
     });
     return () => {
       mounted = false;
     };
-  }, [stepCountToday]);
+  }, [stepCountToday, currentAppState]);
 
   const _subscribe = (mounted) => {
+    setIsPedometerLoading(true);
+
+    // reset Sate for watchStepCount variables
+    setCurrentStepCount(0);
+    setCurrentStepCountAdded(0);
+    // callback  is invoked when new step count data is available
     _subscription = Pedometer.watchStepCount((result) => {
-      if (mounted) setCurrentStepCount(result.steps);
+      if (mounted) {
+        setCurrentStepCount(result.steps);
+      }
     });
 
+    // Returns whether the pedometer is enabled on the device
     Pedometer.isAvailableAsync().then(
       (result) => {
         if (result === true) {
@@ -69,6 +107,7 @@ export default function StepCounter() {
               if (mounted) {
                 setStepCountToday(result.steps);
                 setIsPedometerAvailable(true);
+                setIsPedometerLoading(false);
               }
             },
             (error) => {

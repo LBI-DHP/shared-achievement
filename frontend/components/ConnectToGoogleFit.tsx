@@ -3,23 +3,23 @@ import { View, Text } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { style } from "../constants/Styles";
 import dataManager from "../components/DataManager";
-import * as Google from "expo-auth-session/providers/google";
 import configJSON from "../config.json";
 import * as WebBrowser from "expo-web-browser";
 
-WebBrowser.maybeCompleteAuthSession();
-
 export default function ConnectToGoogleFit({ setIsConnectedToGoogleFit }) {
   const [authorizationCode, setAuthorizationCode] = useState("");
-  const [authRequest, authResponse, authPromptAsync] = Google.useAuthRequest({
-    androidClientId: configJSON.googleConfig.clientID,
-    expoClientId: configJSON.googleConfig.clientID,
-    clientId: configJSON.googleConfig.clientID,
-    redirectUri: configJSON.googleConfig.redirectUri,
-    responseType: "code",
-    scopes: configJSON.googleConfig.scopes,
-  });
   const [error, setError] = useState("");
+
+  const redirectToGoogleLogin = async () => {
+    WebBrowser.openBrowserAsync(
+      "https://accounts.google.com/o/oauth2/v2/auth?scope=" +
+        configJSON.googleConfig.scope +
+        "&access_type=offline&response_type=code&redirect_uri=" +
+        configJSON.googleConfig.redirectUri +
+        "&client_id=" +
+        configJSON.googleConfig.clientID
+    );
+  };
 
   const getFirstToken = async () => {
     try {
@@ -30,7 +30,6 @@ export default function ConnectToGoogleFit({ setIsConnectedToGoogleFit }) {
           client_id: configJSON.googleConfig.clientID,
           client_secret: configJSON.googleConfig.clientSecret,
           grant_type: "authorization_code",
-          code_verifier: authRequest.codeVerifier,
           redirect_uri: configJSON.googleConfig.redirectUri,
         }),
       });
@@ -69,9 +68,8 @@ export default function ConnectToGoogleFit({ setIsConnectedToGoogleFit }) {
       </Text>
       <Button
         mode="contained"
-        disabled={!authRequest}
         onPress={() => {
-          authPromptAsync();
+          redirectToGoogleLogin();
         }}
         style={{ marginBottom: 10 }}
       >

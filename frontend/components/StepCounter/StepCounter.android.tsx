@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
-import { Surface } from "react-native-paper";
+import { Surface, Button } from "react-native-paper";
 import { View } from "react-native";
 import configJSON from "../../config.json";
 import { Text } from "../Themed";
@@ -12,7 +12,6 @@ import { style } from "../../constants/Styles";
 import { style as stepCounterStyles } from "./StepCounterStyles";
 import ContributeButton from "./ContributeButton";
 import CenteredActivityIndicator from "../CenteredActivityIndicator";
-
 WebBrowser.maybeCompleteAuthSession();
 
 export default function StepCounter() {
@@ -25,37 +24,66 @@ export default function StepCounter() {
     token_type: null,
     requested_at_timestamp: null,
   });
+
   const [stepCountToday, setStepCountToday] = useState(0);
   const [contributedSteps, setContributedSteps] = useState(0);
   const [newSteps, setNewSteps] = useState(0);
   const { userData, updated, setUpdated, mode } = useContext(UserDataContext);
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-  const [isGoogleTokenValid, setIsGoogleTokenValid] = useState(false);
+  const [googleFitConnectionError, setGoogleFitConnectionError] =
+    useState(false);
+  const [internetConnectionError, setInternetConnectionError] = useState(false);
+  const [isApiLoading, setIsApiLoading] = useState(true);
+  const [isGoogleFitLoading, setIsGoogleFitLoading] = useState(true);
+  const [isGoogleTokenExpectedToBeValid, setIsGoogleTokenExpectedToBeValid] =
+    useState(true);
+  const [getNewTokenFailed, setGetNewTokenFailed] = useState(false);
   const [goalSteps, setGoalSteps] = useState(null);
 
   useEffect(() => {
+    let mounted = true;
+
     dataManager.getGoogleAuthInfo().then((authInfo) => {
-      if (authInfo != null) setGoogleAuthInfo(authInfo);
+      if (authInfo != null) {
+        if (mounted) setGoogleAuthInfo(authInfo);
+        getSteps(mounted);
+      } else {
+        //reconnect to google Fit
+      }
     });
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   useEffect(() => {
     let mounted = true;
-    if (googleAuthInfo.access_token) {
-      isTokenValid().then((isValid) => {
-        if (isValid && mounted) setIsGoogleTokenValid(true);
-        else getNewToken(mounted);
-      });
+
+    if (
+      !isGoogleTokenExpectedToBeValid &&
+      googleAuthInfo.access_token &&
+      !getNewTokenFailed
+    ) {
+      setIsGoogleFitLoading(true);
+      getNewToken(mounted);
+    } else if (isGoogleTokenExpectedToBeValid && googleAuthInfo.access_token) {
+      setIsGoogleFitLoading(true);
+      getSteps(mounted);
     }
     return () => {
       mounted = false;
     };
-  }, [googleAuthInfo]);
+  }, [
+    googleAuthInfo,
+    updated,
+    getNewTokenFailed,
+    isGoogleTokenExpectedToBeValid,
+  ]);
 
   useEffect(() => {
     let mounted = true;
     if (stepCountToday !== null) {
+      setIsApiLoading(true);
       dataManager.getUserChallengeData(userData.id).then((data) => {
         if (mounted) {
           let userStepCount = data.total_steps;
@@ -64,7 +92,7 @@ export default function StepCounter() {
           if (stepsNew > 0) setNewSteps(stepCountToday - userStepCount);
           setContributedSteps(userStepCount);
           if (data.goal) setGoalSteps(data.goal);
-          setIsLoading(false);
+          setIsApiLoading(false);
         }
       });
     }
@@ -73,33 +101,15 @@ export default function StepCounter() {
     };
   }, [stepCountToday]);
 
-  useEffect(() => {
-    let mounted = true;
-    if (!isGoogleTokenValid && googleAuthInfo.access_token)
-      getNewToken(mounted);
-    else if (isGoogleTokenValid && googleAuthInfo.access_token) {
-      getSteps();
-    }
-    return () => {
-      mounted = false;
-    };
-  }, [isGoogleTokenValid, updated]);
-
-  const resetStepsAfterContribution = () => {
-    setContributedSteps(stepCountToday);
-    setNewSteps(0);
-    setUpdated(!updated);
-  };
-
   const getNewToken = async (mounted) => {
     try {
       const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
         method: "POST",
         body: JSON.stringify({
-          refresh_token: googleAuthInfo.refresh_token,
           client_id: configJSON.googleConfig.clientID,
+          client_secret: configJSON.googleConfig.clientSecret,
           grant_type: "refresh_token",
-          redirect_uri: configJSON.googleConfig.redirectUri,
+          refresh_token: googleAuthInfo.refresh_token,
         }),
       });
       const tokenResponseStatus = await tokenResponse.status;
@@ -113,57 +123,27 @@ export default function StepCounter() {
           requested_at_timestamp: dateNow.valueOf(),
         };
         if (mounted) {
+          setGoogleFitConnectionError(false);
           setGoogleAuthInfo(newAuthInfo);
           dataManager.setGoogleAuthInfo(newAuthInfo);
-          setIsGoogleTokenValid(true);
+          setIsGoogleTokenExpectedToBeValid(true);
+          setGetNewTokenFailed(false);
         }
       } else {
-        setError(
-          "🚨 Error (1): Get new Google Fit token request failed. Response status: " +
-            tokenResponseStatus
-        );
+        setIsGoogleFitLoading(false);
+        setGetNewTokenFailed(true);
+        setGoogleFitConnectionError(true);
       }
     } catch (error) {
-      setError(
-        "🚨 Error (2): Get new Google Fit token request failed. Please check your internet connection. Error info: " +
-          error
-      );
+      setIsGoogleFitLoading(false);
+      setGetNewTokenFailed(true);
+      setInternetConnectionError(true);
     } finally {
       console.log("done with get new token request");
     }
   };
 
-  const isTokenValid = async () => {
-    try {
-      const tokenInfoResponse = await fetch(
-        "https://oauth2.googleapis.com/tokeninfo",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            access_token: googleAuthInfo.access_token,
-          }),
-        }
-      );
-
-      const tokenInfoResponseStatus = await tokenInfoResponse.status;
-
-      if (tokenInfoResponseStatus === 200) {
-        const tokenInfoJSON = await tokenInfoResponse.json();
-        if (tokenInfoJSON.expires_in && tokenInfoJSON.expires_in >= 10) {
-          return true;
-        }
-      }
-      return false;
-    } catch (error) {
-      setError(
-        "🚨 Error (3): Validate Google Fit token request failed. Please check your internet connection. Error info: " +
-          error
-      );
-      return false;
-    }
-  };
-
-  const getSteps = async () => {
+  const getSteps = async (mounted) => {
     const end = new Date();
     const start = new Date();
     start.setHours(0, 0, 0, 0);
@@ -195,6 +175,7 @@ export default function StepCounter() {
       const stepsResponseStatus = await stepsResponse.status;
 
       if (stepsResponseStatus === 200) {
+        setGoogleFitConnectionError(false);
         const stepsResponseJSON = await stepsResponse.json();
         if (
           stepsResponseJSON &&
@@ -208,25 +189,95 @@ export default function StepCounter() {
           stepsResponseJSON.bucket[0].dataset[0].point[0].value.length !== 0 &&
           stepsResponseJSON.bucket[0].dataset[0].point[0].value[0].intVal
         ) {
-          setStepCountToday(
-            stepsResponseJSON.bucket[0].dataset[0].point[0].value[0].intVal
-          );
-        } else setIsLoading(false);
-      } else setIsGoogleTokenValid(false);
+          if (mounted) {
+            setStepCountToday(
+              stepsResponseJSON.bucket[0].dataset[0].point[0].value[0].intVal
+            );
+            setIsGoogleFitLoading(false);
+          }
+        }
+      } else {
+        if (mounted) {
+          setIsGoogleTokenExpectedToBeValid(false);
+        }
+      }
     } catch (error) {
-      setError(
-        "🚨 Error (4): Fetch steps from Google Fit request failed. Please check your internet connection. Error info: " +
-          error
-      );
+      setIsGoogleFitLoading(false);
+      setInternetConnectionError(true);
     }
   };
 
-  if (!mode) {
+  const resetStepsAfterContribution = () => {
+    setContributedSteps(stepCountToday);
+    setNewSteps(0);
+    setUpdated(!updated);
+  };
+
+  if (!mode || isGoogleFitLoading || isApiLoading) {
     return (
-      <Surface style={stepCounterStyles.surface}>
-        <Text style={style.cardHeader}>Personal Contribution</Text>
-        <CenteredActivityIndicator height={100} />
-      </Surface>
+      <>
+        <Surface style={stepCounterStyles.surface}>
+          <Text style={style.cardHeader}>Personal Contribution</Text>
+          <CenteredActivityIndicator height={100} />
+        </Surface>
+        <ContributeButton
+          isLoadingStepCounter={isApiLoading || isGoogleFitLoading}
+          newSteps={newSteps}
+          resetStepsAfterContribution={() => resetStepsAfterContribution()}
+        />
+      </>
+    );
+  }
+
+  if (internetConnectionError) {
+    return (
+      <>
+        <Surface style={stepCounterStyles.surface}>
+          <Text style={style.cardHeader}>Personal Contribution</Text>
+          {/* To-Do Action Button */}
+          <Text>internetConnectionError</Text>
+        </Surface>
+        <ContributeButton
+          isLoadingStepCounter={true}
+          newSteps={newSteps}
+          resetStepsAfterContribution={() => resetStepsAfterContribution()}
+        />
+      </>
+    );
+  }
+
+  if (googleFitConnectionError) {
+    return (
+      <>
+        <Surface style={stepCounterStyles.surface}>
+          <Text style={style.cardHeader}>Personal Contribution</Text>
+          {/* To-Do Action Button */}
+          <Text>googleFitConnectionError</Text>
+          <Button
+            style={{ marginTop: 10 }}
+            mode="contained"
+            onPress={() => {
+              setGetNewTokenFailed(false);
+            }}
+          >
+            Retry
+          </Button>
+          <Button
+            style={{ marginTop: 10 }}
+            mode="contained"
+            onPress={() => {
+              dataManager.deleteGoogleAuthInfo();
+            }}
+          >
+            Reconnect App to Google Fit
+          </Button>
+        </Surface>
+        <ContributeButton
+          isLoadingStepCounter={true}
+          newSteps={newSteps}
+          resetStepsAfterContribution={() => resetStepsAfterContribution()}
+        />
+      </>
     );
   }
 
@@ -235,20 +286,14 @@ export default function StepCounter() {
       <>
         <Surface style={stepCounterStyles.surface}>
           <Text style={style.cardHeader}>Personal Contribution</Text>
-          {isLoading && error.length === 0 ? (
-            <CenteredActivityIndicator height={100} />
-          ) : error.length > 0 ? (
-            <Text style={{ margin: 10 }}>{error}</Text>
-          ) : (
-            <StepsBarChart
-              goalSteps={goalSteps}
-              contributedSteps={contributedSteps}
-              newSteps={newSteps}
-            />
-          )}
+          <StepsBarChart
+            goalSteps={goalSteps}
+            contributedSteps={contributedSteps}
+            newSteps={newSteps}
+          />
         </Surface>
         <ContributeButton
-          isLoadingStepCounter={isLoading}
+          isLoadingStepCounter={isApiLoading || isGoogleFitLoading}
           newSteps={newSteps}
           resetStepsAfterContribution={() => resetStepsAfterContribution()}
         />
@@ -259,25 +304,21 @@ export default function StepCounter() {
       <>
         <Surface style={stepCounterStyles.surface}>
           <Text style={style.cardHeader}>Personal Contribution</Text>
-          {isLoading && error.length === 0 ? (
-            <CenteredActivityIndicator height={100} />
-          ) : (
-            <View style={{ padding: 10 }}>
-              <Text>
-                <Text style={stepCounterStyles.stepsContributed}>
-                  {contributedSteps}
-                </Text>{" "}
-                steps already contributed
-              </Text>
-              <Text>
-                <Text style={stepCounterStyles.stepsNew}>{newSteps}</Text> new
-                steps since last contribution
-              </Text>
-            </View>
-          )}
+          <View style={{ padding: 10 }}>
+            <Text>
+              <Text style={stepCounterStyles.stepsContributed}>
+                {contributedSteps}
+              </Text>{" "}
+              steps already contributed
+            </Text>
+            <Text>
+              <Text style={stepCounterStyles.stepsNew}>{newSteps}</Text> new
+              steps since last contribution
+            </Text>
+          </View>
         </Surface>
         <ContributeButton
-          isLoadingStepCounter={isLoading}
+          isLoadingStepCounter={isApiLoading || isGoogleFitLoading}
           newSteps={newSteps}
           resetStepsAfterContribution={() => resetStepsAfterContribution()}
         />

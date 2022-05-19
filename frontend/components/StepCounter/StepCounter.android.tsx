@@ -39,6 +39,28 @@ export default function StepCounter() {
   const [getNewTokenFailed, setGetNewTokenFailed] = useState(false);
   const [goalSteps, setGoalSteps] = useState(null);
 
+  const [refetchStepsTimer, setRefetchStepsTimer] = useState(60);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+    let interval = setInterval(() => {
+      setRefetchStepsTimer((lastTimerCount) => {
+        if (lastTimerCount <= 1) {
+          getSteps(mounted);
+          clearInterval(interval);
+          return 60;
+        } else {
+          return lastTimerCount - 1;
+        }
+      });
+    }, 1000);
+    return () => {
+      clearInterval(interval);
+      mounted = false;
+    };
+  }, [isTimerRunning]);
+
   useEffect(() => {
     let mounted = true;
 
@@ -64,21 +86,14 @@ export default function StepCounter() {
       googleAuthInfo.access_token &&
       !getNewTokenFailed
     ) {
-      setIsGoogleFitLoading(true);
       getNewToken(mounted);
     } else if (isGoogleTokenExpectedToBeValid && googleAuthInfo.access_token) {
-      setIsGoogleFitLoading(true);
       getSteps(mounted);
     }
     return () => {
       mounted = false;
     };
-  }, [
-    googleAuthInfo,
-    updated,
-    getNewTokenFailed,
-    isGoogleTokenExpectedToBeValid,
-  ]);
+  }, [googleAuthInfo, getNewTokenFailed, isGoogleTokenExpectedToBeValid]);
 
   useEffect(() => {
     let mounted = true;
@@ -102,6 +117,7 @@ export default function StepCounter() {
   }, [stepCountToday]);
 
   const getNewToken = async (mounted) => {
+    setIsGoogleFitLoading(true);
     try {
       const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
         method: "POST",
@@ -136,14 +152,15 @@ export default function StepCounter() {
       }
     } catch (error) {
       setIsGoogleFitLoading(false);
-      setGetNewTokenFailed(true);
       setInternetConnectionError(true);
-    } finally {
-      console.log("done with get new token request");
     }
   };
 
   const getSteps = async (mounted) => {
+    if (mounted) {
+      setIsTimerRunning(false);
+      setIsGoogleFitLoading(true);
+    }
     const end = new Date();
     const start = new Date();
     start.setHours(0, 0, 0, 0);
@@ -175,7 +192,6 @@ export default function StepCounter() {
       const stepsResponseStatus = await stepsResponse.status;
 
       if (stepsResponseStatus === 200) {
-        setGoogleFitConnectionError(false);
         const stepsResponseJSON = await stepsResponse.json();
         if (
           stepsResponseJSON &&
@@ -187,14 +203,17 @@ export default function StepCounter() {
           stepsResponseJSON.bucket[0].dataset[0].point.length !== 0 &&
           stepsResponseJSON.bucket[0].dataset[0].point[0].value &&
           stepsResponseJSON.bucket[0].dataset[0].point[0].value.length !== 0 &&
-          stepsResponseJSON.bucket[0].dataset[0].point[0].value[0].intVal
+          stepsResponseJSON.bucket[0].dataset[0].point[0].value[0].intVal &&
+          mounted
         ) {
-          if (mounted) {
-            setStepCountToday(
-              stepsResponseJSON.bucket[0].dataset[0].point[0].value[0].intVal
-            );
-            setIsGoogleFitLoading(false);
-          }
+          setStepCountToday(
+            stepsResponseJSON.bucket[0].dataset[0].point[0].value[0].intVal
+          );
+        }
+        if (mounted) {
+          setGoogleFitConnectionError(false);
+          setIsTimerRunning(true);
+          setIsGoogleFitLoading(false);
         }
       } else {
         if (mounted) {
@@ -202,8 +221,10 @@ export default function StepCounter() {
         }
       }
     } catch (error) {
-      setIsGoogleFitLoading(false);
-      setInternetConnectionError(true);
+      if (mounted) {
+        setInternetConnectionError(true);
+        setIsGoogleFitLoading(false);
+      }
     }
   };
 
@@ -315,6 +336,7 @@ export default function StepCounter() {
               <Text style={stepCounterStyles.stepsNew}>{newSteps}</Text> new
               steps since last contribution
             </Text>
+            <Text>Sync Google Fit steps in {refetchStepsTimer} seconds</Text>
           </View>
         </Surface>
         <ContributeButton

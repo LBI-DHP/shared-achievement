@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
-import * as WebBrowser from "expo-web-browser";
-import * as Google from "expo-auth-session/providers/google";
-import { Surface, Button } from "react-native-paper";
-import { View } from "react-native";
+import { Feather } from "@expo/vector-icons";
+import { View, TouchableOpacity } from "react-native";
 import configJSON from "../../config.json";
 import { Text } from "../Themed";
 import dataManager from "../DataManager";
@@ -12,7 +10,7 @@ import { style } from "../../constants/Styles";
 import { style as stepCounterStyles } from "./StepCounterStyles";
 import ContributeButton from "./ContributeButton";
 import CenteredActivityIndicator from "../CenteredActivityIndicator";
-WebBrowser.maybeCompleteAuthSession();
+import { Button, Surface, Paragraph, Dialog, Portal } from "react-native-paper";
 
 export default function StepCounter() {
   const [googleAuthInfo, setGoogleAuthInfo] = useState({
@@ -41,6 +39,8 @@ export default function StepCounter() {
 
   const [refetchStepsTimer, setRefetchStepsTimer] = useState(60);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [isGoogleInfoPopUpVisible, setIsGoogleInfoPopUpVisible] =
+    useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -336,7 +336,21 @@ export default function StepCounter() {
               <Text style={stepCounterStyles.stepsNew}>{newSteps}</Text> new
               steps since last contribution
             </Text>
-            <Text>Sync Google Fit steps in {refetchStepsTimer} seconds</Text>
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "flex-end",
+                flexDirection: "row",
+                paddingTop: 3,
+              }}
+            >
+              <Text>Sync Google Fit steps in {refetchStepsTimer} seconds </Text>
+              <TouchableOpacity
+                onPress={() => setIsGoogleInfoPopUpVisible(true)}
+              >
+                <Feather name="info" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
           </View>
         </Surface>
         <ContributeButton
@@ -344,6 +358,29 @@ export default function StepCounter() {
           newSteps={newSteps}
           resetStepsAfterContribution={() => resetStepsAfterContribution()}
         />
+        {isGoogleInfoPopUpVisible && (
+          <Portal>
+            <Dialog visible={isGoogleInfoPopUpVisible}>
+              <Dialog.Content>
+                <Paragraph style={{ paddingBottom: 10 }}>
+                  Google Fit uploads your steps in irregular intervals to the
+                  cloud (approx. every 15min). 🕐
+                </Paragraph>
+                <Paragraph style={{ paddingBottom: 10 }}>
+                  Therefore, it may happen that steps that are already visible
+                  in your Google Fit app are not yet displayed here. As soon as
+                  Google has uploaded your steps to the cloud, they will also be
+                  visible here. 👣
+                </Paragraph>
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button onPress={() => setIsGoogleInfoPopUpVisible(false)}>
+                  Okay
+                </Button>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
+        )}
       </>
     );
   }

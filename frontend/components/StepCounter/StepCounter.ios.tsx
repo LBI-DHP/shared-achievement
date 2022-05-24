@@ -21,15 +21,24 @@ export default function StepCounter() {
   const [newSteps, setNewSteps] = useState(null);
   const [goalSteps, setGoalSteps] = useState(0);
   const { userData, updated, setUpdated, mode } = useContext(UserDataContext);
-  const [isLoading, setIsLoading] = useState(true);
   const [isApiLoading, setIsApiLoading] = useState(true);
   const [isPedometerLoading, setIsPedometerLoading] = useState(true);
+  const [midnightReload, setMidnightReload] = useState(false);
+  const [appHasComeToForeground, setAppHasComeToForeground] = useState(true);
 
   useEffect(() => {
-    setIsLoading(isApiLoading || isPedometerLoading);
-  }, [isApiLoading, isPedometerLoading]);
+    setInterval(() => {
+      const currentDateTime = new Date();
+      const dateTimeString =
+        currentDateTime.getHours() +
+        ":" +
+        currentDateTime.getMinutes() +
+        ":" +
+        currentDateTime.getSeconds();
+      if (dateTimeString === "0:0:0") setMidnightReload(true);
+    }, 1000);
+  }, []);
 
-  const [currentAppState, setCurrentAppState] = useState("active");
   const appState = useRef(AppState.currentState);
 
   useEffect(() => {
@@ -44,9 +53,11 @@ export default function StepCounter() {
       appState.current.match(/inactive|background/) &&
       nextAppState === "active"
     ) {
+      setAppHasComeToForeground(true);
       console.log("App has come to the foreground!");
+    } else {
+      setAppHasComeToForeground(false);
     }
-    setCurrentAppState(nextAppState);
     appState.current = nextAppState;
   };
 
@@ -54,32 +65,38 @@ export default function StepCounter() {
 
   useEffect(() => {
     let mounted = true;
-    _subscribe(mounted);
+    if (appHasComeToForeground) {
+      _unsubscribe();
+      _subscribe(mounted);
+    }
     return () => {
       mounted = false;
       _unsubscribe();
     };
-  }, [currentAppState]);
+  }, [appHasComeToForeground, midnightReload]);
 
   useEffect(() => {
     let mounted = true;
-    setIsApiLoading(true);
-    dataManager.getUserChallengeData(userData.id).then((data) => {
-      if (mounted) {
-        let userStepCount = data.total_steps;
-        if (userStepCount === undefined) userStepCount = 0;
-        const stepsNew = stepCountToday - userStepCount;
-        if (stepsNew > 0) setNewSteps(stepCountToday - userStepCount);
-        else setNewSteps(0);
-        setContributedSteps(userStepCount);
-        if (data.goal) setGoalSteps(data.goal);
-        setIsApiLoading(false);
-      }
-    });
+    if (appHasComeToForeground) {
+      setMidnightReload(false);
+      setIsApiLoading(true);
+      dataManager.getUserChallengeData(userData.id).then((data) => {
+        if (mounted) {
+          let userStepCount = data.total_steps;
+          if (userStepCount === undefined) userStepCount = 0;
+          const stepsNew = stepCountToday - userStepCount;
+          if (stepsNew > 0) setNewSteps(stepCountToday - userStepCount);
+          else setNewSteps(0);
+          setContributedSteps(userStepCount);
+          if (data.goal) setGoalSteps(data.goal);
+          setIsApiLoading(false);
+        }
+      });
+    }
     return () => {
       mounted = false;
     };
-  }, [stepCountToday, currentAppState]);
+  }, [stepCountToday, appHasComeToForeground, midnightReload]);
 
   const _subscribe = (mounted) => {
     setIsPedometerLoading(true);
@@ -136,7 +153,7 @@ export default function StepCounter() {
     setUpdated(!updated);
   };
 
-  if (!isPedometerAvailable) {
+  if (!isPedometerAvailable && !isPedometerLoading) {
     return (
       <Surface style={stepCounterStyles.surface}>
         <Text style={style.cardHeader}>Personal Contribution</Text>
@@ -148,11 +165,16 @@ export default function StepCounter() {
     );
   }
 
-  if (!mode) {
+  if (!mode || isApiLoading || isPedometerLoading) {
     return (
       <Surface style={stepCounterStyles.surface}>
         <Text style={style.cardHeader}>Personal Contribution</Text>
         <CenteredActivityIndicator height={100} />
+        <ContributeButton
+          isLoadingStepCounter={isApiLoading || isPedometerLoading}
+          newSteps={newSteps + (currentStepCount - currentStepCountAdded)}
+          resetStepsAfterContribution={() => resetStepsAfterContribution()}
+        />
       </Surface>
     );
   }
@@ -169,7 +191,7 @@ export default function StepCounter() {
           />
         </Surface>
         <ContributeButton
-          isLoadingStepCounter={isLoading}
+          isLoadingStepCounter={isApiLoading || isPedometerLoading}
           newSteps={newSteps + (currentStepCount - currentStepCountAdded)}
           resetStepsAfterContribution={() => resetStepsAfterContribution()}
         />
@@ -196,7 +218,7 @@ export default function StepCounter() {
           </View>
         </Surface>
         <ContributeButton
-          isLoadingStepCounter={isLoading}
+          isLoadingStepCounter={isApiLoading || isPedometerLoading}
           newSteps={newSteps + (currentStepCount - currentStepCountAdded)}
           resetStepsAfterContribution={() => resetStepsAfterContribution()}
         />

@@ -23,6 +23,8 @@ export const UserDataContext = React.createContext({
   setNavigationIndex: ({}) => {},
   isUserDataLoading: true,
   userDataLoadingError: false,
+  useGoogleFit: false,
+  setUseGoogleFit: ({}) => {},
 });
 
 export const UserDataProvider = (props) => {
@@ -42,6 +44,7 @@ export const UserDataProvider = (props) => {
   const [notification, setNotification] = useState(null);
   const [isUserDataLoading, setIsUserDataLoading] = useState(true);
   const [userDataLoadingError, setUserDataLoadingError] = useState(false);
+  const [useGoogleFit, setUseGoogleFit] = useState(false);
 
   const notificationListener = useRef(null);
   const responseListener = useRef(null);
@@ -83,6 +86,9 @@ export const UserDataProvider = (props) => {
 
   useEffect(() => {
     let mounted = true;
+    dataManager.getUseGoogleFit().then((use) => {
+      if (mounted) setUseGoogleFit(use);
+    });
     dataManager
       .getUserId()
       .then((id) => {
@@ -138,6 +144,8 @@ export const UserDataProvider = (props) => {
         setNavigationIndex,
         isUserDataLoading,
         userDataLoadingError,
+        useGoogleFit,
+        setUseGoogleFit,
       }}
     >
       {props.children}

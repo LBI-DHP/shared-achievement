@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, Keyboard, Platform } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { style } from "../constants/Styles";
 import dataManager from "../components/DataManager";
@@ -9,6 +9,21 @@ import * as WebBrowser from "expo-web-browser";
 export default function ConnectToGoogleFit({ setIsConnectedToGoogleFit }) {
   const [authorizationCode, setAuthorizationCode] = useState("");
   const [error, setError] = useState("");
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+      setIsKeyboardOpen(true);
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      setIsKeyboardOpen(false);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
 
   const redirectToGoogleLogin = async () => {
     WebBrowser.openBrowserAsync(
@@ -61,20 +76,24 @@ export default function ConnectToGoogleFit({ setIsConnectedToGoogleFit }) {
 
   return (
     <View style={style.containerPaddingTop}>
-      <Text style={style.heading}>Enable Step Count</Text>
-      <Text style={style.subheading}>
-        Please login with your Google Account and grant access to your Google
-        Fit data on physical activity.
-      </Text>
-      <Button
-        mode="contained"
-        onPress={() => {
-          redirectToGoogleLogin();
-        }}
-        style={{ marginBottom: 10 }}
-      >
-        Login to Google
-      </Button>
+      {!(isKeyboardOpen && Platform.OS === "ios") && (
+        <>
+          <Text style={style.heading}>Enable Step Count</Text>
+          <Text style={style.subheading}>
+            Please login with your Google Account and grant access to your
+            Google Fit data on physical activity.
+          </Text>
+          <Button
+            mode="contained"
+            onPress={() => {
+              redirectToGoogleLogin();
+            }}
+            style={{ marginBottom: 10 }}
+          >
+            Login to Google
+          </Button>
+        </>
+      )}
       <Text style={style.subheading}>
         Copy the authorization code, you will receive after login, and paste it
         here:

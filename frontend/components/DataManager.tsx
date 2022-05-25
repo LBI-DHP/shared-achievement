@@ -60,6 +60,22 @@ export default class dataManager {
     }
   };
 
+  static setUseGoogleFit = async (useGoogleFit) => {
+    try {
+      await AsyncStorage.setItem("useGoogleFit", useGoogleFit.toString());
+    } catch (e) {
+      console.log(e);
+    } finally {
+      console.log("Use Google Fit ", useGoogleFit, " was set in local storage");
+    }
+  };
+
+  static getUseGoogleFit = async () => {
+    let useGoogleFit = await AsyncStorage.getItem("useGoogleFit");
+    console.log("useGoogleFit", useGoogleFit);
+    return useGoogleFit === "true";
+  };
+
   static getUserPassword = async () => {
     let password = null;
     try {

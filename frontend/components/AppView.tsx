@@ -12,8 +12,13 @@ import CenteredActivityIndicator from "./CenteredActivityIndicator";
 import NoInternetConnection from "../screens/NoInternetConnection";
 
 export default function AppView() {
-  const { userData, updated, isUserDataLoading, userDataLoadingError } =
-    useContext(UserDataContext);
+  const {
+    userData,
+    updated,
+    isUserDataLoading,
+    userDataLoadingError,
+    useGoogleFit,
+  } = useContext(UserDataContext);
   const [isUserNameSet, setIsUserNameSet] = useState(false);
   const [isConnectedToGoogleFit, setIsConnectedToGoogleFit] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -41,7 +46,10 @@ export default function AppView() {
   if (userDataLoadingError) return <NoInternetConnection />;
 
   if (!isUserNameSet) return <WelcomeScreen />;
-  else if (Platform.OS === "android" && !isConnectedToGoogleFit)
+  else if (
+    (Platform.OS === "android" || useGoogleFit) &&
+    !isConnectedToGoogleFit
+  )
     return (
       <ConnectToGoogleFit
         setIsConnectedToGoogleFit={(data) => {

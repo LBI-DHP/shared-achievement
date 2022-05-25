@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { ScrollView, View, Text, StyleSheet } from "react-native";
+import { ScrollView, View, Text, StyleSheet, Platform } from "react-native";
 import { Button, Surface, Paragraph, Dialog, Portal } from "react-native-paper";
 import { style } from "../constants/Styles";
 import Challenge from "../components/Challenge/Challenge";
@@ -8,8 +8,8 @@ import ConfettiCannon from "react-native-confetti-cannon";
 import dataManager from "../components/DataManager";
 import { UserDataContext } from "../components/UserDataProvider";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-// @ts-ignore
-import StepCounter from "../components/StepCounter/StepCounter";
+import StepCounterPedometerIOS from "../components/StepCounter/StepCounterPedometerIOS";
+import StepCounterGoogleFit from "../components/StepCounter/StepCounterGoogleFit";
 
 export default function ChallengeScreen() {
   const {
@@ -20,6 +20,7 @@ export default function ChallengeScreen() {
     isUserDataLoading,
     navigationIndex,
     mode,
+    useGoogleFit,
   } = useContext(UserDataContext);
   const [teamName, setTeamName] = useState("");
   const [teamReachedSummit, setTeamReachedSummit] = useState(false);
@@ -155,7 +156,11 @@ export default function ChallengeScreen() {
             {userData.team && <TeamContributions />}
           </Surface>
           {userData.team ? (
-            <StepCounter />
+            Platform.OS === "android" || useGoogleFit ? (
+              <StepCounterGoogleFit />
+            ) : (
+              <StepCounterPedometerIOS />
+            )
           ) : (
             <Button
               mode="contained"

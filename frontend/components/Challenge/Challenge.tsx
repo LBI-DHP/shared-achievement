@@ -12,11 +12,11 @@ export default function Challenge() {
   const { userData, updated, mode, isUserDataLoading } =
     useContext(UserDataContext);
   const [teamRelativeStepCountToday, setTeamRelativeStepCountToday] =
-    useState(null);
+    useState(0);
   const [teamAbsoluteStepCountToday, setTeamAbsoluteStepCountToday] =
-    useState(null);
+    useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [teamAbsoluteStepGoal, setTeamAbsoluteStepGoal] = useState(null);
+  const [teamAbsoluteStepGoal, setTeamAbsoluteStepGoal] = useState(0);
 
   useEffect(() => {
     let mounted = true;

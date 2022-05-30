@@ -26,15 +26,14 @@ export default function StepCounter() {
   const [stepCountToday, setStepCountToday] = useState(0);
   const [contributedSteps, setContributedSteps] = useState(0);
   const [newSteps, setNewSteps] = useState(0);
-  const { userData, updated, setUpdated, mode } = useContext(UserDataContext);
+  const { userData, updated, setUpdated, mode, setIsConnectedToGoogleFit } =
+    useContext(UserDataContext);
   const [googleFitConnectionError, setGoogleFitConnectionError] =
     useState(false);
   const [internetConnectionError, setInternetConnectionError] = useState(false);
   const [isApiLoading, setIsApiLoading] = useState(true);
   const [isGoogleFitLoading, setIsGoogleFitLoading] = useState(true);
-  const [isGoogleTokenExpectedToBeValid, setIsGoogleTokenExpectedToBeValid] =
-    useState(true);
-  const [getNewTokenFailed, setGetNewTokenFailed] = useState(false);
+  const [tryToGetNewToken, setTryToGetNewToken] = useState(false);
   const [goalSteps, setGoalSteps] = useState(null);
 
   const [refetchStepsTimer, setRefetchStepsTimer] = useState(60);
@@ -47,7 +46,7 @@ export default function StepCounter() {
     let interval = setInterval(() => {
       setRefetchStepsTimer((lastTimerCount) => {
         if (lastTimerCount <= 1) {
-          getSteps(mounted);
+          if (googleAuthInfo.access_token !== null) getSteps(mounted);
           clearInterval(interval);
           return 60;
         } else {
@@ -67,9 +66,8 @@ export default function StepCounter() {
     dataManager.getGoogleAuthInfo().then((authInfo) => {
       if (authInfo != null) {
         if (mounted) setGoogleAuthInfo(authInfo);
-        getSteps(mounted);
       } else {
-        //reconnect to google Fit
+        setIsConnectedToGoogleFit(false);
       }
     });
 
@@ -80,20 +78,11 @@ export default function StepCounter() {
 
   useEffect(() => {
     let mounted = true;
-
-    if (
-      !isGoogleTokenExpectedToBeValid &&
-      googleAuthInfo.access_token &&
-      !getNewTokenFailed
-    ) {
-      getNewToken(mounted);
-    } else if (isGoogleTokenExpectedToBeValid && googleAuthInfo.access_token) {
-      getSteps(mounted);
-    }
+    if (googleAuthInfo.access_token !== null) getSteps(mounted);
     return () => {
       mounted = false;
     };
-  }, [googleAuthInfo, getNewTokenFailed, isGoogleTokenExpectedToBeValid]);
+  }, [googleAuthInfo]);
 
   useEffect(() => {
     let mounted = true;
@@ -117,42 +106,48 @@ export default function StepCounter() {
   }, [stepCountToday]);
 
   const getNewToken = async (mounted) => {
-    setIsGoogleFitLoading(true);
-    try {
-      const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
-        method: "POST",
-        body: JSON.stringify({
-          client_id: configJSON.googleConfig.clientID,
-          client_secret: configJSON.googleConfig.clientSecret,
-          grant_type: "refresh_token",
-          refresh_token: googleAuthInfo.refresh_token,
-        }),
-      });
-      const tokenResponseStatus = await tokenResponse.status;
+    setTryToGetNewToken(false);
+    if (googleAuthInfo.refresh_token) {
+      try {
+        const tokenResponse = await fetch(
+          "https://oauth2.googleapis.com/token",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              client_id: configJSON.googleConfig.clientID,
+              client_secret: configJSON.googleConfig.clientSecret,
+              grant_type: "refresh_token",
+              refresh_token: googleAuthInfo.refresh_token,
+            }),
+          }
+        );
+        const tokenResponseStatus = await tokenResponse.status;
 
-      if (tokenResponseStatus === 200) {
-        const tokenResponseJSON = await tokenResponse.json();
-        const dateNow = new Date();
-        const newAuthInfo = {
-          ...tokenResponseJSON,
-          refresh_token: googleAuthInfo.refresh_token,
-          requested_at_timestamp: dateNow.valueOf(),
-        };
-        if (mounted) {
-          setGoogleFitConnectionError(false);
-          setGoogleAuthInfo(newAuthInfo);
-          dataManager.setGoogleAuthInfo(newAuthInfo);
-          setIsGoogleTokenExpectedToBeValid(true);
-          setGetNewTokenFailed(false);
+        if (tokenResponseStatus === 200) {
+          console.log("Could get new token: " + tokenResponseStatus);
+          const tokenResponseJSON = await tokenResponse.json();
+          const googleAuthFromStorage = await dataManager.getGoogleAuthInfo();
+          console.log("Response:");
+          console.log(tokenResponseJSON);
+          const newAuthInfo = {
+            ...tokenResponseJSON,
+            refresh_token: googleAuthFromStorage.refresh_token,
+            requested_at_timestamp: new Date().valueOf(),
+          };
+          console.log("NewAuthData:");
+          console.log(newAuthInfo);
+          if (mounted) {
+            setGoogleAuthInfo(newAuthInfo);
+            dataManager.setGoogleAuthInfo(newAuthInfo);
+          }
+        } else {
+          console.log("Could not get new token: " + tokenResponseStatus);
         }
-      } else {
-        setIsGoogleFitLoading(false);
-        setGetNewTokenFailed(true);
-        setGoogleFitConnectionError(true);
+      } catch (error) {
+        setInternetConnectionError(true);
       }
-    } catch (error) {
-      setIsGoogleFitLoading(false);
-      setInternetConnectionError(true);
+    } else {
+      console.log("no refresh token");
     }
   };
 
@@ -160,7 +155,17 @@ export default function StepCounter() {
     if (mounted) {
       setIsTimerRunning(false);
       setIsGoogleFitLoading(true);
+      setGoogleFitConnectionError(false);
+      setInternetConnectionError(false);
     }
+    const isTokenValid =
+      googleAuthInfo.requested_at_timestamp +
+        googleAuthInfo.expires_in * 1000 -
+        new Date().valueOf() >
+      2000;
+
+    if (!isTokenValid || tryToGetNewToken) await getNewToken(mounted);
+
     const end = new Date();
     const start = new Date();
     start.setHours(0, 0, 0, 0);
@@ -192,6 +197,7 @@ export default function StepCounter() {
       const stepsResponseStatus = await stepsResponse.status;
 
       if (stepsResponseStatus === 200) {
+        console.log("Could fetch new steps: " + stepsResponseStatus);
         const stepsResponseJSON = await stepsResponse.json();
         if (
           stepsResponseJSON &&
@@ -209,22 +215,24 @@ export default function StepCounter() {
           setStepCountToday(
             stepsResponseJSON.bucket[0].dataset[0].point[0].value[0].intVal
           );
+          setGoogleFitConnectionError(false);
+          setInternetConnectionError(false);
         }
         if (mounted) {
-          setGoogleFitConnectionError(false);
           setIsTimerRunning(true);
-          setIsGoogleFitLoading(false);
         }
       } else {
+        console.log("Could not fetch new steps: " + stepsResponseStatus);
         if (mounted) {
-          setIsGoogleTokenExpectedToBeValid(false);
+          setGoogleFitConnectionError(true);
         }
       }
     } catch (error) {
       if (mounted) {
         setInternetConnectionError(true);
-        setIsGoogleFitLoading(false);
       }
+    } finally {
+      setIsGoogleFitLoading(false);
     }
   };
 
@@ -255,8 +263,22 @@ export default function StepCounter() {
       <>
         <Surface style={stepCounterStyles.surface}>
           <Text style={style.cardHeader}>Personal Contribution</Text>
-          {/* To-Do Action Button */}
-          <Text>internetConnectionError</Text>
+          <View style={{ padding: 10 }}>
+            <Text style={{ padding: 5, textAlign: "center" }}>
+              Sorry, we could not fetch new steps from Google Fit: Internet
+              Connection Error
+            </Text>
+            <Button
+              style={{ marginTop: 10 }}
+              mode="contained"
+              onPress={() => {
+                setTryToGetNewToken(true);
+                getSteps(true);
+              }}
+            >
+              Retry
+            </Button>
+          </View>
         </Surface>
         <ContributeButton
           isLoadingStepCounter={true}
@@ -272,26 +294,52 @@ export default function StepCounter() {
       <>
         <Surface style={stepCounterStyles.surface}>
           <Text style={style.cardHeader}>Personal Contribution</Text>
-          {/* To-Do Action Button */}
-          <Text>googleFitConnectionError</Text>
-          <Button
-            style={{ marginTop: 10 }}
-            mode="contained"
-            onPress={() => {
-              setGetNewTokenFailed(false);
-            }}
-          >
-            Retry
-          </Button>
-          <Button
-            style={{ marginTop: 10 }}
-            mode="contained"
-            onPress={() => {
-              dataManager.deleteGoogleAuthInfo();
-            }}
-          >
-            Reconnect App to Google Fit
-          </Button>
+          <View style={{ padding: 10 }}>
+            <Text style={{ padding: 5, textAlign: "center" }}>
+              Sorry, we could not fetch new steps from Google Fit: Connection
+              Error
+            </Text>
+            {googleAuthInfo.refresh_token && (
+              <Button
+                style={{ marginTop: 10 }}
+                mode="contained"
+                onPress={() => {
+                  setTryToGetNewToken(true);
+                  getSteps(true);
+                }}
+              >
+                Retry
+              </Button>
+            )}
+            <Button
+              style={{ marginTop: 10 }}
+              mode="contained"
+              onPress={() => {
+                setIsGoogleFitLoading(true);
+                fetch(
+                  "https://oauth2.googleapis.com/revoke?token=" +
+                    googleAuthInfo.access_token,
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                  }
+                )
+                  .then((response) => {
+                    if (response.status) {
+                      dataManager.deleteGoogleAuthInfo();
+                      setIsConnectedToGoogleFit(false);
+                    }
+                  })
+                  .catch(() => {
+                    setIsGoogleFitLoading(false);
+                  });
+              }}
+            >
+              Reconnect to Google Fit
+            </Button>
+          </View>
         </Surface>
         <ContributeButton
           isLoadingStepCounter={true}
@@ -344,11 +392,13 @@ export default function StepCounter() {
                 paddingTop: 3,
               }}
             >
-              <Text>Sync Google Fit steps in {refetchStepsTimer} seconds </Text>
+              <Text style={{ color: "grey" }}>
+                {refetchStepsTimer} sec. until resync{" "}
+              </Text>
               <TouchableOpacity
                 onPress={() => setIsGoogleInfoPopUpVisible(true)}
               >
-                <Feather name="info" size={24} color="black" />
+                <Feather name="info" size={24} color="grey" />
               </TouchableOpacity>
             </View>
           </View>

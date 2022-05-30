@@ -25,6 +25,8 @@ export const UserDataContext = React.createContext({
   userDataLoadingError: false,
   useGoogleFit: false,
   setUseGoogleFit: ({}) => {},
+  isConnectedToGoogleFit: false,
+  setIsConnectedToGoogleFit: ({}) => {},
 });
 
 export const UserDataProvider = (props) => {
@@ -45,6 +47,7 @@ export const UserDataProvider = (props) => {
   const [isUserDataLoading, setIsUserDataLoading] = useState(true);
   const [userDataLoadingError, setUserDataLoadingError] = useState(false);
   const [useGoogleFit, setUseGoogleFit] = useState(false);
+  const [isConnectedToGoogleFit, setIsConnectedToGoogleFit] = useState(false);
 
   const notificationListener = useRef(null);
   const responseListener = useRef(null);
@@ -56,6 +59,16 @@ export const UserDataProvider = (props) => {
       shouldSetBadge: false,
     }),
   });
+
+  useEffect(() => {
+    let mounted = true;
+    dataManager.getGoogleAuthInfo().then((authInfo) => {
+      if (authInfo != null && mounted) setIsConnectedToGoogleFit(true);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const createNewUser = (mounted) => {
     dataManager
@@ -146,6 +159,8 @@ export const UserDataProvider = (props) => {
         userDataLoadingError,
         useGoogleFit,
         setUseGoogleFit,
+        isConnectedToGoogleFit,
+        setIsConnectedToGoogleFit,
       }}
     >
       {props.children}

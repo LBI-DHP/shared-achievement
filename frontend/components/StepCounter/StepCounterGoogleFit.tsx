@@ -43,25 +43,6 @@ export default function StepCounter() {
 
   useEffect(() => {
     let mounted = true;
-    let interval = setInterval(() => {
-      setRefetchStepsTimer((lastTimerCount) => {
-        if (lastTimerCount <= 1) {
-          if (googleAuthInfo.access_token !== null) getSteps(mounted);
-          clearInterval(interval);
-          return 60;
-        } else {
-          return lastTimerCount - 1;
-        }
-      });
-    }, 1000);
-    return () => {
-      clearInterval(interval);
-      mounted = false;
-    };
-  }, [isTimerRunning]);
-
-  useEffect(() => {
-    let mounted = true;
 
     dataManager.getGoogleAuthInfo().then((authInfo) => {
       if (authInfo != null) {
@@ -78,7 +59,27 @@ export default function StepCounter() {
 
   useEffect(() => {
     let mounted = true;
-    if (googleAuthInfo.access_token !== null) getSteps(mounted);
+    let interval = setInterval(() => {
+      setRefetchStepsTimer((lastTimerCount) => {
+        if (lastTimerCount <= 1) {
+          if (googleAuthInfo.access_token !== null)
+            syncStepsFromGoogleFit(mounted);
+          clearInterval(interval);
+          return 60;
+        } else {
+          return lastTimerCount - 1;
+        }
+      });
+    }, 1000);
+    return () => {
+      clearInterval(interval);
+      mounted = false;
+    };
+  }, [isTimerRunning]);
+
+  useEffect(() => {
+    let mounted = true;
+    if (googleAuthInfo.access_token !== null) syncStepsFromGoogleFit(mounted);
     return () => {
       mounted = false;
     };
@@ -142,6 +143,7 @@ export default function StepCounter() {
           }
         } else {
           console.log("Could not get new token: " + tokenResponseStatus);
+          setGoogleFitConnectionError(true);
         }
       } catch (error) {
         setInternetConnectionError(true);
@@ -151,7 +153,7 @@ export default function StepCounter() {
     }
   };
 
-  const getSteps = async (mounted) => {
+  const syncStepsFromGoogleFit = async (mounted) => {
     if (mounted) {
       setIsTimerRunning(false);
       setIsGoogleFitLoading(true);
@@ -164,8 +166,11 @@ export default function StepCounter() {
         new Date().valueOf() >
       2000;
 
-    if (!isTokenValid || tryToGetNewToken) await getNewToken(mounted);
+    if (!isTokenValid || tryToGetNewToken) getNewToken(mounted);
+    else getSteps(mounted);
+  };
 
+  const getSteps = async (mounted) => {
     const end = new Date();
     const start = new Date();
     start.setHours(0, 0, 0, 0);
@@ -273,7 +278,7 @@ export default function StepCounter() {
               mode="contained"
               onPress={() => {
                 setTryToGetNewToken(true);
-                getSteps(true);
+                syncStepsFromGoogleFit(true);
               }}
             >
               Retry
@@ -305,7 +310,7 @@ export default function StepCounter() {
                 mode="contained"
                 onPress={() => {
                   setTryToGetNewToken(true);
-                  getSteps(true);
+                  syncStepsFromGoogleFit(true);
                 }}
               >
                 Retry

@@ -25,9 +25,15 @@ export default function Challenge() {
         dataManager
           .getTeamChallengeData(userData.team)
           .then((data) => {
-            if (mounted) {
-              setTeamRelativeStepCountToday(data.progress / 100);
-              setTeamAbsoluteStepCountToday(data.total_steps);
+            if (mounted && data) {
+              if (data.progress && !isNaN(data.progress) && data.progress >= 0)
+                setTeamRelativeStepCountToday(data.progress / 100);
+              if (
+                data.total_steps &&
+                !isNaN(data.total_steps) &&
+                data.total_steps >= 0
+              )
+                setTeamAbsoluteStepCountToday(data.total_steps);
               setTeamAbsoluteStepGoal(data.teamMembersGoal);
               setIsLoading(false);
             }
@@ -69,7 +75,7 @@ export default function Challenge() {
     untersbergSvgHeight = untersbergSvgWidth / untersbergRelation;
     flagSvgHeight = untersbergSvgWidth / flagRelation;
   }
-  let progressPosition;
+  let progressPosition = 0;
 
   if (teamRelativeStepCountToday >= 1) {
     progressPosition =

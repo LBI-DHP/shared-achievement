@@ -5,6 +5,7 @@ import { Surface } from "react-native-paper";
 import { Pedometer } from "expo-sensors";
 import dataManager from "../DataManager";
 import { UserDataContext } from "../UserDataProvider";
+import { UpdateContext } from "../UpdateProvider";
 import { Text, View, AppState } from "react-native";
 import StepsBarChart from "./StepsBarChartRelative";
 import { style } from "../../constants/Styles";
@@ -20,24 +21,12 @@ export default function StepCounter() {
   const [contributedSteps, setContributedSteps] = useState(0);
   const [newSteps, setNewSteps] = useState(null);
   const [goalSteps, setGoalSteps] = useState(0);
-  const { userData, updated, setUpdated, mode } = useContext(UserDataContext);
+  const { userData, mode } = useContext(UserDataContext);
+  const { stepsPushedIndicator, setStepsPushedIndicator, midnightIndicator } =
+    useContext(UpdateContext);
   const [isApiLoading, setIsApiLoading] = useState(true);
   const [isPedometerLoading, setIsPedometerLoading] = useState(true);
-  const [midnightReload, setMidnightReload] = useState(false);
   const [appHasComeToForeground, setAppHasComeToForeground] = useState(true);
-
-  useEffect(() => {
-    setInterval(() => {
-      const currentDateTime = new Date();
-      const dateTimeString =
-        currentDateTime.getHours() +
-        ":" +
-        currentDateTime.getMinutes() +
-        ":" +
-        currentDateTime.getSeconds();
-      if (dateTimeString === "0:0:0") setMidnightReload(true);
-    }, 1000);
-  }, []);
 
   const appState = useRef(AppState.currentState);
 
@@ -73,12 +62,11 @@ export default function StepCounter() {
       mounted = false;
       _unsubscribe();
     };
-  }, [appHasComeToForeground, midnightReload]);
+  }, [appHasComeToForeground, midnightIndicator]);
 
   useEffect(() => {
     let mounted = true;
     if (appHasComeToForeground) {
-      setMidnightReload(false);
       setIsApiLoading(true);
       dataManager.getUserChallengeData(userData.id).then((data) => {
         if (mounted) {
@@ -96,7 +84,7 @@ export default function StepCounter() {
     return () => {
       mounted = false;
     };
-  }, [stepCountToday, appHasComeToForeground, midnightReload]);
+  }, [stepCountToday, appHasComeToForeground, midnightIndicator]);
 
   const _subscribe = (mounted) => {
     setIsPedometerLoading(true);
@@ -150,7 +138,7 @@ export default function StepCounter() {
     setContributedSteps(stepCountToday + currentStepCount);
     setNewSteps(0);
     setCurrentStepCountAdded(currentStepCount);
-    setUpdated(!updated);
+    setStepsPushedIndicator(!stepsPushedIndicator);
   };
 
   if (!isPedometerAvailable && !isPedometerLoading) {

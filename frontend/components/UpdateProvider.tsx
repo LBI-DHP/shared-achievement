@@ -36,6 +36,21 @@ export const UpdateProvider = (props) => {
     };
   });
 
+  useEffect(() => {
+    setInterval(() => {
+      const currentDateTime = new Date();
+      const dateTimeString =
+        currentDateTime.getHours() +
+        ":" +
+        currentDateTime.getMinutes() +
+        ":" +
+        currentDateTime.getSeconds();
+      if (dateTimeString === "0:0:0") {
+        setMidnightIndicator(!midnightIndicator);
+      }
+    }, 1000);
+  });
+
   return (
     <UpdateContext.Provider
       value={{

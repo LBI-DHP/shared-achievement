@@ -29,7 +29,7 @@ export default function StepCounter() {
   const [newSteps, setNewSteps] = useState(0);
   const { userData, mode, setIsConnectedToGoogleFit } =
     useContext(UserDataContext);
-  const { stepsPushedIndicator, setStepsPushedIndicator } =
+  const { stepsPushedIndicator, setStepsPushedIndicator, midnightIndicator } =
     useContext(UpdateContext);
 
   const [googleFitConnectionError, setGoogleFitConnectionError] =
@@ -49,7 +49,7 @@ export default function StepCounter() {
     let mounted = true;
 
     dataManager.getGoogleAuthInfo().then((authInfo) => {
-      if (authInfo != null) {
+      if (authInfo != null && authInfo.access_token) {
         if (mounted) setGoogleAuthInfo(authInfo);
       } else {
         setIsConnectedToGoogleFit(false);
@@ -62,23 +62,25 @@ export default function StepCounter() {
   }, []);
 
   useEffect(() => {
-    let mounted = true;
-    let interval = setInterval(() => {
-      setRefetchStepsTimer((lastTimerCount) => {
-        if (lastTimerCount <= 1) {
-          if (googleAuthInfo.access_token !== null)
-            syncStepsFromGoogleFit(mounted);
-          clearInterval(interval);
-          return 60;
-        } else {
-          return lastTimerCount - 1;
-        }
-      });
-    }, 1000);
-    return () => {
-      clearInterval(interval);
-      mounted = false;
-    };
+    if (isTimerRunning) {
+      let mounted = true;
+      let interval = setInterval(() => {
+        setRefetchStepsTimer((lastTimerCount) => {
+          if (lastTimerCount <= 1) {
+            if (googleAuthInfo.access_token !== null)
+              syncStepsFromGoogleFit(mounted);
+            clearInterval(interval);
+            return 60;
+          } else {
+            return lastTimerCount - 1;
+          }
+        });
+      }, 1000);
+      return () => {
+        clearInterval(interval);
+        mounted = false;
+      };
+    }
   }, [isTimerRunning]);
 
   useEffect(() => {
@@ -87,7 +89,7 @@ export default function StepCounter() {
     return () => {
       mounted = false;
     };
-  }, [googleAuthInfo]);
+  }, [googleAuthInfo, midnightIndicator]);
 
   useEffect(() => {
     let mounted = true;

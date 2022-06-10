@@ -3,11 +3,13 @@ import { View, Text, StyleSheet } from "react-native";
 import { UserDataContext } from "../UserDataProvider";
 import dataManager from "../DataManager";
 import { Foundation } from "@expo/vector-icons";
+import { UpdateDataContext } from "../UpdateDataProvider";
 
 export default function TeamContributions() {
-  const { userData, updated, mode } = useContext(UserDataContext);
+  const { userData, mode } = useContext(UserDataContext);
   const [teamMembersAndStepCountsOfToday, setTeamMembersAndStepCountsOfToday] =
     useState([]);
+  const { xupdated } = useContext(UpdateDataContext);
 
   useEffect(() => {
     let mounted = true;
@@ -27,7 +29,7 @@ export default function TeamContributions() {
     return () => {
       mounted = false;
     };
-  }, [updated]);
+  }, [xupdated]);
 
   return (
     <View

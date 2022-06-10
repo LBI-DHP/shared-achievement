@@ -5,12 +5,13 @@ import UntersbergHidden from "./UntersbergHidden";
 import Clouds from "./Clouds";
 import FlagTop from "./FlagTop";
 import { UserDataContext } from "../UserDataProvider";
+import { UpdateDataContext } from "../UpdateDataProvider";
 import dataManager from "../DataManager";
 import CenteredActivityIndicator from "../CenteredActivityIndicator";
 
 export default function Challenge() {
-  const { userData, updated, mode, isUserDataLoading } =
-    useContext(UserDataContext);
+  const { userData, mode, isUserDataLoading } = useContext(UserDataContext);
+  const { xupdated } = useContext(UpdateDataContext);
   const [teamRelativeStepCountToday, setTeamRelativeStepCountToday] =
     useState(0);
   const [teamAbsoluteStepCountToday, setTeamAbsoluteStepCountToday] =
@@ -48,7 +49,7 @@ export default function Challenge() {
     return () => {
       mounted = false;
     };
-  }, [updated, userData.team, mode]);
+  }, [xupdated, userData.team, mode]);
 
   const { height, width } = useWindowDimensions();
   const windowHeight = height;

@@ -10,7 +10,7 @@ export default function SABottomNavigation() {
     { key: "challenge", title: "Challenge", icon: "image-filter-hdr" },
     { key: "team", title: "Team", icon: "account-group" },
   ]);
-  const { updated, setUpdated, navigationIndex, setNavigationIndex } =
+  const { navigationIndex, setNavigationIndex } =
     React.useContext(UserDataContext);
 
   useEffect(() => {
@@ -28,7 +28,6 @@ export default function SABottomNavigation() {
     <BottomNavigation
       navigationState={{ index, routes }}
       onIndexChange={(newIndex) => {
-        setUpdated(!updated);
         setIndex(newIndex);
         setNavigationIndex(newIndex);
       }}

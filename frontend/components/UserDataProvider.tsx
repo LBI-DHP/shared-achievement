@@ -15,8 +15,6 @@ export const UserDataContext = React.createContext({
     showDeveloperSettings: false,
   },
   setUserData: ({}) => {},
-  updated: false,
-  setUpdated: ({}) => {},
   mode: null,
   setMode: ({}) => {},
   navigationIndex: 0,
@@ -40,7 +38,6 @@ export const UserDataProvider = (props) => {
     showDeveloperSettings: false,
   });
 
-  const [updated, setUpdated] = useState(false);
   const [mode, setMode] = useState(null);
   const [navigationIndex, setNavigationIndex] = useState(0);
   const [notification, setNotification] = useState(null);
@@ -149,8 +146,6 @@ export const UserDataProvider = (props) => {
       value={{
         userData,
         setUserData,
-        updated,
-        setUpdated,
         mode,
         setMode,
         navigationIndex,

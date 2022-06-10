@@ -10,18 +10,20 @@ import { UserDataContext } from "../components/UserDataProvider";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import StepCounterPedometerIOS from "../components/StepCounter/StepCounterPedometerIOS";
 import StepCounterGoogleFit from "../components/StepCounter/StepCounterGoogleFit";
+import { UpdateDataContext } from "../components/UpdateDataProvider";
 
 export default function ChallengeScreen() {
   const {
     userData,
     setMode,
     setNavigationIndex,
-    updated,
     isUserDataLoading,
     navigationIndex,
     mode,
     useGoogleFit,
   } = useContext(UserDataContext);
+  const { xupdated } = useContext(UpdateDataContext);
+
   const [teamName, setTeamName] = useState("");
   const [teamReachedSummit, setTeamReachedSummit] = useState(false);
   const [isTodaysPopUpVisible, setIsTodaysPopUpVisible] = useState(false);
@@ -48,7 +50,7 @@ export default function ChallengeScreen() {
     return () => {
       mounted = false;
     };
-  }, [teamReachedSummit, updated]);
+  }, [teamReachedSummit, xupdated]);
 
   useEffect(() => {
     let mounted = true;
@@ -116,7 +118,7 @@ export default function ChallengeScreen() {
     return () => {
       mounted = false;
     };
-  }, [updated, userData.team]);
+  }, [xupdated, userData.team]);
 
   return (
     <>

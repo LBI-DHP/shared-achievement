@@ -7,10 +7,11 @@ import SendMotivationMessageDialog from "./SendMotivationMessageDialog";
 import TeamChartRelative from "./TeamChartRelative";
 import TeamChartAbsolute from "./TeamChartAbsolute";
 import CenteredActivityIndicator from "../CenteredActivityIndicator";
+import { UpdateDataContext } from "../UpdateDataProvider";
 
 export default function TeamList() {
-  const { userData, updated, mode, isUserDataLoading } =
-    useContext(UserDataContext);
+  const { userData, mode, isUserDataLoading } = useContext(UserDataContext);
+  const { xupdated } = useContext(UpdateDataContext);
   const [teamMembers, setTeamMembers] = useState([]);
   const [expoTokenListTeamMembers, setExpoTokenListTeamMembers] = useState([]);
   const [isMessageDialogVisible, setIsMessageDialogVisible] = useState(false);
@@ -49,7 +50,7 @@ export default function TeamList() {
     return () => {
       mounted = false;
     };
-  }, [updated]);
+  }, [xupdated]);
 
   if (isApiLoading || isUserDataLoading)
     return <CenteredActivityIndicator height={100} />;

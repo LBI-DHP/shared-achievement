@@ -5,6 +5,7 @@ import configJSON from "../../config.json";
 import { Text } from "../Themed";
 import dataManager from "../DataManager";
 import { UserDataContext } from "../UserDataProvider";
+import { UpdateDataContext } from "../UpdateDataProvider";
 import StepsBarChart from "./StepsBarChartRelative";
 import { style } from "../../constants/Styles";
 import { style as stepCounterStyles } from "./StepCounterStyles";
@@ -26,8 +27,10 @@ export default function StepCounter() {
   const [stepCountToday, setStepCountToday] = useState(0);
   const [contributedSteps, setContributedSteps] = useState(0);
   const [newSteps, setNewSteps] = useState(0);
-  const { userData, updated, setUpdated, mode, setIsConnectedToGoogleFit } =
+  const { userData, mode, setIsConnectedToGoogleFit } =
     useContext(UserDataContext);
+  const { xupdated, setXupdated } = useContext(UpdateDataContext);
+
   const [googleFitConnectionError, setGoogleFitConnectionError] =
     useState(false);
   const [internetConnectionError, setInternetConnectionError] = useState(false);
@@ -248,7 +251,7 @@ export default function StepCounter() {
   const resetStepsAfterContribution = () => {
     setContributedSteps(stepCountToday);
     setNewSteps(0);
-    setUpdated(!updated);
+    setXupdated(!xupdated);
   };
 
   if (!mode || isGoogleFitLoading || isApiLoading) {

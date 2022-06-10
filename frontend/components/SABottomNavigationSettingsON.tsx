@@ -12,7 +12,7 @@ export default function SABottomNavigation() {
     { key: "team", title: "Team", icon: "account-group" },
     { key: "settings", title: "Settings", icon: "cog" },
   ]);
-  const { updated, setUpdated, navigationIndex, setNavigationIndex } =
+  const { navigationIndex, setNavigationIndex } =
     React.useContext(UserDataContext);
 
   useEffect(() => {
@@ -31,7 +31,6 @@ export default function SABottomNavigation() {
     <BottomNavigation
       navigationState={{ index, routes }}
       onIndexChange={(newIndex) => {
-        setUpdated(!updated);
         setIndex(newIndex);
         setNavigationIndex(newIndex);
       }}

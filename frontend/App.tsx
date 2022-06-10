@@ -5,6 +5,7 @@ import { AppRegistry } from "react-native";
 import appJson from "./app.json";
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 import { UserDataProvider } from "./components/UserDataProvider";
+import { UpdateProvider } from "./components/UpdateProvider";
 import AppView from "./components/AppView";
 
 const theme = {
@@ -25,11 +26,13 @@ export default function App() {
   } else {
     return (
       <UserDataProvider>
-        <SafeAreaProvider>
-          <PaperProvider theme={theme}>
-            <AppView />
-          </PaperProvider>
-        </SafeAreaProvider>
+        <UpdateProvider>
+          <SafeAreaProvider>
+            <PaperProvider theme={theme}>
+              <AppView />
+            </PaperProvider>
+          </SafeAreaProvider>
+        </UpdateProvider>
       </UserDataProvider>
     );
   }

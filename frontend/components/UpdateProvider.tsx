@@ -10,12 +10,31 @@ export const UpdateContext = React.createContext({
   setMidnightIndicator: ({}) => {},
 });
 
-export const UserDataProvider = (props) => {
+export const UpdateProvider = (props) => {
   const [stepsPushedIndicator, setStepsPushedIndicator] = useState(false);
   const [apiReloadIndicator, setApiReloadIndicator] = useState(false);
   const [midnightIndicator, setMidnightIndicator] = useState(false);
 
-  useEffect(() => {}, []);
+  const [refetchApiTimer, setRefetchApiTimer] = useState(30);
+
+  useEffect(() => {
+    let mounted = true;
+    let interval = setInterval(() => {
+      setRefetchApiTimer((lastTimerCount) => {
+        if (lastTimerCount <= 1) {
+          clearInterval(interval);
+          setApiReloadIndicator(!apiReloadIndicator);
+          return 30;
+        } else {
+          return lastTimerCount - 1;
+        }
+      });
+    }, 1000);
+    return () => {
+      clearInterval(interval);
+      mounted = false;
+    };
+  });
 
   return (
     <UpdateContext.Provider

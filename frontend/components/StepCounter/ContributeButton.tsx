@@ -6,7 +6,7 @@ import { Text, View, TouchableOpacity } from "react-native";
 import { style as stepCounterStyles } from "./StepCounterStyles";
 import { Foundation, FontAwesome } from "@expo/vector-icons";
 import { UserDataContext } from "../UserDataProvider";
-import { UpdateDataContext } from "../UpdateDataProvider";
+import { UpdateContext } from "../UpdateProvider";
 
 export default function ContributeButton({
   isLoadingStepCounter,
@@ -15,7 +15,8 @@ export default function ContributeButton({
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const { userData } = useContext(UserDataContext);
-  const { xupdated, setXupdated } = useContext(UpdateDataContext);
+  const { stepsPushedIndicator, setStepsPushedIndicator } =
+    useContext(UpdateContext);
 
   const [isDisabled, setIsDisabled] = useState(true);
   const [error, setError] = useState("");
@@ -38,7 +39,7 @@ export default function ContributeButton({
           dataManager.pushSteps(userData.id, newSteps).then((worked) => {
             if (worked) {
               resetStepsAfterContribution();
-              setXupdated(xupdated!);
+              setStepsPushedIndicator(!stepsPushedIndicator);
             } else setError("true");
             setIsLoading(false);
           });

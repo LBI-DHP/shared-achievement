@@ -144,12 +144,16 @@ export default function StepCounter() {
         } else {
           console.log("Could not get new token: " + tokenResponseStatus);
           setGoogleFitConnectionError(true);
+          setIsGoogleFitLoading(false);
         }
       } catch (error) {
         setInternetConnectionError(true);
+        setIsGoogleFitLoading(false);
       }
     } else {
       console.log("no refresh token");
+      setGoogleFitConnectionError(true);
+      setIsGoogleFitLoading(false);
     }
   };
 

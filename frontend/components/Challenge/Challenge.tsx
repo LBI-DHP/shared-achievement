@@ -60,7 +60,7 @@ export default function Challenge() {
 
   const { height, width } = useWindowDimensions();
   const windowHeight = height;
-  const windowWidth = width - 60;
+  const windowWidth = width;
 
   let untersbergSvgWidth;
   let untersbergSvgHeight;
@@ -102,15 +102,14 @@ export default function Challenge() {
     return (
       <View
         style={{
-          paddingTop: 10,
           height:
             untersbergSvgHeight +
             untersbergSvgHeight / 3.5 +
             flagSvgHeight +
             10,
-          margin: 10,
           backgroundColor: "#99bfcf",
           justifyContent: "flex-end",
+          alignItems: "center",
         }}
       >
         <UntersbergHidden
@@ -165,12 +164,11 @@ const style = StyleSheet.create({
     paddingTop: 10,
     alignItems: "center",
     backgroundColor: "#99bfcf",
-    margin: 10,
     justifyContent: "flex-end",
+    marginBottom: 10,
   },
   containerAbsolute: {
     width: "100%",
-
     paddingBottom: 10,
     position: "absolute",
     justifyContent: "center",

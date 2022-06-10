@@ -10,6 +10,7 @@ import { UpdateContext } from "../UpdateProvider";
 
 export default function ContributeButton({
   isLoadingStepCounter,
+  isErrorStepCounter,
   newSteps,
   resetStepsAfterContribution,
 }) {
@@ -22,7 +23,9 @@ export default function ContributeButton({
   const [error, setError] = useState("");
 
   useEffect(() => {
-    setIsDisabled(newSteps === 0 || isLoading || isLoadingStepCounter);
+    setIsDisabled(
+      newSteps === 0 || isLoading || isLoadingStepCounter || isErrorStepCounter
+    );
   }, [newSteps, isLoading, isLoadingStepCounter]);
 
   return (
@@ -55,7 +58,9 @@ export default function ContributeButton({
         />
         <Foundation name="foot" size={30} color="white" />
       </View>
-      <Text style={stepCounterStyles.buttonText}>Contribute new steps</Text>
+      <Text style={stepCounterStyles.buttonText}>
+        Contribute {newSteps !== 0 && newSteps} new steps
+      </Text>
     </TouchableOpacity>
   );
 }

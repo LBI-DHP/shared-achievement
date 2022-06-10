@@ -6,12 +6,10 @@ import { Pedometer } from "expo-sensors";
 import dataManager from "../DataManager";
 import { UserDataContext } from "../UserDataProvider";
 import { UpdateContext } from "../UpdateProvider";
-import { Text, View, AppState } from "react-native";
+import { Text, View } from "react-native";
 import StepsBarChart from "./StepsBarChartRelative";
-import { style } from "../../constants/Styles";
-import { style as stepCounterStyles } from "./StepCounterStyles";
 import ContributeButton from "./ContributeButton";
-import CenteredActivityIndicator from "../CenteredActivityIndicator";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function StepCounter() {
   const [isPedometerAvailable, setIsPedometerAvailable] = useState(false);
@@ -122,71 +120,44 @@ export default function StepCounter() {
     setStepsPushedIndicator(!stepsPushedIndicator);
   };
 
-  if (!isPedometerAvailable && !isPedometerLoading) {
-    return (
-      <Surface style={stepCounterStyles.surface}>
-        <Text style={style.cardHeader}>Personal Contribution</Text>
-        <Text style={{ padding: 10 }}>
-          🚨 Error: Step counter is not available. Please go to phone settings
-          and give this app permission to record motion and fitness data.
-        </Text>
-      </Surface>
-    );
-  }
-
-  if (!mode || isApiLoading || isPedometerLoading) {
-    return (
-      <Surface style={stepCounterStyles.surface}>
-        <Text style={style.cardHeader}>Personal Contribution</Text>
-        <CenteredActivityIndicator height={100} />
-        <ContributeButton
-          isLoadingStepCounter={isApiLoading || isPedometerLoading}
-          newSteps={newSteps + (currentStepCount - currentStepCountAdded)}
-          resetStepsAfterContribution={() => resetStepsAfterContribution()}
-        />
-      </Surface>
-    );
-  }
-
-  if (mode === "RELATIVE") {
+  if (mode === "ABSOLUTE") {
     return (
       <>
-        <Surface style={stepCounterStyles.surface}>
-          <Text style={style.cardHeader}>Personal Contribution</Text>
-          <StepsBarChart
-            goalSteps={goalSteps}
-            contributedSteps={contributedSteps}
-            newSteps={newSteps + (currentStepCount - currentStepCountAdded)}
-          />
-        </Surface>
+        {!isPedometerAvailable && !isPedometerLoading && (
+          <View
+            style={{
+              alignItems: "center",
+              flexDirection: "row",
+              marginTop: 2,
+              justifyContent: "center",
+              padding: 10,
+            }}
+          >
+            <MaterialIcons name="error-outline" size={24} color="red" />
+            <Text style={{ paddingLeft: 10 }}>
+              Error: Step counter is not available. Please go to phone settings
+              and give this app permission to record motion and fitness data.
+            </Text>
+          </View>
+        )}
         <ContributeButton
+          isErrorStepCounter={!isPedometerAvailable && !isPedometerLoading}
           isLoadingStepCounter={isApiLoading || isPedometerLoading}
           newSteps={newSteps + (currentStepCount - currentStepCountAdded)}
           resetStepsAfterContribution={() => resetStepsAfterContribution()}
         />
       </>
     );
-  } else if (mode === "ABSOLUTE") {
+  } else if (mode === "RELATIVE") {
     return (
       <>
-        <Surface style={stepCounterStyles.surface}>
-          <Text style={style.cardHeader}>Personal Contribution</Text>
-          <View style={{ padding: 10 }}>
-            <Text>
-              <Text style={stepCounterStyles.stepsContributed}>
-                {contributedSteps}
-              </Text>{" "}
-              steps already contributed
-            </Text>
-            <Text>
-              <Text style={stepCounterStyles.stepsNew}>
-                {newSteps + (currentStepCount - currentStepCountAdded)}
-              </Text>{" "}
-              new steps since last contribution
-            </Text>
-          </View>
-        </Surface>
+        <StepsBarChart
+          goalSteps={goalSteps}
+          contributedSteps={contributedSteps}
+          newSteps={newSteps + (currentStepCount - currentStepCountAdded)}
+        />
         <ContributeButton
+          isErrorStepCounter={!isPedometerAvailable && !isPedometerLoading}
           isLoadingStepCounter={isApiLoading || isPedometerLoading}
           newSteps={newSteps + (currentStepCount - currentStepCountAdded)}
           resetStepsAfterContribution={() => resetStepsAfterContribution()}

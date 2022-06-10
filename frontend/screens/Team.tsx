@@ -3,13 +3,16 @@ import { ScrollView, Text } from "react-native";
 import { Button, Paragraph, Dialog, Portal } from "react-native-paper";
 import JoinOrCreateTeam from "../components/JoinTeam";
 import { UserDataContext } from "../components/UserDataProvider";
+import { UpdateContext } from "../components/UpdateProvider";
 import TeamList from "../components/TeamList/TeamList";
 import { style } from "../constants/Styles";
 import dataManager from "../components/DataManager";
 
 export default function Team() {
   const [isUserInATeam, setIsUserInATeam] = useState(false);
-  const { userData, setUserData, mode, setMode } = useContext(UserDataContext);
+  const { userData, setUserData, setMode } = useContext(UserDataContext);
+  const { setApiReloadIndicator, apiReloadIndicator } =
+    useContext(UpdateContext);
   const [error, setError] = useState("");
   const [teamName, setTeamName] = useState("");
   const [isLeaveTeamDialogVisible, setIsLeaveTeamDialogVisible] =
@@ -92,6 +95,7 @@ export default function Team() {
                           setIsLeaveTeamDialogVisible(false);
                           setUserData(newUserData);
                           setMode(null);
+                          setApiReloadIndicator(apiReloadIndicator);
                         }
                       });
                     }}

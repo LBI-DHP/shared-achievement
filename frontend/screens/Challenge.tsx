@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
-import { ScrollView, View, Text, StyleSheet, Platform } from "react-native";
-import { Button, Surface, Paragraph, Dialog, Portal } from "react-native-paper";
+import { ScrollView, View, Text, Platform } from "react-native";
+import { Button } from "react-native-paper";
 import { style } from "../constants/Styles";
 import Challenge from "../components/Challenge/Challenge";
 import TeamContributions from "../components/Challenge/TeamContributions";
@@ -11,6 +11,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import StepCounterPedometerIOS from "../components/StepCounter/StepCounterPedometerIOS";
 import StepCounterGoogleFit from "../components/StepCounter/StepCounterGoogleFit";
 import { UpdateContext } from "../components/UpdateProvider";
+import YesterdaysProgressPopUp from "../components/YesterdaysProgressPopUp";
+import TodaysPopUp from "../components/TodaysPopUp";
 
 export default function ChallengeScreen() {
   const {
@@ -117,6 +119,7 @@ export default function ChallengeScreen() {
           console.log(error);
         });
     } else {
+      setTeamName(null);
       setTeamReachedSummit(false);
       setShowConfettiCannon(false);
     }
@@ -124,25 +127,18 @@ export default function ChallengeScreen() {
     return () => {
       mounted = false;
     };
-  }, [
-    apiReloadIndicator,
-    stepsPushedIndicator,
-    midnightIndicator,
-    userData.team,
-  ]);
+  }, [apiReloadIndicator, stepsPushedIndicator, midnightIndicator, userData]);
 
   return (
     <>
-      <ScrollView style={styles.container}>
+      <Text style={style.header}>Progress of Team {teamName}</Text>
+      <ScrollView>
         <View
           style={{
             paddingBottom: 35,
           }}
         >
-          <Surface style={styles.surface}>
-            {userData.team && (
-              <Text style={style.cardHeader}>Progress of Team {teamName}</Text>
-            )}
+          <>
             {teamReachedSummit && (
               <View
                 style={{
@@ -167,7 +163,7 @@ export default function ChallengeScreen() {
             )}
             <Challenge />
             {userData.team && <TeamContributions />}
-          </Surface>
+          </>
           {userData.team ? (
             Platform.OS === "android" || useGoogleFit ? (
               <StepCounterGoogleFit />
@@ -178,7 +174,7 @@ export default function ChallengeScreen() {
             <Button
               mode="contained"
               style={{
-                marginTop: 10,
+                margin: 10,
               }}
               onPress={() => {
                 setNavigationIndex(1);
@@ -189,59 +185,21 @@ export default function ChallengeScreen() {
           )}
         </View>
         {isTodaysPopUpVisible && navigationIndex === 0 && (
-          <Portal>
-            <Dialog visible={isTodaysPopUpVisible}>
-              <Dialog.Content>
-                <Paragraph style={{ paddingBottom: 10 }}>
-                  Well done!👏 Your team made it to the summit today. 🥳🎉 Keep
-                  collecting and contributing steps.
-                </Paragraph>
-              </Dialog.Content>
-              <Dialog.Actions>
-                <Button onPress={() => setIsTodaysPopUpVisible(false)}>
-                  Okay
-                </Button>
-              </Dialog.Actions>
-            </Dialog>
-          </Portal>
+          <TodaysPopUp
+            isTodaysPopUpVisible={isTodaysPopUpVisible}
+            setIsTodaysPopUpVisible={setIsTodaysPopUpVisible}
+          />
         )}
         {isYesterdaysProgressPopUpVisible && didChallengeExistYesterday && (
-          <Portal>
-            <Dialog visible={isYesterdaysProgressPopUpVisible}>
-              <Dialog.Content>
-                <Paragraph style={{ paddingBottom: 10 }}>
-                  {yesterdaysProgress >= 100 ? (
-                    <>
-                      Well done!👏Your team made it to the summit yesterday.🥳🎉{" "}
-                    </>
-                  ) : (
-                    <>
-                      Unfortunately, your team did not make it to the summit
-                      yesterday.{" "}
-                    </>
-                  )}
-                  {mode === "ABSOLUTE" ? (
-                    <>
-                      You made it up {yesterdaysProgress}% and collected{" "}
-                      {yesterdaysSteps} steps. ⛰️
-                    </>
-                  ) : (
-                    <>You made it up {yesterdaysProgress}%. ⛰️</>
-                  )}
-                  {yesterdaysProgress < 100 && (
-                    <> Try it again today. You can do it. 💪</>
-                  )}
-                </Paragraph>
-              </Dialog.Content>
-              <Dialog.Actions>
-                <Button
-                  onPress={() => setIsYesterdaysProgressPopUpVisible(false)}
-                >
-                  Okay
-                </Button>
-              </Dialog.Actions>
-            </Dialog>
-          </Portal>
+          <YesterdaysProgressPopUp
+            isYesterdaysProgressPopUpVisible={isYesterdaysProgressPopUpVisible}
+            setIsYesterdaysProgressPopUpVisible={
+              setIsYesterdaysProgressPopUpVisible
+            }
+            yesterdaysProgress={yesterdaysProgress}
+            mode={mode}
+            yesterdaysSteps={yesterdaysSteps}
+          />
         )}
       </ScrollView>
       {showConfettiCannon && (
@@ -250,21 +208,3 @@ export default function ChallengeScreen() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  surface: {
-    elevation: 4,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  container: {
-    padding: 20,
-    flex: 1,
-  },
-  subheading: {
-    fontSize: 20,
-    fontWeight: "bold",
-    margin: 10,
-    marginBottom: 0,
-  },
-});

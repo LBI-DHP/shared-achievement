@@ -7,11 +7,10 @@ import dataManager from "../DataManager";
 import { UserDataContext } from "../UserDataProvider";
 import { UpdateContext } from "../UpdateProvider";
 import StepsBarChart from "./StepsBarChartRelative";
-import { style } from "../../constants/Styles";
-import { style as stepCounterStyles } from "./StepCounterStyles";
 import ContributeButton from "./ContributeButton";
-import CenteredActivityIndicator from "../CenteredActivityIndicator";
-import { Button, Surface, Paragraph, Dialog, Portal } from "react-native-paper";
+import { Button } from "react-native-paper";
+import { MaterialIcons } from "@expo/vector-icons";
+import GoogleFitInfoDialog from "./GoogleFitInfoDialog";
 
 export default function StepCounter() {
   const [googleAuthInfo, setGoogleAuthInfo] = useState({
@@ -278,63 +277,52 @@ export default function StepCounter() {
     setStepsPushedIndicator(!stepsPushedIndicator);
   };
 
-  if (!mode || isGoogleFitLoading || isApiLoading) {
+  if (mode === "ABSOLUTE") {
     return (
       <>
-        <Surface style={stepCounterStyles.surface}>
-          <Text style={style.cardHeader}>Personal Contribution</Text>
-          <CenteredActivityIndicator height={100} />
-        </Surface>
         <ContributeButton
+          isErrorStepCounter={
+            googleFitConnectionError || internetConnectionError
+          }
           isLoadingStepCounter={isApiLoading || isGoogleFitLoading}
           newSteps={newSteps}
           resetStepsAfterContribution={() => resetStepsAfterContribution()}
         />
-      </>
-    );
-  }
-
-  if (internetConnectionError) {
-    return (
-      <>
-        <Surface style={stepCounterStyles.surface}>
-          <Text style={style.cardHeader}>Personal Contribution</Text>
-          <View style={{ padding: 10 }}>
-            <Text style={{ padding: 5, textAlign: "center" }}>
-              Sorry, we could not fetch new steps from Google Fit: Internet
-              Connection Error
+        {!googleFitConnectionError && !internetConnectionError && (
+          <View
+            style={{
+              marginLeft: 10,
+              marginRight: 10,
+              alignItems: "center",
+              justifyContent: "flex-end",
+              flexDirection: "row",
+            }}
+          >
+            <Text style={{ color: "grey" }}>
+              {refetchStepsTimer} sec. until resync{" "}
             </Text>
-            <Button
-              style={{ marginTop: 10 }}
-              mode="contained"
-              onPress={() => {
-                setTryToGetNewToken(true);
-                syncStepsFromGoogleFit(true);
+            <TouchableOpacity onPress={() => setIsGoogleInfoPopUpVisible(true)}>
+              <Feather name="info" size={24} color="grey" />
+            </TouchableOpacity>
+          </View>
+        )}
+        {(googleFitConnectionError || internetConnectionError) && (
+          <View style={{ margin: 10, marginTop: 0 }}>
+            <View
+              style={{
+                alignItems: "center",
+                flexDirection: "row",
+                marginTop: 2,
+                justifyContent: "center",
               }}
             >
-              Retry
-            </Button>
-          </View>
-        </Surface>
-        <ContributeButton
-          isLoadingStepCounter={true}
-          newSteps={newSteps}
-          resetStepsAfterContribution={() => resetStepsAfterContribution()}
-        />
-      </>
-    );
-  }
-
-  if (googleFitConnectionError) {
-    return (
-      <>
-        <Surface style={stepCounterStyles.surface}>
-          <Text style={style.cardHeader}>Personal Contribution</Text>
-          <View style={{ padding: 10 }}>
-            <Text style={{ padding: 5, textAlign: "center" }}>
-              Sorry, we could not fetch new steps from Google Fit: Connection
-              Error
-            </Text>
+              <MaterialIcons name="error-outline" size={24} color="red" />
+              <Text>
+                {googleFitConnectionError
+                  ? " Google Fit Connection Error"
+                  : " Internet Connection Error"}
+              </Text>
+            </View>
             {googleAuthInfo.refresh_token && (
               <Button
                 style={{ marginTop: 10 }}
@@ -347,126 +335,61 @@ export default function StepCounter() {
                 Retry
               </Button>
             )}
-            <Button
-              style={{ marginTop: 10 }}
-              mode="contained"
-              onPress={() => {
-                setIsGoogleFitLoading(true);
-                fetch(
-                  "https://oauth2.googleapis.com/revoke?token=" +
-                    googleAuthInfo.access_token,
-                  {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/x-www-form-urlencoded",
-                    },
-                  }
-                )
-                  .then((response) => {
-                    if (response.status) {
-                      dataManager.deleteGoogleAuthInfo();
-                      setIsConnectedToGoogleFit(false);
+            {googleFitConnectionError && (
+              <Button
+                style={{ marginTop: 10 }}
+                mode="outlined"
+                onPress={() => {
+                  setIsGoogleFitLoading(true);
+                  fetch(
+                    "https://oauth2.googleapis.com/revoke?token=" +
+                      googleAuthInfo.access_token,
+                    {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                      },
                     }
-                  })
-                  .catch(() => {
-                    setIsGoogleFitLoading(false);
-                  });
-              }}
-            >
-              Reconnect to Google Fit
-            </Button>
-          </View>
-        </Surface>
-        <ContributeButton
-          isLoadingStepCounter={true}
-          newSteps={newSteps}
-          resetStepsAfterContribution={() => resetStepsAfterContribution()}
-        />
-      </>
-    );
-  }
-
-  if (mode === "RELATIVE") {
-    return (
-      <>
-        <Surface style={stepCounterStyles.surface}>
-          <Text style={style.cardHeader}>Personal Contribution</Text>
-          <StepsBarChart
-            goalSteps={goalSteps}
-            contributedSteps={contributedSteps}
-            newSteps={newSteps}
-          />
-        </Surface>
-        <ContributeButton
-          isLoadingStepCounter={isApiLoading || isGoogleFitLoading}
-          newSteps={newSteps}
-          resetStepsAfterContribution={() => resetStepsAfterContribution()}
-        />
-      </>
-    );
-  } else if (mode === "ABSOLUTE") {
-    return (
-      <>
-        <Surface style={stepCounterStyles.surface}>
-          <Text style={style.cardHeader}>Personal Contribution</Text>
-          <View style={{ padding: 10 }}>
-            <Text>
-              <Text style={stepCounterStyles.stepsContributed}>
-                {contributedSteps}
-              </Text>{" "}
-              steps already contributed
-            </Text>
-            <Text>
-              <Text style={stepCounterStyles.stepsNew}>{newSteps}</Text> new
-              steps since last contribution
-            </Text>
-            <View
-              style={{
-                alignItems: "center",
-                justifyContent: "flex-end",
-                flexDirection: "row",
-                paddingTop: 3,
-              }}
-            >
-              <Text style={{ color: "grey" }}>
-                {refetchStepsTimer} sec. until resync{" "}
-              </Text>
-              <TouchableOpacity
-                onPress={() => setIsGoogleInfoPopUpVisible(true)}
+                  )
+                    .then((response) => {
+                      if (response.status) {
+                        dataManager.deleteGoogleAuthInfo();
+                        setIsConnectedToGoogleFit(false);
+                      }
+                    })
+                    .catch(() => {
+                      setIsGoogleFitLoading(false);
+                    });
+                }}
               >
-                <Feather name="info" size={24} color="grey" />
-              </TouchableOpacity>
-            </View>
+                Reconnect to Google Fit
+              </Button>
+            )}
           </View>
-        </Surface>
+        )}
+        {isGoogleInfoPopUpVisible && (
+          <GoogleFitInfoDialog
+            isGoogleInfoPopUpVisible={isGoogleInfoPopUpVisible}
+            setIsGoogleInfoPopUpVisible={setIsGoogleInfoPopUpVisible}
+          />
+        )}
+      </>
+    );
+  } else if (mode === "RELATIVE") {
+    return (
+      <>
+        <StepsBarChart
+          goalSteps={goalSteps}
+          contributedSteps={contributedSteps}
+          newSteps={newSteps}
+        />
+
         <ContributeButton
+          isErrorStepCounter={true}
           isLoadingStepCounter={isApiLoading || isGoogleFitLoading}
           newSteps={newSteps}
           resetStepsAfterContribution={() => resetStepsAfterContribution()}
         />
-        {isGoogleInfoPopUpVisible && (
-          <Portal>
-            <Dialog visible={isGoogleInfoPopUpVisible}>
-              <Dialog.Content>
-                <Paragraph style={{ paddingBottom: 10 }}>
-                  Google Fit uploads your steps in irregular intervals to the
-                  cloud (approx. every 15min). 🕐
-                </Paragraph>
-                <Paragraph style={{ paddingBottom: 10 }}>
-                  Therefore, it may happen that steps that are already visible
-                  in your Google Fit app are not yet displayed here. As soon as
-                  Google has uploaded your steps to the cloud, they will also be
-                  visible here. 👣
-                </Paragraph>
-              </Dialog.Content>
-              <Dialog.Actions>
-                <Button onPress={() => setIsGoogleInfoPopUpVisible(false)}>
-                  Okay
-                </Button>
-              </Dialog.Actions>
-            </Dialog>
-          </Portal>
-        )}
       </>
     );
   }

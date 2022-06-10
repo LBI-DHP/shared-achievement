@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 export const style = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: 10,
     flex: 1,
   },
   containerPaddingTop: {
@@ -30,6 +30,16 @@ export const style = StyleSheet.create({
     padding: 10,
     textAlign: "center",
   },
+  header: {
+    color: "white",
+    textTransform: "uppercase",
+    padding: 20,
+    fontSize: 20,
+    fontWeight: "bold",
+    backgroundColor: "#3f5c7c",
+    textAlign: "center",
+  },
+
   surface: {
     elevation: 4,
     borderRadius: 5,

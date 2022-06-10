@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Text, StyleSheet } from "react-native";
-import { Button, Surface } from "react-native-paper";
+import { Text, View } from "react-native";
+import { Button } from "react-native-paper";
 import { UserDataContext } from "./UserDataProvider";
 import dataManager from "./DataManager";
 import { Picker } from "@react-native-picker/picker";
 import CenteredActivityIndicator from "./CenteredActivityIndicator";
+import { style } from "../constants/Styles";
 
 export default function JoinOrCreateTeam() {
   const { userData, setUserData } = useContext(UserDataContext);
@@ -38,8 +39,8 @@ export default function JoinOrCreateTeam() {
   if (isLoading) return <CenteredActivityIndicator height={50} />;
 
   return (
-    <Surface style={styles.surface}>
-      <Text style={styles.header}>Select your Team</Text>
+    <View>
+      <Text style={style.header}>Select your Team</Text>
       {errorOnLoadTeams.length > 0 && (
         <Text style={{ marginTop: 2, marginBottom: 2, textAlign: "center" }}>
           {errorOnLoadTeams}
@@ -92,37 +93,6 @@ export default function JoinOrCreateTeam() {
           {errorOnJoinTeam}
         </Text>
       )}
-    </Surface>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  viewWrapper: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-around",
-  },
-  wrapper: {
-    padding: 15,
-    alignItems: "center",
-    width: "33.33%",
-  },
-  header: {
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
-    width: "100%",
-    fontSize: 20,
-    fontWeight: "bold",
-    backgroundColor: "#3f5c7c",
-    color: "white",
-    padding: 10,
-    textAlign: "center",
-  },
-  headerText: { fontSize: 20, fontWeight: "bold" },
-  labelText: { textAlign: "center" },
-  surface: {
-    elevation: 4,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-});

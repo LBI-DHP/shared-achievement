@@ -10,16 +10,16 @@ import dataManager from "../DataManager";
 
 export default function SendMotivationMessageDialog({
   hideDialog,
-  visible,
+  isVisible,
   nameTo,
-  expoToken,
+  expoTokenList,
   nameFrom,
 }) {
   const [message, setMessage] = React.useState("");
 
   return (
     <Portal>
-      <Dialog visible={visible} onDismiss={hideDialog}>
+      <Dialog visible={isVisible} onDismiss={hideDialog}>
         <Dialog.Content>
           <Paragraph style={{ paddingBottom: 10 }}>
             Send {nameTo} a motivating message:
@@ -45,14 +45,16 @@ export default function SendMotivationMessageDialog({
             disabled={message.length < 1}
             onPress={() => {
               hideDialog();
-              dataManager
-                .sendPushNotification(expoToken, message, nameFrom)
-                .then((success) => {
-                  if (success) {
-                    setMessage("");
-                    hideDialog();
-                  }
-                });
+              expoTokenList.forEach((token) => {
+                dataManager
+                  .sendPushNotification(token, message, nameFrom)
+                  .then((success) => {
+                    if (success) {
+                      setMessage("");
+                      hideDialog();
+                    }
+                  });
+              });
             }}
           >
             Send

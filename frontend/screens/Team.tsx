@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
-import { View, ScrollView, Text } from "react-native";
-import { Button, Surface, Paragraph, Dialog, Portal } from "react-native-paper";
+import { ScrollView, Text } from "react-native";
+import { Button, Paragraph, Dialog, Portal } from "react-native-paper";
 import JoinOrCreateTeam from "../components/JoinTeam";
 import { UserDataContext } from "../components/UserDataProvider";
 import TeamList from "../components/TeamList/TeamList";
@@ -34,24 +34,23 @@ export default function Team() {
   }, [isUserInATeam]);
 
   return (
-    <ScrollView style={style.container}>
+    <>
       {isUserInATeam ? (
         <>
-          <View style={{ marginBottom: 30 }}>
-            <Surface style={style.surface}>
-              <Text style={style.cardHeader}>Team {teamName}</Text>
-              <TeamList />
-              <Button
-                disabled={!isUserInATeam}
-                mode="contained"
-                onPress={() => {
-                  setIsLeaveTeamDialogVisible(true);
-                }}
-              >
-                Leave Team
-              </Button>
-            </Surface>
-          </View>
+          <Text style={style.header}>Go, team {teamName}!</Text>
+          <ScrollView style={{ marginBottom: 0 }}>
+            <TeamList />
+            <Button
+              style={{ margin: 10 }}
+              disabled={!isUserInATeam}
+              mode="outlined"
+              onPress={() => {
+                setIsLeaveTeamDialogVisible(true);
+              }}
+            >
+              Leave Team
+            </Button>
+          </ScrollView>
           {isLeaveTeamDialogVisible && (
             <Portal>
               <Dialog
@@ -107,6 +106,6 @@ export default function Team() {
       ) : (
         <JoinOrCreateTeam />
       )}
-    </ScrollView>
+    </>
   );
 }

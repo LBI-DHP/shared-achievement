@@ -463,8 +463,9 @@ export default class dataManager {
             return true;
           }
         }
+      } else {
+        return false;
       }
-      return false;
     } catch (error) {
       console.log("error on send push message:" + error);
     } finally {

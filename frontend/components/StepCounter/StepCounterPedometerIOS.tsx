@@ -22,33 +22,14 @@ export default function StepCounter() {
   const [newSteps, setNewSteps] = useState(null);
   const [goalSteps, setGoalSteps] = useState(0);
   const { userData, mode } = useContext(UserDataContext);
-  const { stepsPushedIndicator, setStepsPushedIndicator, midnightIndicator } =
-    useContext(UpdateContext);
+  const {
+    stepsPushedIndicator,
+    setStepsPushedIndicator,
+    midnightIndicator,
+    appHasComeToForeground,
+  } = useContext(UpdateContext);
   const [isApiLoading, setIsApiLoading] = useState(true);
   const [isPedometerLoading, setIsPedometerLoading] = useState(true);
-  const [appHasComeToForeground, setAppHasComeToForeground] = useState(true);
-
-  const appState = useRef(AppState.currentState);
-
-  useEffect(() => {
-    AppState.addEventListener("change", _handleAppStateChange);
-    return () => {
-      AppState.removeEventListener("change", _handleAppStateChange);
-    };
-  }, []);
-
-  const _handleAppStateChange = (nextAppState) => {
-    if (
-      appState.current.match(/inactive|background/) &&
-      nextAppState === "active"
-    ) {
-      setAppHasComeToForeground(true);
-      console.log("App has come to the foreground!");
-    } else {
-      setAppHasComeToForeground(false);
-    }
-    appState.current = nextAppState;
-  };
 
   let _subscription;
 

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { AppState } from "react-native";
 
-// Alternating booleans to trigger useEffect hooks based on an update
 export const UpdateContext = React.createContext({
   stepsPushedIndicator: false,
   setStepsPushedIndicator: ({}) => {},
@@ -8,14 +8,40 @@ export const UpdateContext = React.createContext({
   setApiReloadIndicator: ({}) => {},
   midnightIndicator: false,
   setMidnightIndicator: ({}) => {},
+  appHasComeToForeground: false,
 });
 
 export const UpdateProvider = (props) => {
+  // Indicator are alternating booleans to trigger useEffect hooks based on an update
   const [stepsPushedIndicator, setStepsPushedIndicator] = useState(false);
   const [apiReloadIndicator, setApiReloadIndicator] = useState(false);
   const [midnightIndicator, setMidnightIndicator] = useState(false);
 
   const [refetchApiTimer, setRefetchApiTimer] = useState(30);
+  const [appHasComeToForeground, setAppHasComeToForeground] = useState(true);
+
+  const appState = useRef(AppState.currentState);
+
+  useEffect(() => {
+    AppState.addEventListener("change", _handleAppStateChange);
+    return () => {
+      AppState.removeEventListener("change", _handleAppStateChange);
+    };
+  }, []);
+
+  const _handleAppStateChange = (nextAppState) => {
+    if (
+      appState.current.match(/inactive|background/) &&
+      nextAppState === "active"
+    ) {
+      setAppHasComeToForeground(true);
+      setApiReloadIndicator(!apiReloadIndicator);
+      console.log("App has come to the foreground!");
+    } else {
+      setAppHasComeToForeground(false);
+    }
+    appState.current = nextAppState;
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -60,6 +86,7 @@ export const UpdateProvider = (props) => {
         setApiReloadIndicator,
         midnightIndicator,
         setMidnightIndicator,
+        appHasComeToForeground,
       }}
     >
       {props.children}

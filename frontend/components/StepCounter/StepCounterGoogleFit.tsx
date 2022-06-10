@@ -29,8 +29,12 @@ export default function StepCounter() {
   const [newSteps, setNewSteps] = useState(0);
   const { userData, mode, setIsConnectedToGoogleFit } =
     useContext(UserDataContext);
-  const { stepsPushedIndicator, setStepsPushedIndicator, midnightIndicator } =
-    useContext(UpdateContext);
+  const {
+    stepsPushedIndicator,
+    setStepsPushedIndicator,
+    midnightIndicator,
+    appHasComeToForeground,
+  } = useContext(UpdateContext);
 
   const [googleFitConnectionError, setGoogleFitConnectionError] =
     useState(false);
@@ -90,6 +94,23 @@ export default function StepCounter() {
       mounted = false;
     };
   }, [googleAuthInfo, midnightIndicator]);
+
+  useEffect(() => {
+    let mounted = true;
+    const currentDateTime = new Date();
+    const isShortlyAfterMidnight =
+      currentDateTime.getHours() === 0 && currentDateTime.getMinutes() === 0;
+
+    if (
+      appHasComeToForeground &&
+      googleAuthInfo.access_token !== null &&
+      isShortlyAfterMidnight
+    )
+      syncStepsFromGoogleFit(mounted);
+    return () => {
+      mounted = false;
+    };
+  }, [appHasComeToForeground]);
 
   useEffect(() => {
     let mounted = true;

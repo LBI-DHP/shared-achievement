@@ -14,23 +14,32 @@ export default function TeamContributions() {
 
   useEffect(() => {
     let mounted = true;
-    dataManager
-      .getTeamMembersAndStepCountOfToday(userData.team)
-      .then((teamMembersStepCountOfToday) => {
-        if (mounted && teamMembersStepCountOfToday !== null)
-          teamMembersStepCountOfToday.sort((a, b) =>
-            a.userProgress < b.userProgress
-              ? 1
-              : b.userProgress < a.userProgress
-              ? -1
-              : 0
-          );
-        setTeamMembersAndStepCountsOfToday(teamMembersStepCountOfToday);
-      });
+    if (mode) {
+      dataManager
+        .getTeamMembersAndStepCountOfToday(userData.team)
+        .then((teamMembersStepCountOfToday) => {
+          if (mounted && teamMembersStepCountOfToday !== null)
+            if (mode === "ABSOLUTE") {
+              teamMembersStepCountOfToday.sort((a, b) =>
+                a.sumSteps < b.sumSteps ? 1 : b.sumSteps < a.sumSteps ? -1 : 0
+              );
+            } else {
+              teamMembersStepCountOfToday.sort((a, b) =>
+                a.userProgress < b.userProgress
+                  ? 1
+                  : b.userProgress < a.userProgress
+                  ? -1
+                  : 0
+              );
+            }
+          console.log(teamMembersStepCountOfToday);
+          setTeamMembersAndStepCountsOfToday(teamMembersStepCountOfToday);
+        });
+    }
     return () => {
       mounted = false;
     };
-  }, [apiReloadIndicator, stepsPushedIndicator, midnightIndicator]);
+  }, [apiReloadIndicator, stepsPushedIndicator, midnightIndicator, mode]);
 
   return (
     <View
@@ -62,11 +71,9 @@ export default function TeamContributions() {
                 <Text style={style.unitContribution}> %</Text>
               </View>
               <Text style={style.name}>
-                {member.username === userData.username ? (
-                  <Text style={{ fontWeight: "normal" }}>me</Text>
-                ) : (
-                  truncateString(member.username, 4)
-                )}
+                {member.username === userData.username
+                  ? "me"
+                  : truncateString(member.username, 4)}
               </Text>
             </View>
           );
@@ -88,11 +95,9 @@ export default function TeamContributions() {
                 </Text>
               </View>
               <Text style={style.name}>
-                {member.username === userData.username ? (
-                  <Text style={{ fontWeight: "normal" }}>me</Text>
-                ) : (
-                  truncateString(member.username, 4)
-                )}
+                {member.username === userData.username
+                  ? "me"
+                  : truncateString(member.username, 4)}
               </Text>
             </View>
           );
@@ -111,7 +116,6 @@ function truncateString(str, num) {
 
 export const style = StyleSheet.create({
   name: {
-    fontWeight: "bold",
     marginTop: -3,
     color: "black",
   },
@@ -135,9 +139,10 @@ export const style = StyleSheet.create({
   },
   viewMe: {
     flexDirection: "column",
-    padding: 5,
-    borderWidth: 1,
+    padding: 4,
+    borderWidth: 2,
     borderColor: "#ffbb00",
+    backgroundColor: "#fff8e3",
     borderRadius: 5,
     width: 70,
     marginRight: 5,

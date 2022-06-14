@@ -6,11 +6,11 @@ import Challenge from "../components/Challenge/Challenge";
 import TeamContributions from "../components/Challenge/TeamContributions";
 import ConfettiCannon from "react-native-confetti-cannon";
 import dataManager from "../components/DataManager";
-import { UserDataContext } from "../components/UserDataProvider";
+import { UserDataContext } from "../provider/UserDataProvider";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import StepCounterPedometerIOS from "../components/StepCounter/StepCounterPedometerIOS";
 import StepCounterGoogleFit from "../components/StepCounter/StepCounterGoogleFit";
-import { UpdateContext } from "../components/UpdateProvider";
+import { UpdateContext } from "../provider/UpdateProvider";
 import YesterdaysProgressPopUp from "../components/YesterdaysProgressPopUp";
 import TodaysPopUp from "../components/TodaysPopUp";
 

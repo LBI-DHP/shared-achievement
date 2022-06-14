@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View } from "react-native";
 import { Button } from "react-native-paper";
-import { UserDataContext } from "../UserDataProvider";
+import { UserDataContext } from "../../provider/UserDataProvider";
 import dataManager from "../DataManager";
 import SendMotivationMessageDialog from "./SendMotivationMessageDialog";
 import TeamChartRelative from "./TeamChartRelative";
 import TeamChartAbsolute from "./TeamChartAbsolute";
 import CenteredActivityIndicator from "../CenteredActivityIndicator";
-import { UpdateContext } from "../UpdateProvider";
+import { UpdateContext } from "../../provider/UpdateProvider";
 
 export default function TeamList() {
   const { userData, mode, isUserDataLoading } = useContext(UserDataContext);

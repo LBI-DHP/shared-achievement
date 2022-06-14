@@ -4,8 +4,8 @@ import useCachedResources from "./hooks/useCachedResources";
 import { AppRegistry } from "react-native";
 import appJson from "./app.json";
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
-import { UserDataProvider } from "./components/UserDataProvider";
-import { UpdateProvider } from "./components/UpdateProvider";
+import { UserDataProvider } from "./provider/UserDataProvider";
+import { UpdateProvider } from "./provider/UpdateProvider";
 import AppView from "./components/AppView";
 
 const theme = {

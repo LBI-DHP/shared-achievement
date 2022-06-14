@@ -6,8 +6,8 @@ import { Text, View, TouchableOpacity } from "react-native";
 import { style as stepCounterStyles } from "./StepCounterStyles";
 import { LinearGradient } from "expo-linear-gradient";
 
-import { UserDataContext } from "../UserDataProvider";
-import { UpdateContext } from "../UpdateProvider";
+import { UserDataContext } from "../../provider/UserDataProvider";
+import { UpdateContext } from "../../provider/UpdateProvider";
 
 export default function ContributeButton({
   isLoadingStepCounter,

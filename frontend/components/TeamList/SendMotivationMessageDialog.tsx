@@ -25,9 +25,11 @@ export default function SendMotivationMessageDialog({
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    setWasMessageSentSuccessfully(false);
-    setError(false);
-    setErrorCount(0);
+    if (isVisible) {
+      setWasMessageSentSuccessfully(false);
+      setError(false);
+      setErrorCount(0);
+    }
   }, [isVisible]);
 
   return (
@@ -75,7 +77,7 @@ export default function SendMotivationMessageDialog({
           </Button>
           {wasMessageSentSuccessfully ? (
             <Button icon="check" color="green">
-              Send
+              Sent
             </Button>
           ) : (
             <Button
@@ -96,8 +98,8 @@ export default function SendMotivationMessageDialog({
                 if (counter === 0) {
                   setWasMessageSentSuccessfully(true);
                   setTimeout(() => {
-                    setMessage("");
                     hideDialog();
+                    setMessage("");
                   }, 1500);
                 } else {
                   setError(true);

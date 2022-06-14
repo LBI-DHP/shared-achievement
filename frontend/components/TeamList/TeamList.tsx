@@ -35,7 +35,7 @@ export default function TeamList() {
   useEffect(() => {
     let mounted = true;
     dataManager
-      .getTeamMembersAndStepCountOfToday(userData.team)
+      .getTeamMembersAndStepCountOfToday(userData.team, mode)
       .then((teamMembers) => {
         if (mounted && teamMembers !== null) {
           setTeamMembers(teamMembers);

@@ -350,7 +350,7 @@ export default class dataManager {
     }
   };
 
-  static getTeamMembersAndStepCountOfToday = async (teamid) => {
+  static getTeamMembersAndStepCountOfToday = async (teamid, mode) => {
     try {
       const response = await fetch(
         configJSON.serverConfig.root + "/teamstepstoday/" + teamid,
@@ -367,6 +367,20 @@ export default class dataManager {
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.indexOf("application/json") !== -1) {
           const responseJSON = await response.json();
+          if (responseJSON !== null)
+            if (mode === "ABSOLUTE") {
+              responseJSON.sort((a, b) =>
+                a.sumSteps < b.sumSteps ? 1 : b.sumSteps < a.sumSteps ? -1 : 0
+              );
+            } else {
+              responseJSON.sort((a, b) =>
+                a.userProgress < b.userProgress
+                  ? 1
+                  : b.userProgress < a.userProgress
+                  ? -1
+                  : 0
+              );
+            }
           return responseJSON;
         }
       }

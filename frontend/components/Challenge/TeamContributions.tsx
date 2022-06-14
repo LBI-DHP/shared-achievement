@@ -52,24 +52,10 @@ export default function TeamContributions() {
     let mounted = true;
     if (mode) {
       dataManager
-        .getTeamMembersAndStepCountOfToday(userData.team)
+        .getTeamMembersAndStepCountOfToday(userData.team, mode)
         .then((teamMembersStepCountOfToday) => {
-          if (mounted && teamMembersStepCountOfToday !== null)
-            if (mode === "ABSOLUTE") {
-              teamMembersStepCountOfToday.sort((a, b) =>
-                a.sumSteps < b.sumSteps ? 1 : b.sumSteps < a.sumSteps ? -1 : 0
-              );
-            } else {
-              teamMembersStepCountOfToday.sort((a, b) =>
-                a.userProgress < b.userProgress
-                  ? 1
-                  : b.userProgress < a.userProgress
-                  ? -1
-                  : 0
-              );
-            }
-          console.log(teamMembersStepCountOfToday);
-          setTeamMembersAndStepCountsOfToday(teamMembersStepCountOfToday);
+          if (mounted)
+            setTeamMembersAndStepCountsOfToday(teamMembersStepCountOfToday);
         });
     }
     return () => {

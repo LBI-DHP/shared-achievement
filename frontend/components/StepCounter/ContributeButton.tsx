@@ -4,7 +4,8 @@ import React, { useState, useContext, useEffect } from "react";
 import dataManager from "../DataManager";
 import { Text, View, TouchableOpacity } from "react-native";
 import { style as stepCounterStyles } from "./StepCounterStyles";
-import { Foundation, FontAwesome } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+
 import { UserDataContext } from "../UserDataProvider";
 import { UpdateContext } from "../UpdateProvider";
 
@@ -29,39 +30,36 @@ export default function ContributeButton({
   }, [newSteps, isLoading, isLoadingStepCounter]);
 
   return (
-    <TouchableOpacity
-      disabled={isDisabled}
-      style={
-        isDisabled
-          ? stepCounterStyles.contributeStepsButtonDisabled
-          : stepCounterStyles.contributeStepsButton
-      }
-      onPress={() => {
-        if (!isLoading) {
-          setIsLoading(true);
-          dataManager.pushSteps(userData.id, newSteps).then((worked) => {
-            if (worked) {
-              resetStepsAfterContribution();
-              setStepsPushedIndicator(!stepsPushedIndicator);
-            } else setError("true");
-            setIsLoading(false);
-          });
-        }
-      }}
-    >
-      <View style={stepCounterStyles.icons}>
-        <FontAwesome
-          style={{ marginRight: 5 }}
-          name="plus"
-          size={15}
-          color="white"
-        />
-        <Foundation name="foot" size={30} color="white" />
-      </View>
-      <Text style={stepCounterStyles.buttonText}>
-        Contribute {newSteps !== 0 && newSteps} new steps
-      </Text>
-    </TouchableOpacity>
+    <>
+      <LinearGradient
+        colors={isDisabled ? ["#6d6d6d", "#6d6d6d"] : ["#3f5c7c", "#558dad"]}
+        style={stepCounterStyles.contributeStepsButtonColor}
+      >
+        <TouchableOpacity
+          disabled={isDisabled}
+          style={stepCounterStyles.contributeStepsButton}
+          onPress={() => {
+            if (!isLoading) {
+              setIsLoading(true);
+              dataManager.pushSteps(userData.id, newSteps).then((worked) => {
+                if (worked) {
+                  resetStepsAfterContribution();
+                  setStepsPushedIndicator(!stepsPushedIndicator);
+                } else setError("true");
+                setIsLoading(false);
+              });
+            }
+          }}
+        >
+          <View>
+            <Text style={stepCounterStyles.buttonText}>Contribute</Text>
+            <Text style={stepCounterStyles.buttonStepsNumberText}>
+              {newSteps !== 0 ? newSteps : 0}
+            </Text>
+            <Text style={stepCounterStyles.buttonText}>new steps</Text>
+          </View>
+        </TouchableOpacity>
+      </LinearGradient>
+    </>
   );
 }
-TouchableOpacity;

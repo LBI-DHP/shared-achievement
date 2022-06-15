@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ScrollView, View, Text, useWindowDimensions } from "react-native";
-import { UserDataContext } from "../../provider/UserDataProvider";
+import { UserDataContext } from "../../providers/UserDataProvider";
 import dataManager from "../DataManager";
 import { Foundation } from "@expo/vector-icons";
-import { UpdateContext } from "../../provider/UpdateProvider";
+import { UpdateContext } from "../../providers/UpdateProvider";
 
 export default function TeamContributions() {
   const { userData, mode } = useContext(UserDataContext);

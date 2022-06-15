@@ -10,7 +10,7 @@ import {
 import { Button, TextInput } from "react-native-paper";
 import { style } from "../constants/Styles";
 import dataManager from "../components/DataManager";
-import { UserDataContext } from "../components/UserDataProvider";
+import { UserDataContext } from "../providers/UserDataProvider";
 import * as Device from "expo-device";
 
 export default function Welcome() {

@@ -5,7 +5,7 @@ import NavigationSettingsON from "./SABottomNavigationSettingsON";
 import { StatusBar } from "expo-status-bar";
 import WelcomeScreen from "../screens/Welcome";
 import ConnectToGoogleFit from "./ConnectToGoogleFit";
-import { UserDataContext } from "./UserDataProvider";
+import { UserDataContext } from "../providers/UserDataProvider";
 import { Platform } from "react-native";
 import CenteredActivityIndicator from "./CenteredActivityIndicator";
 import NoInternetConnection from "../screens/NoInternetConnection";

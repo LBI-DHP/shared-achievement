@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import ChallengeScreen from "../screens/Challenge";
 import TeamScreen from "../screens/Team";
 import { BottomNavigation } from "react-native-paper";
-import { UserDataContext } from "./UserDataProvider";
+import { UserDataContext } from "../providers/UserDataProvider";
 
 export default function SABottomNavigation() {
   const [index, setIndex] = React.useState(0);

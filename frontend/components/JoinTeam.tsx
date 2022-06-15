@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { Button } from "react-native-paper";
-import { UserDataContext } from "./UserDataProvider";
+import { UserDataContext } from "../providers/UserDataProvider";
 import dataManager from "./DataManager";
 import { Picker } from "@react-native-picker/picker";
 import CenteredActivityIndicator from "./CenteredActivityIndicator";

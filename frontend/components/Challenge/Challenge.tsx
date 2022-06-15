@@ -4,8 +4,8 @@ import Untersberg from "./Untersberg";
 import UntersbergHidden from "./UntersbergHidden";
 import Clouds from "./Clouds";
 import FlagTop from "./FlagTop";
-import { UserDataContext } from "../../provider/UserDataProvider";
-import { UpdateContext } from "../../provider/UpdateProvider";
+import { UserDataContext } from "../../providers/UserDataProvider";
+import { UpdateContext } from "../../providers/UpdateProvider";
 import dataManager from "../DataManager";
 import CenteredActivityIndicator from "../CenteredActivityIndicator";
 

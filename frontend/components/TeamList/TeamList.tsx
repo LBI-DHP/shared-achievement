@@ -2,21 +2,21 @@ import React, { useContext, useEffect, useState } from "react";
 import { View } from "react-native";
 import { Button } from "react-native-paper";
 import { UserDataContext } from "../../providers/UserDataProvider";
-import dataManager from "../DataManager";
+import { TeamDataContext } from "../../providers/TeamDataProvider";
 import SendMotivationMessageDialog from "./SendMotivationMessageDialog";
 import TeamChartRelative from "./TeamChartRelative";
 import TeamChartAbsolute from "./TeamChartAbsolute";
 import CenteredActivityIndicator from "../CenteredActivityIndicator";
-import { UpdateContext } from "../../providers/UpdateProvider";
 
 export default function TeamList() {
-  const { userData, mode, isUserDataLoading } = useContext(UserDataContext);
-  const { apiReloadIndicator, stepsPushedIndicator, midnightIndicator } =
-    useContext(UpdateContext);
-  const [teamMembers, setTeamMembers] = useState([]);
+  const { userData, isUserDataLoading } = useContext(UserDataContext);
+  const {
+    mode,
+    teamMembersAndStepCountOfToday,
+    isTeamMembersAndStepCountOfTodayLoading,
+  } = useContext(TeamDataContext);
   const [expoTokenListTeamMembers, setExpoTokenListTeamMembers] = useState([]);
   const [isMessageDialogVisible, setIsMessageDialogVisible] = useState(false);
-  const [isApiLoading, setIsApiLoading] = useState(true);
 
   const showDialog = () => setIsMessageDialogVisible(true);
   const hideDialog = () => {
@@ -33,32 +33,20 @@ export default function TeamList() {
   });
 
   useEffect(() => {
-    let mounted = true;
-    dataManager
-      .getTeamMembersAndStepCountOfToday(userData.team, mode)
-      .then((teamMembers) => {
-        if (mounted && teamMembers !== null) {
-          setTeamMembers(teamMembers);
-          let expoTokens = [];
-          teamMembers.forEach((member) => {
-            if (member.expoToken !== userData.expoToken)
-              expoTokens.push(member.expoToken);
-          });
-          setExpoTokenListTeamMembers(expoTokens);
-        }
-        setIsApiLoading(false);
-      });
-    return () => {
-      mounted = false;
-    };
-  }, [apiReloadIndicator, stepsPushedIndicator, midnightIndicator]);
+    let expoTokens = [];
+    teamMembersAndStepCountOfToday.forEach((member) => {
+      if (member.expoToken !== userData.expoToken)
+        expoTokens.push(member.expoToken);
+    });
+    setExpoTokenListTeamMembers(expoTokens);
+  }, [teamMembersAndStepCountOfToday]);
 
-  if (isApiLoading || isUserDataLoading)
+  if (isTeamMembersAndStepCountOfTodayLoading || isUserDataLoading)
     return <CenteredActivityIndicator height={100} />;
 
   return (
     <View style={{ paddingTop: 10 }}>
-      {teamMembers.map((member) => {
+      {teamMembersAndStepCountOfToday.map((member) => {
         if (mode === "RELATIVE") {
           return (
             <TeamChartRelative

@@ -5,6 +5,7 @@ import configJSON from "../../config.json";
 import { Text } from "../Themed";
 import dataManager from "../DataManager";
 import { UserDataContext } from "../../providers/UserDataProvider";
+import { TeamDataContext } from "../../providers/TeamDataProvider";
 import { UpdateContext } from "../../providers/UpdateProvider";
 import StepsBarChart from "./StepsBarChartRelative";
 import ContributeButton from "./ContributeButton";
@@ -26,8 +27,8 @@ export default function StepCounter() {
   const [stepCountToday, setStepCountToday] = useState(0);
   const [contributedSteps, setContributedSteps] = useState(0);
   const [newSteps, setNewSteps] = useState(0);
-  const { userData, mode, setIsConnectedToGoogleFit } =
-    useContext(UserDataContext);
+  const { userData, setIsConnectedToGoogleFit } = useContext(UserDataContext);
+  const { mode } = useContext(TeamDataContext);
   const {
     stepsPushedIndicator,
     setStepsPushedIndicator,

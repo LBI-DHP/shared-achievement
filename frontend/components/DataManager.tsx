@@ -414,9 +414,9 @@ export default class dataManager {
       }
       return null;
     } catch (error) {
-      console.log("error on get team name:" + error);
+      console.log("error on get team data:" + error);
     } finally {
-      console.log("done with get team name request");
+      console.log("done with get team data request");
     }
   };
   static getTeamChallengeData = async (teamid, date = "") => {
@@ -448,9 +448,9 @@ export default class dataManager {
       }
       return null;
     } catch (error) {
-      console.log("error on get team name:" + error);
+      console.log("error on get team challenge data:" + error);
     } finally {
-      console.log("done with get team name request");
+      console.log("done with get team challenge data request");
     }
   };
 

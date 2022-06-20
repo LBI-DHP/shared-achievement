@@ -1,16 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ScrollView, View, Text, useWindowDimensions } from "react-native";
 import { UserDataContext } from "../../providers/UserDataProvider";
-import dataManager from "../DataManager";
+import { TeamDataContext } from "../../providers/TeamDataProvider";
 import { Foundation } from "@expo/vector-icons";
-import { UpdateContext } from "../../providers/UpdateProvider";
 
 export default function TeamContributions() {
-  const { userData, mode } = useContext(UserDataContext);
-  const [teamMembersAndStepCountsOfToday, setTeamMembersAndStepCountsOfToday] =
-    useState([]);
-  const { apiReloadIndicator, stepsPushedIndicator, midnightIndicator } =
-    useContext(UpdateContext);
+  const { userData } = useContext(UserDataContext);
+  const { mode, teamMembersAndStepCountOfToday } = useContext(TeamDataContext);
   const [elementWidth, setElementWidth] = useState(0);
 
   const { width } = useWindowDimensions();
@@ -22,9 +18,9 @@ export default function TeamContributions() {
   let elementSpaces = (elementBoarder + elementMargin) * 2;
 
   useEffect(() => {
-    if (teamMembersAndStepCountsOfToday.length !== 0) {
+    if (teamMembersAndStepCountOfToday.length !== 0) {
       let elementMinInnerWidth = 75;
-      let numOfElements = teamMembersAndStepCountsOfToday.length;
+      let numOfElements = teamMembersAndStepCountOfToday.length;
       let availableSpaceInParent = windowWidth - parentPadding * 2;
       let elementsPerRow = Math.floor(
         availableSpaceInParent / (elementMinInnerWidth + elementSpaces)
@@ -46,22 +42,7 @@ export default function TeamContributions() {
 
       setElementWidth(availableSpacePerElement - elementSpaces);
     }
-  }, [teamMembersAndStepCountsOfToday]);
-
-  useEffect(() => {
-    let mounted = true;
-    if (mode) {
-      dataManager
-        .getTeamMembersAndStepCountOfToday(userData.team, mode)
-        .then((teamMembersStepCountOfToday) => {
-          if (mounted)
-            setTeamMembersAndStepCountsOfToday(teamMembersStepCountOfToday);
-        });
-    }
-    return () => {
-      mounted = false;
-    };
-  }, [apiReloadIndicator, stepsPushedIndicator, midnightIndicator, mode]);
+  }, [teamMembersAndStepCountOfToday]);
 
   return (
     <View
@@ -74,7 +55,7 @@ export default function TeamContributions() {
         alignContent: "center",
       }}
     >
-      {teamMembersAndStepCountsOfToday.map((member) => {
+      {teamMembersAndStepCountOfToday.map((member) => {
         return (
           <View
             style={

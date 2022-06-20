@@ -7,27 +7,25 @@ import TeamContributions from "../components/Challenge/TeamContributions";
 import ConfettiCannon from "react-native-confetti-cannon";
 import dataManager from "../components/DataManager";
 import { UserDataContext } from "../providers/UserDataProvider";
+import { TeamDataContext } from "../providers/TeamDataProvider";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import StepCounterPedometerIOS from "../components/StepCounter/StepCounterPedometerIOS";
 import StepCounterGoogleFit from "../components/StepCounter/StepCounterGoogleFit";
-import { UpdateContext } from "../providers/UpdateProvider";
 import YesterdaysProgressPopUp from "../components/YesterdaysProgressPopUp";
 import TodaysPopUp from "../components/TodaysPopUp";
 
 export default function ChallengeScreen() {
   const {
     userData,
-    setMode,
     setNavigationIndex,
     isUserDataLoading,
     navigationIndex,
-    mode,
     useGoogleFit,
   } = useContext(UserDataContext);
-  const { apiReloadIndicator, stepsPushedIndicator, midnightIndicator } =
-    useContext(UpdateContext);
 
-  const [teamName, setTeamName] = useState("");
+  const { mode, teamName, isUserInATeam, teamChallengeData } =
+    useContext(TeamDataContext);
+
   const [teamReachedSummit, setTeamReachedSummit] = useState(false);
   const [isTodaysPopUpVisible, setIsTodaysPopUpVisible] = useState(false);
   const [showConfettiCannon, setShowConfettiCannon] = useState(false);
@@ -42,92 +40,65 @@ export default function ChallengeScreen() {
 
   useEffect(() => {
     let mounted = true;
+    if (!isUserDataLoading && isUserInATeam) {
+      dataManager.getShowYesterdaysProgressPopUp().then((showPopUp) => {
+        if (showPopUp) {
+          const newDate = new Date();
+          newDate.setDate(newDate.getDate() - 1);
+          const date = newDate.getDate();
+          const month = newDate.getMonth() + 1;
+          const year = newDate.getFullYear();
+          let dateString = date.toString();
+          if (dateString.length === 1) dateString = "0" + dateString;
+          let monthString = month.toString();
+          if (monthString.length === 1) monthString = "0" + monthString;
+          const dateStringYesterday =
+            year + "-" + monthString + "-" + dateString;
+
+          dataManager
+            .getTeamChallengeData(userData.team, dateStringYesterday)
+            .then((data) => {
+              if (mounted && data === -1) {
+                setDidChallengeExistYesterday(false);
+              } else if (mounted && data && data.progress) {
+                setYesterdaysProgress(data.progress);
+                setYesterdaysSteps(data.total_steps);
+                setDidChallengeExistYesterday(true);
+                setIsYesterdaysProgressPopUpVisible(showPopUp);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else setIsYesterdaysProgressPopUpVisible(showPopUp);
+      });
+    }
+    return () => {
+      mounted = false;
+    };
+  }, [isUserInATeam, isUserDataLoading]);
+
+  useEffect(() => {
+    if (isUserInATeam && teamChallengeData.progress) {
+      setTeamReachedSummit(teamChallengeData.progress >= 100);
+      setShowConfettiCannon(teamChallengeData.progress >= 100);
+    } else {
+      setTeamReachedSummit(false);
+      setShowConfettiCannon(false);
+    }
+  }, [teamChallengeData.progress, isUserInATeam]);
+
+  useEffect(() => {
+    let mounted = true;
     if (teamReachedSummit && navigationIndex === 0) {
       dataManager.getShowReachedSummitPopUp().then((showPopUp) => {
         if (mounted) setIsTodaysPopUpVisible(showPopUp);
       });
     }
-    if (teamReachedSummit && navigationIndex === 0) {
-      if (mounted) setShowConfettiCannon(true);
-    }
     return () => {
       mounted = false;
     };
-  }, [
-    teamReachedSummit,
-    apiReloadIndicator,
-    stepsPushedIndicator,
-    midnightIndicator,
-  ]);
-
-  useEffect(() => {
-    let mounted = true;
-    if (!isUserDataLoading && userData.team) {
-      dataManager.getShowYesterdaysProgressPopUp().then((showPopUp) => {
-        if (mounted) setIsYesterdaysProgressPopUpVisible(showPopUp);
-      });
-    }
-    return () => {
-      mounted = false;
-    };
-  }, [userData.team]);
-
-  useEffect(() => {
-    let mounted = true;
-    if (!isUserDataLoading && userData.team) {
-      dataManager.getTeamData(userData.team).then((data) => {
-        if (data !== null) {
-          setTeamName(data.name);
-          setMode(data.progressCalculationMode);
-        }
-      });
-      dataManager
-        .getTeamChallengeData(userData.team)
-        .then((data) => {
-          if (mounted && data.progress) {
-            setTeamReachedSummit(data.progress >= 100);
-            setShowConfettiCannon(data.progress >= 100);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-
-      const newDate = new Date();
-      newDate.setDate(newDate.getDate() - 1);
-      const date = newDate.getDate();
-      const month = newDate.getMonth() + 1;
-      const year = newDate.getFullYear();
-      let dateString = date.toString();
-      if (dateString.length === 1) dateString = "0" + dateString;
-      let monthString = month.toString();
-      if (monthString.length === 1) monthString = "0" + monthString;
-      const dateStringYesterday = year + "-" + monthString + "-" + dateString;
-
-      dataManager
-        .getTeamChallengeData(userData.team, dateStringYesterday)
-        .then((data) => {
-          if (mounted && data === -1) {
-            setDidChallengeExistYesterday(false);
-          } else if (mounted && data && data.progress) {
-            setYesterdaysProgress(data.progress);
-            setYesterdaysSteps(data.total_steps);
-            setDidChallengeExistYesterday(true);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } else {
-      setTeamName(null);
-      setTeamReachedSummit(false);
-      setShowConfettiCannon(false);
-    }
-
-    return () => {
-      mounted = false;
-    };
-  }, [apiReloadIndicator, stepsPushedIndicator, midnightIndicator, userData]);
+  }, [teamReachedSummit]);
 
   return (
     <>

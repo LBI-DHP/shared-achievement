@@ -6,6 +6,7 @@ import appJson from "./app.json";
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 import { UserDataProvider } from "./providers/UserDataProvider";
 import { UpdateProvider } from "./providers/UpdateProvider";
+import { TeamDataProvider } from "./providers/TeamDataProvider";
 import AppView from "./components/AppView";
 
 const theme = {
@@ -27,11 +28,13 @@ export default function App() {
     return (
       <UserDataProvider>
         <UpdateProvider>
-          <SafeAreaProvider>
-            <PaperProvider theme={theme}>
-              <AppView />
-            </PaperProvider>
-          </SafeAreaProvider>
+          <TeamDataProvider>
+            <SafeAreaProvider>
+              <PaperProvider theme={theme}>
+                <AppView />
+              </PaperProvider>
+            </SafeAreaProvider>
+          </TeamDataProvider>
         </UpdateProvider>
       </UserDataProvider>
     );

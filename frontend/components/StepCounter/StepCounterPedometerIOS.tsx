@@ -1,10 +1,10 @@
 // https://snack.expo.dev/@yoobit0616/pedometer-functional
 
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { Surface } from "react-native-paper";
 import { Pedometer } from "expo-sensors";
 import dataManager from "../DataManager";
 import { UserDataContext } from "../../providers/UserDataProvider";
+import { TeamDataContext } from "../../providers/TeamDataProvider";
 import { UpdateContext } from "../../providers/UpdateProvider";
 import { Text, View } from "react-native";
 import StepsBarChart from "./StepsBarChartRelative";
@@ -19,7 +19,8 @@ export default function StepCounter() {
   const [contributedSteps, setContributedSteps] = useState(0);
   const [newSteps, setNewSteps] = useState(null);
   const [goalSteps, setGoalSteps] = useState(0);
-  const { userData, mode } = useContext(UserDataContext);
+  const { userData } = useContext(UserDataContext);
+  const { mode } = useContext(TeamDataContext);
   const {
     stepsPushedIndicator,
     setStepsPushedIndicator,

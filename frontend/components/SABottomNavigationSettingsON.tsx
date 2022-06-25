@@ -3,7 +3,7 @@ import ChallengeScreen from "../screens/Challenge";
 import TeamScreen from "../screens/Team";
 import SettingsScreen from "../screens/Settings";
 import { BottomNavigation } from "react-native-paper";
-import { UserDataContext } from "./UserDataProvider";
+import { UserDataContext } from "../providers/UserDataProvider";
 
 export default function SABottomNavigation() {
   const [index, setIndex] = React.useState(0);
@@ -12,7 +12,7 @@ export default function SABottomNavigation() {
     { key: "team", title: "Team", icon: "account-group" },
     { key: "settings", title: "Settings", icon: "cog" },
   ]);
-  const { updated, setUpdated, navigationIndex, setNavigationIndex } =
+  const { navigationIndex, setNavigationIndex } =
     React.useContext(UserDataContext);
 
   useEffect(() => {
@@ -31,7 +31,6 @@ export default function SABottomNavigation() {
     <BottomNavigation
       navigationState={{ index, routes }}
       onIndexChange={(newIndex) => {
-        setUpdated(!updated);
         setIndex(newIndex);
         setNavigationIndex(newIndex);
       }}

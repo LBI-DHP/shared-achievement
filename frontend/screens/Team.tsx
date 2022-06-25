@@ -1,57 +1,42 @@
 import React, { useState, useContext, useEffect } from "react";
-import { View, ScrollView, Text } from "react-native";
-import { Button, Surface, Paragraph, Dialog, Portal } from "react-native-paper";
+import { ScrollView, Text } from "react-native";
+import { Button, Paragraph, Dialog, Portal } from "react-native-paper";
 import JoinOrCreateTeam from "../components/JoinTeam";
-import { UserDataContext } from "../components/UserDataProvider";
+import { UserDataContext } from "../providers/UserDataProvider";
+import { TeamDataContext } from "../providers/TeamDataProvider";
+import { UpdateContext } from "../providers/UpdateProvider";
 import TeamList from "../components/TeamList/TeamList";
 import { style } from "../constants/Styles";
 import dataManager from "../components/DataManager";
 
 export default function Team() {
-  const [isUserInATeam, setIsUserInATeam] = useState(false);
-  const { userData, setUserData, mode, setMode } = useContext(UserDataContext);
+  const { userData, setUserData } = useContext(UserDataContext);
+  const { teamName, isUserInATeam } = useContext(TeamDataContext);
+
+  const { setApiReloadIndicator, apiReloadIndicator } =
+    useContext(UpdateContext);
   const [error, setError] = useState("");
-  const [teamName, setTeamName] = useState("");
   const [isLeaveTeamDialogVisible, setIsLeaveTeamDialogVisible] =
     useState(false);
 
-  useEffect(() => {
-    setIsUserInATeam(userData.team !== null);
-  }, [userData.team]);
-
-  useEffect(() => {
-    let mounted = true;
-    if (isUserInATeam && mounted)
-      dataManager.getTeamData(userData.team).then((data) => {
-        if (mounted && data !== null) {
-          setTeamName(data.name);
-          setMode(data.progressCalculationMode);
-        }
-      });
-    return () => {
-      mounted = false;
-    };
-  }, [isUserInATeam]);
-
   return (
-    <ScrollView style={style.container}>
+    <>
       {isUserInATeam ? (
         <>
-          <View style={{ marginBottom: 30 }}>
-            <Surface style={style.surface}>
-              <Text style={style.cardHeader}>Team {teamName}</Text>
-              <TeamList />
-              <Button
-                disabled={!isUserInATeam}
-                mode="contained"
-                onPress={() => {
-                  setIsLeaveTeamDialogVisible(true);
-                }}
-              >
-                Leave Team
-              </Button>
-            </Surface>
-          </View>
+          <Text style={style.header}>Go, team {teamName}!</Text>
+          <ScrollView style={{ marginBottom: 0 }}>
+            <TeamList />
+            <Button
+              style={{ margin: 10 }}
+              disabled={!isUserInATeam}
+              mode="outlined"
+              onPress={() => {
+                setIsLeaveTeamDialogVisible(true);
+              }}
+            >
+              Leave Team
+            </Button>
+          </ScrollView>
           {isLeaveTeamDialogVisible && (
             <Portal>
               <Dialog
@@ -92,7 +77,7 @@ export default function Team() {
                         else {
                           setIsLeaveTeamDialogVisible(false);
                           setUserData(newUserData);
-                          setMode(null);
+                          setApiReloadIndicator(apiReloadIndicator);
                         }
                       });
                     }}
@@ -107,6 +92,6 @@ export default function Team() {
       ) : (
         <JoinOrCreateTeam />
       )}
-    </ScrollView>
+    </>
   );
 }

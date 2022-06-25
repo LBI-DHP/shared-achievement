@@ -2,13 +2,12 @@ import { StyleSheet } from "react-native";
 
 export const style = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: 10,
     flex: 1,
   },
   containerPaddingTop: {
-    flex: 1,
     padding: 20,
-    paddingTop: 80,
+    marginTop: 20,
   },
   heading: {
     fontSize: 40,
@@ -31,8 +30,40 @@ export const style = StyleSheet.create({
     padding: 10,
     textAlign: "center",
   },
+  header: {
+    color: "white",
+    textTransform: "uppercase",
+    padding: 20,
+    fontSize: 20,
+    fontWeight: "bold",
+    backgroundColor: "#3f5c7c",
+    textAlign: "center",
+  },
+
   surface: {
     elevation: 4,
     borderRadius: 5,
+  },
+  selectButton: {
+    backgroundColor: "#3f5c7c",
+    borderRadius: 3,
+    padding: 10,
+    marginBottom: 10,
+    marginTop: 10,
+    marginRight: 10,
+  },
+  selectButtonInactive: {
+    backgroundColor: "#b3b7bb",
+    borderRadius: 3,
+    padding: 10,
+    marginBottom: 10,
+    marginTop: 10,
+    marginRight: 10,
+  },
+  selectButtonText: {
+    color: "white",
+  },
+  selectButtonGroup: {
+    flexDirection: "row",
   },
 });

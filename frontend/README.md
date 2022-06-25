@@ -26,15 +26,22 @@ npm install
 
 ## Run the project
 
-To run the project, navigate to the project directory and run the following npm command:
+To run the project in **development** mode, navigate to the project directory and run the following expo command:
 
 ```bash
-npm start
+expo start
+```
+
+To run the project in **production** mode, navigate to the project directory and run the following expo command:
+
+```bash
+expo start --no-dev --minify
 ```
 
 The expo-cli should pop up and you are ready to go.
 
 To test the application on your mobile phone, download the Expo app ([Android](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=de&gl=US) / [IOS](https://apps.apple.com/at/app/expo-go/id982107779)), create a profile and log in on the expo-cli and on your mobile phone. Make sure all your devices are connected to the same WIFI and off you go.
+
 
 ## Build
 

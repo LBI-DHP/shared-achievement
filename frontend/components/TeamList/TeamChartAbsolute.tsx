@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
-import { Button, Surface } from "react-native-paper";
+import { Button } from "react-native-paper";
 import { style as TeamListStyle } from "./TeamListStyles";
 
 export default function TeamChartAbsolute({
@@ -29,7 +29,10 @@ export default function TeamChartAbsolute({
       {member.username !== currentUserName && (
         <Button
           onPress={() => {
-            setSelectedUser(member);
+            setSelectedUser({
+              username: member.username,
+              expoToken: member.expoToken,
+            });
             showDialog();
           }}
           mode="contained"

@@ -5,31 +5,21 @@ import NavigationSettingsON from "./SABottomNavigationSettingsON";
 import { StatusBar } from "expo-status-bar";
 import WelcomeScreen from "../screens/Welcome";
 import ConnectToGoogleFit from "./ConnectToGoogleFit";
-import { UserDataContext } from "./UserDataProvider";
-import dataManager from "./DataManager";
+import { UserDataContext } from "../providers/UserDataProvider";
 import { Platform } from "react-native";
 import CenteredActivityIndicator from "./CenteredActivityIndicator";
 import NoInternetConnection from "../screens/NoInternetConnection";
 
 export default function AppView() {
-  const { userData, updated, isUserDataLoading, userDataLoadingError } =
-    useContext(UserDataContext);
+  const {
+    userData,
+    isUserDataLoading,
+    userDataLoadingError,
+    useGoogleFit,
+    isConnectedToGoogleFit,
+    setIsConnectedToGoogleFit,
+  } = useContext(UserDataContext);
   const [isUserNameSet, setIsUserNameSet] = useState(false);
-  const [isConnectedToGoogleFit, setIsConnectedToGoogleFit] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    let mounted = true;
-    dataManager
-      .getGoogleAuthInfo()
-      .then((authInfo) => {
-        if (authInfo != null && mounted) setIsConnectedToGoogleFit(true);
-      })
-      .finally(() => setIsLoading(false));
-    return () => {
-      mounted = false;
-    };
-  }, [updated]);
 
   useEffect(() => {
     if (userData && userData.username !== null) {
@@ -37,11 +27,14 @@ export default function AppView() {
     }
   }, [userData]);
 
-  if (isUserDataLoading || isLoading) return <CenteredActivityIndicator />;
+  if (isUserDataLoading) return <CenteredActivityIndicator />;
   if (userDataLoadingError) return <NoInternetConnection />;
 
   if (!isUserNameSet) return <WelcomeScreen />;
-  else if (Platform.OS === "android" && !isConnectedToGoogleFit)
+  else if (
+    (Platform.OS === "android" || useGoogleFit) &&
+    !isConnectedToGoogleFit
+  )
     return (
       <ConnectToGoogleFit
         setIsConnectedToGoogleFit={(data) => {

@@ -60,6 +60,22 @@ export default class dataManager {
     }
   };
 
+  static setUseGoogleFit = async (useGoogleFit) => {
+    try {
+      await AsyncStorage.setItem("useGoogleFit", useGoogleFit.toString());
+    } catch (e) {
+      console.log(e);
+    } finally {
+      console.log("Use Google Fit ", useGoogleFit, " was set in local storage");
+    }
+  };
+
+  static getUseGoogleFit = async () => {
+    let useGoogleFit = await AsyncStorage.getItem("useGoogleFit");
+    console.log("useGoogleFit", useGoogleFit);
+    return useGoogleFit === "true";
+  };
+
   static getUserPassword = async () => {
     let password = null;
     try {
@@ -334,7 +350,7 @@ export default class dataManager {
     }
   };
 
-  static getTeamMembersAndStepCountOfToday = async (teamid) => {
+  static getTeamMembersAndStepCountOfToday = async (teamid, mode) => {
     try {
       const response = await fetch(
         configJSON.serverConfig.root + "/teamstepstoday/" + teamid,
@@ -351,6 +367,20 @@ export default class dataManager {
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.indexOf("application/json") !== -1) {
           const responseJSON = await response.json();
+          if (responseJSON !== null)
+            if (mode === "ABSOLUTE") {
+              responseJSON.sort((a, b) =>
+                a.sumSteps < b.sumSteps ? 1 : b.sumSteps < a.sumSteps ? -1 : 0
+              );
+            } else {
+              responseJSON.sort((a, b) =>
+                a.userProgress < b.userProgress
+                  ? 1
+                  : b.userProgress < a.userProgress
+                  ? -1
+                  : 0
+              );
+            }
           return responseJSON;
         }
       }
@@ -384,9 +414,9 @@ export default class dataManager {
       }
       return null;
     } catch (error) {
-      console.log("error on get team name:" + error);
+      console.log("error on get team data:" + error);
     } finally {
-      console.log("done with get team name request");
+      console.log("done with get team data request");
     }
   };
   static getTeamChallengeData = async (teamid, date = "") => {
@@ -418,9 +448,9 @@ export default class dataManager {
       }
       return null;
     } catch (error) {
-      console.log("error on get team name:" + error);
+      console.log("error on get team challenge data:" + error);
     } finally {
-      console.log("done with get team name request");
+      console.log("done with get team challenge data request");
     }
   };
 
@@ -447,8 +477,9 @@ export default class dataManager {
             return true;
           }
         }
+      } else {
+        return false;
       }
-      return false;
     } catch (error) {
       console.log("error on send push message:" + error);
     } finally {

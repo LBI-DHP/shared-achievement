@@ -4,49 +4,34 @@ import Untersberg from "./Untersberg";
 import UntersbergHidden from "./UntersbergHidden";
 import Clouds from "./Clouds";
 import FlagTop from "./FlagTop";
-import { UserDataContext } from "../UserDataProvider";
-import dataManager from "../DataManager";
-import CenteredActivityIndicator from "../CenteredActivityIndicator";
+import { UserDataContext } from "../../providers/UserDataProvider";
+import { TeamDataContext } from "../../providers/TeamDataProvider";
 
 export default function Challenge() {
-  const { userData, updated, mode, isUserDataLoading } =
-    useContext(UserDataContext);
+  const { userData, isUserDataLoading } = useContext(UserDataContext);
+  const { isUserInATeam, mode, teamChallengeData } =
+    useContext(TeamDataContext);
   const [teamRelativeStepCountToday, setTeamRelativeStepCountToday] =
-    useState(null);
+    useState(0);
   const [teamAbsoluteStepCountToday, setTeamAbsoluteStepCountToday] =
-    useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [teamAbsoluteStepGoal, setTeamAbsoluteStepGoal] = useState(null);
+    useState(0);
+  const [teamAbsoluteStepGoal, setTeamAbsoluteStepGoal] = useState(0);
 
   useEffect(() => {
-    let mounted = true;
-    if (!isUserDataLoading) {
-      if (userData.team) {
-        dataManager
-          .getTeamChallengeData(userData.team)
-          .then((data) => {
-            if (mounted) {
-              setTeamRelativeStepCountToday(data.progress / 100);
-              setTeamAbsoluteStepCountToday(data.total_steps);
-              setTeamAbsoluteStepGoal(data.teamMembersGoal);
-              setIsLoading(false);
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      } else {
-        setIsLoading(false);
-      }
+    if (!isUserDataLoading && isUserInATeam) {
+      setTeamRelativeStepCountToday(teamChallengeData.progress / 100);
+      setTeamAbsoluteStepCountToday(teamChallengeData.totalSteps);
+      setTeamAbsoluteStepGoal(teamChallengeData.teamMembersGoal);
     }
-    return () => {
-      mounted = false;
-    };
-  }, [updated, userData.team, mode]);
+  }, [
+    teamChallengeData.totalSteps,
+    teamChallengeData.progress,
+    teamChallengeData.teamMembersGoal,
+  ]);
 
   const { height, width } = useWindowDimensions();
   const windowHeight = height;
-  const windowWidth = width - 60;
+  const windowWidth = width;
 
   let untersbergSvgWidth;
   let untersbergSvgHeight;
@@ -69,7 +54,7 @@ export default function Challenge() {
     untersbergSvgHeight = untersbergSvgWidth / untersbergRelation;
     flagSvgHeight = untersbergSvgWidth / flagRelation;
   }
-  let progressPosition;
+  let progressPosition = 0;
 
   if (teamRelativeStepCountToday >= 1) {
     progressPosition =
@@ -81,22 +66,18 @@ export default function Challenge() {
       (untersbergSvgViewBoxHeight - 10 - 7.5) * teamRelativeStepCountToday;
   }
 
-  if (isLoading)
-    return <CenteredActivityIndicator height={untersbergSvgViewBoxHeight} />;
-
   if (!userData.team) {
     return (
       <View
         style={{
-          paddingTop: 10,
           height:
             untersbergSvgHeight +
             untersbergSvgHeight / 3.5 +
             flagSvgHeight +
             10,
-          margin: 10,
           backgroundColor: "#99bfcf",
           justifyContent: "flex-end",
+          alignItems: "center",
         }}
       >
         <UntersbergHidden
@@ -151,12 +132,11 @@ const style = StyleSheet.create({
     paddingTop: 10,
     alignItems: "center",
     backgroundColor: "#99bfcf",
-    margin: 10,
     justifyContent: "flex-end",
+    marginBottom: 10,
   },
   containerAbsolute: {
     width: "100%",
-
     paddingBottom: 10,
     position: "absolute",
     justifyContent: "center",

@@ -33,7 +33,10 @@ export default function TeamChartRelative({
           <Button
             style={{ margin: 5 }}
             onPress={() => {
-              setSelectedUser(member);
+              setSelectedUser({
+                username: member.username,
+                expoToken: member.expoToken,
+              });
               showDialog();
             }}
             mode="contained"

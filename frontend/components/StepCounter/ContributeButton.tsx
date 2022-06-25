@@ -1,54 +1,65 @@
 // https://snack.expo.dev/@yoobit0616/pedometer-functional
 
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import dataManager from "../DataManager";
 import { Text, View, TouchableOpacity } from "react-native";
 import { style as stepCounterStyles } from "./StepCounterStyles";
-import { Foundation, FontAwesome } from "@expo/vector-icons";
-import { UserDataContext } from "../UserDataProvider";
+import { LinearGradient } from "expo-linear-gradient";
+
+import { UserDataContext } from "../../providers/UserDataProvider";
+import { UpdateContext } from "../../providers/UpdateProvider";
 
 export default function ContributeButton({
   isLoadingStepCounter,
+  isErrorStepCounter,
   newSteps,
   resetStepsAfterContribution,
 }) {
   const [isLoading, setIsLoading] = useState(false);
-  const { userData, updated, setUpdated } = useContext(UserDataContext);
-  const disabled = newSteps === 0 || isLoading || isLoadingStepCounter;
+  const { userData } = useContext(UserDataContext);
+  const { stepsPushedIndicator, setStepsPushedIndicator } =
+    useContext(UpdateContext);
+
+  const [isDisabled, setIsDisabled] = useState(true);
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    setIsDisabled(
+      newSteps === 0 || isLoading || isLoadingStepCounter || isErrorStepCounter
+    );
+  }, [newSteps, isLoading, isLoadingStepCounter]);
+
   return (
-    <TouchableOpacity
-      disabled={disabled}
-      style={
-        disabled
-          ? stepCounterStyles.contributeStepsButtonDisabled
-          : stepCounterStyles.contributeStepsButton
-      }
-      onPress={() => {
-        if (!isLoading) {
-          setIsLoading(true);
-          dataManager.pushSteps(userData.id, newSteps).then((worked) => {
-            if (worked) {
-              resetStepsAfterContribution();
-              setUpdated(updated!);
-            } else setError("true");
-            setIsLoading(false);
-          });
-        }
-      }}
-    >
-      <View style={stepCounterStyles.icons}>
-        <FontAwesome
-          style={{ marginRight: 5 }}
-          name="plus"
-          size={15}
-          color="white"
-        />
-        <Foundation name="foot" size={30} color="white" />
-      </View>
-      <Text style={stepCounterStyles.buttonText}>Contribute new steps</Text>
-    </TouchableOpacity>
+    <>
+      <LinearGradient
+        colors={isDisabled ? ["#6d6d6d", "#6d6d6d"] : ["#3f5c7c", "#558dad"]}
+        style={stepCounterStyles.contributeStepsButtonColor}
+      >
+        <TouchableOpacity
+          disabled={isDisabled}
+          style={stepCounterStyles.contributeStepsButton}
+          onPress={() => {
+            if (!isLoading) {
+              setIsLoading(true);
+              dataManager.pushSteps(userData.id, newSteps).then((worked) => {
+                if (worked) {
+                  resetStepsAfterContribution();
+                  setStepsPushedIndicator(!stepsPushedIndicator);
+                } else setError("true");
+                setIsLoading(false);
+              });
+            }
+          }}
+        >
+          <View>
+            <Text style={stepCounterStyles.buttonText}>Contribute</Text>
+            <Text style={stepCounterStyles.buttonStepsNumberText}>
+              {newSteps !== 0 ? newSteps : 0}
+            </Text>
+            <Text style={stepCounterStyles.buttonText}>new steps</Text>
+          </View>
+        </TouchableOpacity>
+      </LinearGradient>
+    </>
   );
 }
-TouchableOpacity;

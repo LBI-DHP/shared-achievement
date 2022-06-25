@@ -1,144 +1,128 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { UserDataContext } from "../UserDataProvider";
-import dataManager from "../DataManager";
+import { ScrollView, View, Text, useWindowDimensions } from "react-native";
+import { UserDataContext } from "../../providers/UserDataProvider";
+import { TeamDataContext } from "../../providers/TeamDataProvider";
 import { Foundation } from "@expo/vector-icons";
 
 export default function TeamContributions() {
-  const { userData, updated, mode } = useContext(UserDataContext);
-  const [teamMembersAndStepCountsOfToday, setTeamMembersAndStepCountsOfToday] =
-    useState([]);
+  const { userData } = useContext(UserDataContext);
+  const { mode, teamMembersAndStepCountOfToday } = useContext(TeamDataContext);
+  const [elementWidth, setElementWidth] = useState(0);
+
+  const { width } = useWindowDimensions();
+  const windowWidth = width;
+  const parentPadding = 1;
+  const elementPadding = 5;
+  const elementBoarder = 1;
+  const elementMargin = 5;
+  let elementSpaces = (elementBoarder + elementMargin) * 2;
 
   useEffect(() => {
-    let mounted = true;
-    dataManager
-      .getTeamMembersAndStepCountOfToday(userData.team)
-      .then((teamMembersStepCountOfToday) => {
-        if (mounted && teamMembersStepCountOfToday !== null)
-          teamMembersStepCountOfToday.sort((a, b) =>
-            a.userProgress < b.userProgress
-              ? 1
-              : b.userProgress < a.userProgress
-              ? -1
-              : 0
-          );
-        setTeamMembersAndStepCountsOfToday(teamMembersStepCountOfToday);
-      });
-    return () => {
-      mounted = false;
-    };
-  }, [updated]);
+    if (teamMembersAndStepCountOfToday.length !== 0) {
+      let elementMinInnerWidth = 75;
+      let numOfElements = teamMembersAndStepCountOfToday.length;
+      let availableSpaceInParent = windowWidth - parentPadding * 2;
+      let elementsPerRow = Math.floor(
+        availableSpaceInParent / (elementMinInnerWidth + elementSpaces)
+      );
+      let numOfRows = numOfElements / elementsPerRow;
+      if (!Number.isInteger(numOfRows)) numOfRows = Math.floor(numOfRows) + 1;
+      if (numOfRows > 1 && numOfElements % elementsPerRow !== 0) {
+        let numOfElementsLastRow = numOfElements % elementsPerRow;
+        let emptyElementsInLastRow = elementsPerRow - numOfElementsLastRow;
+        let emptyElementsPerRow = Math.floor(
+          emptyElementsInLastRow / numOfRows
+        );
+        elementsPerRow = elementsPerRow - emptyElementsPerRow;
+      } else if (numOfRows === 1) elementsPerRow = numOfElements;
+
+      let availableSpacePerElement = availableSpaceInParent / elementsPerRow;
+      if (!availableSpacePerElement)
+        availableSpacePerElement = elementMinInnerWidth;
+
+      setElementWidth(availableSpacePerElement - elementSpaces);
+    }
+  }, [teamMembersAndStepCountOfToday]);
 
   return (
     <View
       style={{
-        paddingLeft: 10,
-        paddingRight: 10,
         flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "flex-start",
+        width: "100%",
+        padding: parentPadding,
         flexWrap: "wrap",
-        paddingBottom: 5,
+        justifyContent: "center",
+        alignContent: "center",
       }}
     >
-      {teamMembersAndStepCountsOfToday.map((member) => {
-        if (mode === "RELATIVE") {
-          return (
-            <View
-              style={
-                member.username !== userData.username
-                  ? style.viewMember
-                  : style.viewMe
-              }
-              key={member.username}
-            >
-              <View style={style.viewContribution}>
-                <Text style={style.textContribution}>
-                  {Math.round(member.userProgress * 100)}
+      {teamMembersAndStepCountOfToday.map((member) => {
+        return (
+          <View
+            style={
+              member.username !== userData.username
+                ? {
+                    margin: elementMargin,
+                    flexDirection: "column",
+                    padding: elementPadding,
+                    paddingBottom: 0,
+                    borderWidth: elementBoarder,
+                    borderColor: "#7ebdd8",
+                    borderRadius: 5,
+                    width: elementWidth,
+                  }
+                : {
+                    margin: elementMargin,
+                    flexDirection: "column",
+                    padding: elementPadding - 1,
+                    paddingBottom: 0,
+                    borderWidth: elementBoarder + 1,
+                    borderColor: "#7ebdd8",
+                    backgroundColor: "#e6f7ff",
+                    borderRadius: 5,
+                    width: elementWidth,
+                  }
+            }
+            key={member.username}
+          >
+            <View>
+              <View
+                style={{
+                  flexDirection: "row",
+                }}
+              >
+                <Text style={{ fontWeight: "bold" }}>
+                  {mode === "ABSOLUTE"
+                    ? member.sumSteps
+                    : Math.round(member.userProgress * 100)}
                 </Text>
-                <Text style={style.unitContribution}> %</Text>
-              </View>
-              <Text style={style.name}>
-                {member.username === userData.username ? (
-                  <Text style={{ fontWeight: "normal" }}>me</Text>
-                ) : (
-                  truncateString(member.username, 4)
-                )}
-              </Text>
-            </View>
-          );
-        } else if (mode === "ABSOLUTE") {
-          return (
-            <View
-              style={
-                member.username !== userData.username
-                  ? style.viewMember
-                  : style.viewMe
-              }
-              key={member.username}
-            >
-              <View style={style.viewContribution}>
-                <Text style={style.textContribution}>{member.sumSteps}</Text>
-                <Text style={style.unitContribution}>
+                <Text>
                   {" "}
-                  <Foundation name="foot" size={15} color="black" />
+                  {mode === "ABSOLUTE" ? (
+                    <Foundation name="foot" size={15} color="black" />
+                  ) : (
+                    "%"
+                  )}
                 </Text>
               </View>
-              <Text style={style.name}>
-                {member.username === userData.username ? (
-                  <Text style={{ fontWeight: "normal" }}>me</Text>
-                ) : (
-                  truncateString(member.username, 4)
-                )}
-              </Text>
+              <ScrollView
+                horizontal={true}
+                style={{ paddingBottom: elementPadding }}
+              >
+                <Text
+                  style={{
+                    marginTop: -2,
+                    color: "black",
+                  }}
+                >
+                  {member.username === userData.username
+                    ? member.username + " (me)"
+                    : member.username}
+                </Text>
+              </ScrollView>
             </View>
-          );
-        }
+          </View>
+        );
       })}
     </View>
   );
 }
-
-function truncateString(str, num) {
-  if (str.length > num) {
-    return str.slice(0, num) + "…";
-  }
-  return str;
-}
-
-export const style = StyleSheet.create({
-  name: {
-    fontWeight: "bold",
-    marginTop: -3,
-    color: "black",
-  },
-  textContribution: {
-    fontWeight: "bold",
-    color: "black",
-  },
-  unitContribution: { color: "black" },
-  viewContribution: {
-    flexDirection: "row",
-  },
-  viewMember: {
-    flexDirection: "column",
-    padding: 5,
-    borderWidth: 1,
-    borderColor: "#7ebdd8",
-    borderRadius: 5,
-    width: 70,
-    marginRight: 5,
-    marginBottom: 5,
-  },
-  viewMe: {
-    flexDirection: "column",
-    padding: 5,
-    borderWidth: 1,
-    borderColor: "#ffbb00",
-    borderRadius: 5,
-    width: 70,
-    marginRight: 5,
-    marginBottom: 5,
-    fontWeight: "normal",
-  },
-});

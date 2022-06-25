@@ -4,7 +4,9 @@ import useCachedResources from "./hooks/useCachedResources";
 import { AppRegistry } from "react-native";
 import appJson from "./app.json";
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
-import { UserDataProvider } from "./components/UserDataProvider";
+import { UserDataProvider } from "./providers/UserDataProvider";
+import { UpdateProvider } from "./providers/UpdateProvider";
+import { TeamDataProvider } from "./providers/TeamDataProvider";
 import AppView from "./components/AppView";
 
 const theme = {
@@ -25,11 +27,15 @@ export default function App() {
   } else {
     return (
       <UserDataProvider>
-        <SafeAreaProvider>
-          <PaperProvider theme={theme}>
-            <AppView />
-          </PaperProvider>
-        </SafeAreaProvider>
+        <UpdateProvider>
+          <TeamDataProvider>
+            <SafeAreaProvider>
+              <PaperProvider theme={theme}>
+                <AppView />
+              </PaperProvider>
+            </SafeAreaProvider>
+          </TeamDataProvider>
+        </UpdateProvider>
       </UserDataProvider>
     );
   }

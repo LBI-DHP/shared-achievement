@@ -1,25 +1,40 @@
-import React, { useState } from "react";
-import { View, Text } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, Keyboard, Platform } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { style } from "../constants/Styles";
 import dataManager from "../components/DataManager";
-import * as Google from "expo-auth-session/providers/google";
 import configJSON from "../config.json";
 import * as WebBrowser from "expo-web-browser";
 
-WebBrowser.maybeCompleteAuthSession();
-
 export default function ConnectToGoogleFit({ setIsConnectedToGoogleFit }) {
   const [authorizationCode, setAuthorizationCode] = useState("");
-  const [authRequest, authResponse, authPromptAsync] = Google.useAuthRequest({
-    androidClientId: configJSON.googleConfig.clientID,
-    expoClientId: configJSON.googleConfig.clientID,
-    clientId: configJSON.googleConfig.clientID,
-    redirectUri: configJSON.googleConfig.redirectUri,
-    responseType: "code",
-    scopes: configJSON.googleConfig.scopes,
-  });
   const [error, setError] = useState("");
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+      setIsKeyboardOpen(true);
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      setIsKeyboardOpen(false);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
+
+  const redirectToGoogleLogin = async () => {
+    WebBrowser.openBrowserAsync(
+      "https://accounts.google.com/o/oauth2/v2/auth?scope=" +
+        configJSON.googleConfig.scope +
+        "&access_type=offline&response_type=code&redirect_uri=" +
+        configJSON.googleConfig.redirectUri +
+        "&client_id=" +
+        configJSON.googleConfig.clientID
+    );
+  };
 
   const getFirstToken = async () => {
     try {
@@ -28,8 +43,8 @@ export default function ConnectToGoogleFit({ setIsConnectedToGoogleFit }) {
         body: JSON.stringify({
           code: authorizationCode,
           client_id: configJSON.googleConfig.clientID,
+          client_secret: configJSON.googleConfig.clientSecret,
           grant_type: "authorization_code",
-          code_verifier: authRequest.codeVerifier,
           redirect_uri: configJSON.googleConfig.redirectUri,
         }),
       });
@@ -61,21 +76,24 @@ export default function ConnectToGoogleFit({ setIsConnectedToGoogleFit }) {
 
   return (
     <View style={style.containerPaddingTop}>
-      <Text style={style.heading}>Enable Step Count</Text>
-      <Text style={style.subheading}>
-        Please login with your Google Account and grant access to your Google
-        Fit data on physical activity.
-      </Text>
-      <Button
-        mode="contained"
-        disabled={!authRequest}
-        onPress={() => {
-          authPromptAsync();
-        }}
-        style={{ marginBottom: 10 }}
-      >
-        Login to Google
-      </Button>
+      {!(isKeyboardOpen && Platform.OS === "ios") && (
+        <>
+          <Text style={style.heading}>Enable Step Count</Text>
+          <Text style={style.subheading}>
+            Please login with your Google Account and grant access to your
+            Google Fit data on physical activity.
+          </Text>
+          <Button
+            mode="contained"
+            onPress={() => {
+              redirectToGoogleLogin();
+            }}
+            style={{ marginBottom: 10 }}
+          >
+            Login to Google
+          </Button>
+        </>
+      )}
       <Text style={style.subheading}>
         Copy the authorization code, you will receive after login, and paste it
         here:

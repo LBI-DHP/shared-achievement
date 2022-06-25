@@ -15,14 +15,14 @@ export const UserDataContext = React.createContext({
     showDeveloperSettings: false,
   },
   setUserData: ({}) => {},
-  updated: false,
-  setUpdated: ({}) => {},
-  mode: null,
-  setMode: ({}) => {},
   navigationIndex: 0,
   setNavigationIndex: ({}) => {},
   isUserDataLoading: true,
   userDataLoadingError: false,
+  useGoogleFit: false,
+  setUseGoogleFit: ({}) => {},
+  isConnectedToGoogleFit: false,
+  setIsConnectedToGoogleFit: ({}) => {},
 });
 
 export const UserDataProvider = (props) => {
@@ -36,12 +36,12 @@ export const UserDataProvider = (props) => {
     showDeveloperSettings: false,
   });
 
-  const [updated, setUpdated] = useState(false);
-  const [mode, setMode] = useState(null);
   const [navigationIndex, setNavigationIndex] = useState(0);
   const [notification, setNotification] = useState(null);
   const [isUserDataLoading, setIsUserDataLoading] = useState(true);
   const [userDataLoadingError, setUserDataLoadingError] = useState(false);
+  const [useGoogleFit, setUseGoogleFit] = useState(false);
+  const [isConnectedToGoogleFit, setIsConnectedToGoogleFit] = useState(false);
 
   const notificationListener = useRef(null);
   const responseListener = useRef(null);
@@ -53,6 +53,16 @@ export const UserDataProvider = (props) => {
       shouldSetBadge: false,
     }),
   });
+
+  useEffect(() => {
+    let mounted = true;
+    dataManager.getGoogleAuthInfo().then((authInfo) => {
+      if (authInfo != null && mounted) setIsConnectedToGoogleFit(true);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const createNewUser = (mounted) => {
     dataManager
@@ -83,6 +93,9 @@ export const UserDataProvider = (props) => {
 
   useEffect(() => {
     let mounted = true;
+    dataManager.getUseGoogleFit().then((use) => {
+      if (mounted) setUseGoogleFit(use);
+    });
     dataManager
       .getUserId()
       .then((id) => {
@@ -130,14 +143,14 @@ export const UserDataProvider = (props) => {
       value={{
         userData,
         setUserData,
-        updated,
-        setUpdated,
-        mode,
-        setMode,
         navigationIndex,
         setNavigationIndex,
         isUserDataLoading,
         userDataLoadingError,
+        useGoogleFit,
+        setUseGoogleFit,
+        isConnectedToGoogleFit,
+        setIsConnectedToGoogleFit,
       }}
     >
       {props.children}

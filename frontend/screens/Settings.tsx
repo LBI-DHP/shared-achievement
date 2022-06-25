@@ -3,13 +3,12 @@ import { View, Text } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { style } from "../constants/Styles";
 import { useEffect, useState } from "react";
-import { UserDataContext } from "../components/UserDataProvider";
+import { UserDataContext } from "../providers/UserDataProvider";
 import dataManager from "../components/DataManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Settings() {
-  const { userData, setUserData, updated, setUpdated } =
-    useContext(UserDataContext);
+  const { userData, setUserData } = useContext(UserDataContext);
   const [error, setError] = useState("");
   const [isUserNameChanged, setIsUserNameChanged] = useState(false);
   const [newUserName, setNewUserName] = useState(userData.username);

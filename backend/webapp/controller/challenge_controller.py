@@ -7,7 +7,7 @@ from playhouse.signals import post_save, pre_save
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from peewee import fn
 from controller.push_notifications import send_push_notification
-from config import MIN_STEPS_TO_PUSH_NOTIFICATION
+from app import conf
 teams_to_update = []
 
 
@@ -63,7 +63,7 @@ def on_save_steps(sender, instance: StepCount, created):
             progress  = (instance.steps / instance.user.targetGoal) * 100
             msg_body = f"""Awesome! {contributor.username} contributed {int(round(progress))} % to your challenge."""
         msg_type = 'STEPS_CONTRIBUTION'
-        if instance.steps > MIN_STEPS_TO_PUSH_NOTIFICATION:
+        if instance.steps > conf.MIN_STEPS_TO_PUSH_NOTIFICATION:
             send_push_notification(sender_user_id=contributor.id, receiver_user_id=row['user_id'], title=msg_title, body=msg_body, type=msg_type)
         logger.log(logging.INFO, f"post save hook send mesage to {row}")
 

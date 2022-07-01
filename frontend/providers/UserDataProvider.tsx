@@ -93,31 +93,33 @@ export const UserDataProvider = (props) => {
 
   useEffect(() => {
     let mounted = true;
-    dataManager.getUseGoogleFit().then((use) => {
-      if (mounted) setUseGoogleFit(use);
-    });
-    dataManager
-      .getUserId()
-      .then((id) => {
-        if (id) {
-          dataManager.getUserData(id).then((data) => {
-            if (mounted) {
-              if (data === -1) {
-                setUserDataLoadingError(true);
-                setIsUserDataLoading(false);
-              } else if (data === null) {
-                createNewUser(mounted);
-              } else {
-                setUserData(data);
-                setIsUserDataLoading(false);
+    if (userData.id === null) {
+      dataManager.getUseGoogleFit().then((use) => {
+        if (mounted) setUseGoogleFit(use);
+      });
+      dataManager
+        .getUserId()
+        .then((id) => {
+          if (id) {
+            dataManager.getUserData(id).then((data) => {
+              if (mounted) {
+                if (data === -1) {
+                  setUserDataLoadingError(true);
+                  setIsUserDataLoading(false);
+                } else if (data === null) {
+                  createNewUser(mounted);
+                } else {
+                  setUserData(data);
+                  setIsUserDataLoading(false);
+                }
               }
-            }
-          });
-        } else {
-          createNewUser(mounted);
-        }
-      })
-      .catch((e) => console.log("Error:", e));
+            });
+          } else {
+            createNewUser(mounted);
+          }
+        })
+        .catch((e) => console.log("Error:", e));
+    }
 
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
@@ -136,7 +138,7 @@ export const UserDataProvider = (props) => {
       );
       Notifications.removeNotificationSubscription(responseListener.current);
     };
-  }, []);
+  }, [userData.id]);
 
   return (
     <UserDataContext.Provider

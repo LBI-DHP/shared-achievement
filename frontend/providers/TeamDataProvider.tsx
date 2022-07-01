@@ -6,14 +6,12 @@ import { UpdateContext } from "./UpdateProvider";
 export const TeamDataContext = React.createContext({
   teamName: null,
   mode: null,
-  isUserInATeam: false,
   teamMembersAndStepCountOfToday: [],
   teamChallengeData: { progress: 0, totalSteps: 0, teamMembersGoal: 0 },
   isTeamMembersAndStepCountOfTodayLoading: true,
 });
 
 export const TeamDataProvider = (props) => {
-  const [isUserInATeam, setIsUserInATeam] = useState(false);
   const [mode, setMode] = useState(null);
   const [teamName, setTeamName] = useState(null);
   const [teamMembersAndStepCountOfToday, setTeamMembersAndStepCountOfToday] =
@@ -33,17 +31,12 @@ export const TeamDataProvider = (props) => {
     useContext(UpdateContext);
 
   useEffect(() => {
-    if (userData.team !== null) {
-      setIsUserInATeam(true);
-    } else {
-      setIsUserInATeam(false);
-      setMode(null);
-    }
+    if (userData.team === null) setMode(null);
   }, [userData.team]);
 
   useEffect(() => {
     let mounted = true;
-    if (isUserInATeam && mounted) {
+    if (userData.team && mounted) {
       dataManager.getTeamData(userData.team).then((data) => {
         if (mounted && data) {
           setTeamName(data.name);
@@ -51,11 +44,11 @@ export const TeamDataProvider = (props) => {
         }
       });
     }
-  }, [isUserInATeam]);
+  }, [userData.team]);
 
   useEffect(() => {
     let mounted = true;
-    if (isUserInATeam && mode) {
+    if (userData.team && mode) {
       dataManager
         .getTeamMembersAndStepCountOfToday(userData.team, mode)
         .then((data) => {
@@ -98,7 +91,7 @@ export const TeamDataProvider = (props) => {
     apiReloadIndicator,
     stepsPushedIndicator,
     midnightIndicator,
-    isUserInATeam,
+    userData.team,
   ]);
 
   return (
@@ -106,7 +99,6 @@ export const TeamDataProvider = (props) => {
       value={{
         mode,
         teamName,
-        isUserInATeam,
         teamMembersAndStepCountOfToday,
         teamChallengeData,
         isTeamMembersAndStepCountOfTodayLoading,

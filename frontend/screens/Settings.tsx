@@ -8,20 +8,35 @@ import dataManager from "../components/DataManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Settings() {
-  const { userData, setUserData } = useContext(UserDataContext);
-  const [error, setError] = useState("");
+  const {
+    userData,
+    setUserData,
+    isConnectedToGoogleFit,
+    setIsConnectedToGoogleFit,
+  } = useContext(UserDataContext);
+  const [userNameError, setUserNameError] = useState("");
+  const [googleFitError, setGoogleFitError] = useState(false);
   const [isUserNameChanged, setIsUserNameChanged] = useState(false);
   const [newUserName, setNewUserName] = useState(userData.username);
+  const [googleAccessToken, setGoogleAccessToken] = useState(null);
 
   useEffect(() => {
     if (newUserName === userData.username) setIsUserNameChanged(false);
     else setIsUserNameChanged(true);
-  }, [userData]);
+  }, [userData.username, newUserName]);
 
   useEffect(() => {
-    if (newUserName === userData.username) setIsUserNameChanged(false);
-    else setIsUserNameChanged(true);
-  }, [newUserName]);
+    let mounted = true;
+    dataManager.getGoogleAuthInfo().then((authInfo) => {
+      if (authInfo != null && authInfo.access_token) {
+        if (mounted) setGoogleAccessToken(authInfo.access_token);
+      }
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <View style={style.container}>
@@ -37,16 +52,18 @@ export default function Settings() {
         disabled={!isUserNameChanged}
         mode="contained"
         onPress={() => {
-          setError("");
+          setUserNameError("");
           const newUserData = {
             ...userData,
             username: newUserName,
           };
           dataManager.updateUserData(newUserData).then((data) => {
             if (data === -1)
-              setError("🚨 Error: Please check your internet connection.");
+              setUserNameError(
+                "🚨 Error: Please check your internet connection."
+              );
             else if (data === null)
-              setError(
+              setUserNameError(
                 "🚨 Internal Server Error: Please try again or contact the administrator."
               );
             else setUserData(data);
@@ -55,25 +72,71 @@ export default function Settings() {
       >
         Update user name
       </Button>
-      {error.length > 0 && <Text style={{ marginTop: 2 }}>{error}</Text>}
+      {userNameError.length > 0 && (
+        <Text style={{ marginTop: 2 }}>{userNameError}</Text>
+      )}
+      {isConnectedToGoogleFit && (
+        <Button
+          style={{ marginTop: 10 }}
+          mode="contained"
+          onPress={() => {
+            dataManager
+              .disconnectFromGoogleFit(googleAccessToken)
+              .then((worked) => {
+                if (worked) setIsConnectedToGoogleFit(false);
+                else setGoogleFitError(true);
+              });
+          }}
+        >
+          Disconnect App from Google Fit
+        </Button>
+      )}
       <Button
         style={{ marginTop: 10 }}
         mode="contained"
         onPress={() => {
-          dataManager.deleteGoogleAuthInfo();
-        }}
-      >
-        Disconnect App from Google Fit
-      </Button>
-      <Button
-        style={{ marginTop: 10 }}
-        mode="contained"
-        onPress={() => {
-          AsyncStorage.clear();
+          if (isConnectedToGoogleFit) {
+            dataManager
+              .disconnectFromGoogleFit(googleAccessToken)
+              .then((worked) => {
+                if (worked) {
+                  AsyncStorage.clear().then(() => {
+                    setUserData({
+                      id: null,
+                      username: null,
+                      team: null,
+                      expoToken: null,
+                      password: null,
+                      targetGoal: null,
+                      showDeveloperSettings: false,
+                    });
+                    setIsConnectedToGoogleFit(false);
+                  });
+                } else setGoogleFitError(true);
+              });
+          } else
+            AsyncStorage.clear().then(() => {
+              setUserData({
+                id: null,
+                username: null,
+                team: null,
+                expoToken: null,
+                password: null,
+                targetGoal: null,
+                showDeveloperSettings: false,
+              });
+            });
         }}
       >
         Clear local storage
       </Button>
+
+      {googleFitError && (
+        <Text style={{ paddingTop: 10 }}>
+          🚨 Error: Could not disconnect from Google Fit. Please check the
+          internet connection.
+        </Text>
+      )}
     </View>
   );
 }

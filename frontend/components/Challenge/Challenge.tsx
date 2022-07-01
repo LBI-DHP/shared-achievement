@@ -9,8 +9,7 @@ import { TeamDataContext } from "../../providers/TeamDataProvider";
 
 export default function Challenge() {
   const { userData, isUserDataLoading } = useContext(UserDataContext);
-  const { isUserInATeam, mode, teamChallengeData } =
-    useContext(TeamDataContext);
+  const { mode, teamChallengeData } = useContext(TeamDataContext);
   const [teamRelativeStepCountToday, setTeamRelativeStepCountToday] =
     useState(0);
   const [teamAbsoluteStepCountToday, setTeamAbsoluteStepCountToday] =
@@ -18,7 +17,7 @@ export default function Challenge() {
   const [teamAbsoluteStepGoal, setTeamAbsoluteStepGoal] = useState(0);
 
   useEffect(() => {
-    if (!isUserDataLoading && isUserInATeam) {
+    if (!isUserDataLoading && userData.team) {
       setTeamRelativeStepCountToday(teamChallengeData.progress / 100);
       setTeamAbsoluteStepCountToday(teamChallengeData.totalSteps);
       setTeamAbsoluteStepGoal(teamChallengeData.teamMembersGoal);

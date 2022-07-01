@@ -304,8 +304,12 @@ def manual():
 
 @app.route('/redirect_uri')
 def redirect_uri():
-
-    return jsonify(dict(url_parse.parse_qsl(url_parse.urlsplit(request.url).query)))
+    d = dict(url_parse.parse_qsl(url_parse.urlsplit(request.url).query))
+    if 'code' in d:
+        code = d['code']
+        return code
+    else:
+        return jsonify(d)
     return request.url
 
 

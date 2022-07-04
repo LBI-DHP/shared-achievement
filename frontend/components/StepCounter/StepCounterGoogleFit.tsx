@@ -342,24 +342,11 @@ export default function StepCounter() {
                 mode="outlined"
                 onPress={() => {
                   setIsGoogleFitLoading(true);
-                  fetch(
-                    "https://oauth2.googleapis.com/revoke?token=" +
-                      googleAuthInfo.access_token,
-                    {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                      },
-                    }
-                  )
-                    .then((response) => {
-                      if (response.status) {
-                        dataManager.deleteGoogleAuthInfo();
-                        setIsConnectedToGoogleFit(false);
-                      }
-                    })
-                    .catch(() => {
-                      setIsGoogleFitLoading(false);
+                  dataManager
+                    .disconnectFromGoogleFit(googleAuthInfo.access_token)
+                    .then((worked) => {
+                      if (worked) setIsConnectedToGoogleFit(false);
+                      else setIsGoogleFitLoading(false);
                     });
                 }}
               >

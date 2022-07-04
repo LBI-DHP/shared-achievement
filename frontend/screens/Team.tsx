@@ -11,7 +11,7 @@ import dataManager from "../components/DataManager";
 
 export default function Team() {
   const { userData, setUserData } = useContext(UserDataContext);
-  const { teamName, isUserInATeam } = useContext(TeamDataContext);
+  const { teamName } = useContext(TeamDataContext);
 
   const { setApiReloadIndicator, apiReloadIndicator } =
     useContext(UpdateContext);
@@ -21,14 +21,14 @@ export default function Team() {
 
   return (
     <>
-      {isUserInATeam ? (
+      {userData.team ? (
         <>
           <Text style={style.header}>Go, team {teamName}!</Text>
           <ScrollView style={{ marginBottom: 0 }}>
             <TeamList />
             <Button
               style={{ margin: 10 }}
-              disabled={!isUserInATeam}
+              disabled={!userData.team}
               mode="outlined"
               onPress={() => {
                 setIsLeaveTeamDialogVisible(true);

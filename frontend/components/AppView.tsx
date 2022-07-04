@@ -24,8 +24,8 @@ export default function AppView() {
   useEffect(() => {
     if (userData && userData.username !== null) {
       setIsUserNameSet(true);
-    }
-  }, [userData]);
+    } else setIsUserNameSet(false);
+  }, [userData.username]);
 
   if (isUserDataLoading) return <CenteredActivityIndicator />;
   if (userDataLoadingError) return <NoInternetConnection />;

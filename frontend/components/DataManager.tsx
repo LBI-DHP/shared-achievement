@@ -44,6 +44,31 @@ export default class dataManager {
     }
   };
 
+  static disconnectFromGoogleFit = async (googleAccessToken) => {
+    let worked = await fetch(
+      "https://oauth2.googleapis.com/revoke?token=" + googleAccessToken,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    )
+      .then((response) => {
+        if (response.status) {
+          dataManager.deleteGoogleAuthInfo();
+          return true;
+        } else {
+          return false;
+        }
+      })
+      .catch(() => {
+        return false;
+      });
+
+    return worked;
+  };
+
   static getUserId = async () => {
     let id = await AsyncStorage.getItem("id");
     console.log("userID", id);

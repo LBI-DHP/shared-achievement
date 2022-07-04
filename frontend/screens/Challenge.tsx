@@ -23,8 +23,7 @@ export default function ChallengeScreen() {
     useGoogleFit,
   } = useContext(UserDataContext);
 
-  const { mode, teamName, isUserInATeam, teamChallengeData } =
-    useContext(TeamDataContext);
+  const { mode, teamName, teamChallengeData } = useContext(TeamDataContext);
 
   const [teamReachedSummit, setTeamReachedSummit] = useState(false);
   const [isTodaysPopUpVisible, setIsTodaysPopUpVisible] = useState(false);
@@ -40,7 +39,7 @@ export default function ChallengeScreen() {
 
   useEffect(() => {
     let mounted = true;
-    if (!isUserDataLoading && isUserInATeam) {
+    if (!isUserDataLoading && userData.team) {
       dataManager.getShowYesterdaysProgressPopUp().then((showPopUp) => {
         if (showPopUp) {
           const newDate = new Date();
@@ -76,17 +75,17 @@ export default function ChallengeScreen() {
     return () => {
       mounted = false;
     };
-  }, [isUserInATeam, isUserDataLoading]);
+  }, [userData.team, isUserDataLoading]);
 
   useEffect(() => {
-    if (isUserInATeam && teamChallengeData.progress) {
+    if (userData.team && teamChallengeData.progress) {
       setTeamReachedSummit(teamChallengeData.progress >= 100);
       setShowConfettiCannon(teamChallengeData.progress >= 100);
     } else {
       setTeamReachedSummit(false);
       setShowConfettiCannon(false);
     }
-  }, [teamChallengeData.progress, isUserInATeam]);
+  }, [teamChallengeData.progress, userData.team]);
 
   useEffect(() => {
     let mounted = true;

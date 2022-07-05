@@ -10,7 +10,7 @@ import logging
 from unicodedata import name
 from urllib.request import Request
 from urllib import parse as url_parse
-from flask import Response, jsonify, render_template, request  # ...etc , redirect, request, url_for
+from flask import Response, jsonify, render_template, request, url_for   # ...etc , redirect, request, url_for
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from sqlalchemy import null
 from app import app
@@ -337,3 +337,16 @@ def consent(user_id):
         return "Consent", 200
 
 
+@app.route("/all-routes")
+def all_links():
+    links = []
+    print(app.url_map)
+    #return "res" #jsonify("res")
+    for rule in app.url_map.iter_rules():
+        print(rule)
+        links.append(rule.rule)
+        # if len(rule.defaults) >= len(rule.arguments):
+        #     url = url_for(rule.endpoint, **(rule.defaults or {}))
+        #     links.append((url, rule.endpoint))
+    print(links)
+    return jsonify(links)

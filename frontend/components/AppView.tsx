@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import Header from "./Header";
 import Navigation from "./SABottomNavigation";
 import NavigationSettingsON from "./SABottomNavigationSettingsON";
-import { StatusBar } from "expo-status-bar";
+import SingleChallenge from "../screens/SingleChallenge";
 import WelcomeScreen from "../screens/Welcome";
 import ConnectToGoogleFit from "./ConnectToGoogleFit";
 import { UserDataContext } from "../providers/UserDataProvider";
@@ -19,18 +19,13 @@ export default function AppView() {
     isConnectedToGoogleFit,
     setIsConnectedToGoogleFit,
   } = useContext(UserDataContext);
-  const [isUserNameSet, setIsUserNameSet] = useState(false);
 
-  useEffect(() => {
-    if (userData && userData.username !== null) {
-      setIsUserNameSet(true);
-    } else setIsUserNameSet(false);
-  }, [userData.username]);
+  const isSingleUser = true;
 
   if (isUserDataLoading) return <CenteredActivityIndicator />;
   if (userDataLoadingError) return <NoInternetConnection />;
 
-  if (!isUserNameSet) return <WelcomeScreen />;
+  if (!userData.username) return <WelcomeScreen isSingleUser={isSingleUser} />;
   else if (
     (Platform.OS === "android" || useGoogleFit) &&
     !isConnectedToGoogleFit
@@ -42,16 +37,25 @@ export default function AppView() {
         }}
       />
     );
-
-  return (
-    <>
-      <Header />
-      {userData.showDeveloperSettings ? (
+  else if (userData.showDeveloperSettings) {
+    return (
+      <>
+        <Header />
         <NavigationSettingsON />
-      ) : (
+      </>
+    );
+  } else if (isSingleUser) {
+    return (
+      <>
+        <Header />
+        <SingleChallenge />
+      </>
+    );
+  } else
+    return (
+      <>
+        <Header />
         <Navigation />
-      )}
-      <StatusBar />
-    </>
-  );
+      </>
+    );
 }

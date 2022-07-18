@@ -13,7 +13,7 @@ import { Button } from "react-native-paper";
 import { MaterialIcons } from "@expo/vector-icons";
 import GoogleFitInfoDialog from "./GoogleFitInfoDialog";
 
-export default function StepCounter() {
+export default function StepCounterGoogleFit({ singleUser = false }) {
   const [googleAuthInfo, setGoogleAuthInfo] = useState({
     access_token: null,
     expires_in: null,
@@ -278,7 +278,8 @@ export default function StepCounter() {
     setStepsPushedIndicator(!stepsPushedIndicator);
   };
 
-  if (mode === "ABSOLUTE") {
+  // TODO/To-do/TO-DO Changes for single User here
+  if (singleUser || mode === "ABSOLUTE") {
     return (
       <>
         <ContributeButton

@@ -1,6 +1,6 @@
 // https://snack.expo.dev/@yoobit0616/pedometer-functional
 
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Pedometer } from "expo-sensors";
 import dataManager from "../DataManager";
 import { UserDataContext } from "../../providers/UserDataProvider";
@@ -11,7 +11,7 @@ import StepsBarChart from "./StepsBarChartRelative";
 import ContributeButton from "./ContributeButton";
 import { MaterialIcons } from "@expo/vector-icons";
 
-export default function StepCounter() {
+export default function StepCounterPedometerIOS({ singleUser = false }) {
   const [isPedometerAvailable, setIsPedometerAvailable] = useState(false);
   const [stepCountToday, setStepCountToday] = useState(0);
   const [currentStepCount, setCurrentStepCount] = useState(0);
@@ -121,7 +121,8 @@ export default function StepCounter() {
     setStepsPushedIndicator(!stepsPushedIndicator);
   };
 
-  if (mode === "ABSOLUTE") {
+  // TODO/To-do/TO-DO Changes for single User here
+  if (singleUser || mode === "ABSOLUTE") {
     return (
       <>
         {!isPedometerAvailable && !isPedometerLoading && (

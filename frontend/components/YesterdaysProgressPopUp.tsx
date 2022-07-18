@@ -7,18 +7,35 @@ export default function YesterdaysProgressPopUp({
   yesterdaysProgress,
   mode,
   yesterdaysSteps,
+  isSingleUser = false,
 }) {
   return (
     <Portal>
       <Dialog visible={isYesterdaysProgressPopUpVisible}>
         <Dialog.Content>
           <Paragraph style={{ paddingBottom: 10 }}>
-            {yesterdaysProgress >= 100 ? (
-              <>Well done!👏Your team made it to the summit yesterday.🥳🎉 </>
+            {isSingleUser ? (
+              <>
+                {yesterdaysProgress >= 100 ? (
+                  <>Well done!👏 You made it to the summit yesterday.🥳🎉 </>
+                ) : (
+                  <>
+                    Unfortunately, you did not make it to the summit yesterday.{" "}
+                  </>
+                )}
+              </>
             ) : (
               <>
-                Unfortunately, your team did not make it to the summit
-                yesterday.{" "}
+                {yesterdaysProgress >= 100 ? (
+                  <>
+                    Well done!👏 Your team made it to the summit yesterday.🥳🎉{" "}
+                  </>
+                ) : (
+                  <>
+                    Unfortunately, your team did not make it to the summit
+                    yesterday.{" "}
+                  </>
+                )}
               </>
             )}
             {mode === "ABSOLUTE" ? (

@@ -13,7 +13,7 @@ import dataManager from "../components/DataManager";
 import { UserDataContext } from "../providers/UserDataProvider";
 import * as Device from "expo-device";
 
-export default function Welcome() {
+export default function Welcome({ isSingleUser }) {
   const { userData, setUserData, setUseGoogleFit } =
     useContext(UserDataContext);
   const [userName, setUserName] = useState("");
@@ -133,7 +133,6 @@ export default function Welcome() {
               averageSteps: averageSteps,
             };
 
-            console.log(newUserData);
             setError("");
 
             dataManager.registerUser(newUserData).then((data) => {
@@ -157,6 +156,14 @@ export default function Welcome() {
                 );
               }
             });
+
+            // if (isSingleUser) {
+            //   dataManager.createNewTeam({
+            //     name: newUserData.username + "_" + newUserData.uniqueDeviceId,
+            //     progressCalculationMode: "ABSOLUTE",
+            //   });
+            //   // TODO/To-do/TO-DO create and join that team
+            // }
           }}
         >
           Get started

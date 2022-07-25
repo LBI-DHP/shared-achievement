@@ -1,19 +1,16 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import uuid from "react-native-uuid";
 import configJSON from "../config.json";
 import base64 from "react-native-base64";
+import * as SecureStore from "expo-secure-store";
 
 export default class dataManager {
-  static mapResponseUserDataToUserData = async (responseUserData) => {
-    if (!responseUserData.password) {
-      responseUserData.password = await this.getUserPassword();
-    }
+  static mapResponseUserDataToUserData = (responseUserData) => {
     return {
+      uniqueDeviceId: responseUserData.uniqueDeviceId,
       id: responseUserData.id,
       username: responseUserData.username,
       team: responseUserData.team,
       expoToken: responseUserData.expoToken,
-      password: responseUserData.password,
       targetGoal: responseUserData.targetGoal,
       showDeveloperSettings: responseUserData.showDeveloperSettings,
     };
@@ -70,18 +67,18 @@ export default class dataManager {
   };
 
   static getUserId = async () => {
-    let id = await AsyncStorage.getItem("id");
+    let id = await SecureStore.getItemAsync("id");
     console.log("userID", id);
     return id;
   };
 
   static setUserId = async (id) => {
     try {
-      await AsyncStorage.setItem("id", id.toString());
+      await SecureStore.setItemAsync("id", id.toString());
     } catch (e) {
       console.log(e);
     } finally {
-      console.log("User ID (", id, ") was set in local storage");
+      console.log("User ID (", id, ") was set in secure storage");
     }
   };
 
@@ -99,23 +96,6 @@ export default class dataManager {
     let useGoogleFit = await AsyncStorage.getItem("useGoogleFit");
     console.log("useGoogleFit", useGoogleFit);
     return useGoogleFit === "true";
-  };
-
-  static getUserPassword = async () => {
-    let password = null;
-    try {
-      password = await AsyncStorage.getItem("uuid");
-      if (password == null) {
-        console.log("generate password");
-        password = uuid.v4().toString(); // something like '11edc52b-2918-4d71-9058-f7285e29d894'
-        await AsyncStorage.setItem("password", password);
-      }
-    } catch (e) {
-      console.log(e);
-    } finally {
-      console.log("Password was set/retrieved from local storage");
-    }
-    return password.toString();
   };
 
   static getShowReachedSummitPopUp = async () => {
@@ -184,6 +164,38 @@ export default class dataManager {
     }
   };
 
+  static getUserDataByUniqueDeviceId = async (uniqueDeviceId) => {
+    try {
+      const response = await fetch(
+        configJSON.serverConfig.root +
+          "/api/user/?uniqueDeviceId=" +
+          uniqueDeviceId,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          const responseJSON = await response.json();
+          if (responseJSON && responseJSON.objects && responseJSON.objects[0])
+            return this.mapResponseUserDataToUserData(responseJSON.objects[0]);
+        }
+      }
+      return null;
+    } catch (error) {
+      console.log("error on get user data:" + error);
+      return -1;
+    } finally {
+      console.log("done with get user request");
+    }
+  };
+
   static getUserData = async (userid) => {
     try {
       const response = await fetch(
@@ -201,7 +213,7 @@ export default class dataManager {
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.indexOf("application/json") !== -1) {
           const responseJSON = await response.json();
-          return await this.mapResponseUserDataToUserData(responseJSON);
+          return this.mapResponseUserDataToUserData(responseJSON);
         }
       }
       return null;
@@ -233,7 +245,7 @@ export default class dataManager {
           if (responseJSON && responseJSON.id) {
             this.setUserId(responseJSON.id);
           }
-          return await this.mapResponseUserDataToUserData(responseJSON);
+          return this.mapResponseUserDataToUserData(responseJSON);
         }
       }
       if (response.status === 409) return -2;
@@ -273,7 +285,7 @@ export default class dataManager {
             this.setUserId(responseJSON.id);
           }
           console.log("responseJSON", responseJSON);
-          return await this.mapResponseUserDataToUserData(responseJSON);
+          return this.mapResponseUserDataToUserData(responseJSON);
         }
       }
       return null;
@@ -285,10 +297,15 @@ export default class dataManager {
     }
   };
 
-  static getUserChallengeData = async (id) => {
+  static getUserChallengeData = async (id, date = "") => {
+    let completeRequestString = id;
+    if (date.length !== 0) completeRequestString += "?date=" + date;
+
     try {
       const response = await fetch(
-        configJSON.serverConfig.root + "/challenge/user/" + id,
+        configJSON.serverConfig.root +
+          "/challenge/user/" +
+          completeRequestString,
         {
           method: "GET",
           headers: {
@@ -309,7 +326,7 @@ export default class dataManager {
     } catch (error) {
       console.log("error on get user step count data:" + error);
     } finally {
-      console.log("done with get team step count request");
+      console.log("done with get user step count request");
     }
   };
 
@@ -330,10 +347,10 @@ export default class dataManager {
         }
       );
 
+      console.log("push steps response status: " + response.status);
+
       if (response.ok) {
-        console.log("response ok");
         const contentType = await response.headers.get("content-type");
-        console.log(contentType);
         if (contentType && contentType.indexOf("application/json") !== -1) {
           return true;
         }
@@ -343,6 +360,73 @@ export default class dataManager {
       console.log("error on push new steps:" + error);
     } finally {
       console.log("done with push new steps request");
+    }
+  };
+
+  static sendUserMessage = async (
+    senderUserID,
+    receiverUserID,
+    title,
+    body,
+    type = "USER_MOTIVATION_MESSAGE"
+  ) => {
+    try {
+      const response = await fetch(
+        configJSON.serverConfig.root + "/send_user_message/",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            sender: senderUserID,
+            receiver: receiverUserID,
+            title: title,
+            body: body,
+            type: type,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        return 1;
+      }
+      return -1;
+    } catch (error) {
+      console.log("error on create new team:" + error);
+      return -1;
+    } finally {
+      console.log("done with create new team request");
+    }
+  };
+
+  static createNewTeam = async ({ name, progressCalculationMode }) => {
+    try {
+      const response = await fetch(
+        configJSON.serverConfig.root + "/admin/team/add",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: name,
+            progressCalculationMode: progressCalculationMode,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        return 1;
+      }
+      return -1;
+    } catch (error) {
+      console.log("error on create new team:" + error);
+      return -1;
+    } finally {
+      console.log("done with create new team request");
     }
   };
 

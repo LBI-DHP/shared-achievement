@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import dataManager from "../components/DataManager";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import { Platform } from "react-native";
+import { UpdateContext } from "./UpdateProvider";
 
 export const UserDataContext = React.createContext({
   userData: {
@@ -10,9 +11,9 @@ export const UserDataContext = React.createContext({
     username: null,
     team: null,
     expoToken: null,
-    password: null,
     targetGoal: null,
     showDeveloperSettings: false,
+    uniqueDeviceId: null,
   },
   setUserData: ({}) => {},
   navigationIndex: 0,
@@ -23,6 +24,8 @@ export const UserDataContext = React.createContext({
   setUseGoogleFit: ({}) => {},
   isConnectedToGoogleFit: false,
   setIsConnectedToGoogleFit: ({}) => {},
+  userChallengeData: { progress: 0, totalSteps: 0, goal: 0 },
+  isUserChallengeDataLoading: true,
 });
 
 export const UserDataProvider = (props) => {
@@ -31,9 +34,9 @@ export const UserDataProvider = (props) => {
     username: null,
     team: null,
     expoToken: null,
-    password: null,
     targetGoal: null,
     showDeveloperSettings: false,
+    uniqueDeviceId: null,
   });
 
   const [navigationIndex, setNavigationIndex] = useState(0);
@@ -43,8 +46,20 @@ export const UserDataProvider = (props) => {
   const [useGoogleFit, setUseGoogleFit] = useState(false);
   const [isConnectedToGoogleFit, setIsConnectedToGoogleFit] = useState(false);
 
+  const [userChallengeData, setUserChallengeData] = useState({
+    progress: 0,
+    totalSteps: 0,
+    goal: 0,
+  });
+
+  const [isUserChallengeDataLoading, setIsUserChallengeDataLoading] =
+    useState(true);
+
   const notificationListener = useRef(null);
   const responseListener = useRef(null);
+
+  const { apiReloadIndicator, stepsPushedIndicator, midnightIndicator } =
+    useContext(UpdateContext);
 
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -65,26 +80,16 @@ export const UserDataProvider = (props) => {
   }, []);
 
   const createNewUser = (mounted) => {
-    dataManager
-      .getUserPassword()
-      .then((password) => {
-        registerForPushNotificationsAsync()
-          .then((token) => {
-            if (mounted)
-              setUserData({
-                ...userData,
-                expoToken: token,
-                password: password,
-              });
-          })
-          .catch((e) => {
-            console.log("Could not register for push notifications", e);
-            if (mounted)
-              setUserData({
-                ...userData,
-                password: password,
-              });
+    registerForPushNotificationsAsync()
+      .then((token) => {
+        if (mounted)
+          setUserData({
+            ...userData,
+            expoToken: token,
           });
+      })
+      .catch((e) => {
+        console.log("Could not register for push notifications", e);
       })
       .finally(() => {
         if (mounted) setIsUserDataLoading(false);
@@ -140,6 +145,38 @@ export const UserDataProvider = (props) => {
     };
   }, [userData.id]);
 
+  useEffect(() => {
+    setIsUserChallengeDataLoading(true);
+    let mounted = true;
+    dataManager
+      .getUserChallengeData(userData.id)
+      .then((data) => {
+        if (mounted && data) {
+          if (!data.progress || isNaN(data.progress) || data.progress < 0)
+            data.progress = 0;
+
+          if (
+            !data.total_steps ||
+            isNaN(data.total_steps) ||
+            data.total_steps < 0
+          )
+            data.totalSteps = 0;
+          else data.totalSteps = data.total_steps;
+
+          delete data.total_steps;
+
+          setUserChallengeData(data);
+          setIsUserChallengeDataLoading(false);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [apiReloadIndicator, stepsPushedIndicator, midnightIndicator]);
+
   return (
     <UserDataContext.Provider
       value={{
@@ -153,6 +190,8 @@ export const UserDataProvider = (props) => {
         setUseGoogleFit,
         isConnectedToGoogleFit,
         setIsConnectedToGoogleFit,
+        userChallengeData,
+        isUserChallengeDataLoading,
       }}
     >
       {props.children}

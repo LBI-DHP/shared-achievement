@@ -1,32 +1,27 @@
 import React, { useState, useEffect, useContext } from "react";
 import { ScrollView, View, Text, Platform } from "react-native";
-import { Button } from "react-native-paper";
 import { style } from "../constants/Styles";
-import Challenge from "../components/Challenge/Challenge";
-import TeamContributions from "../components/Challenge/TeamContributions";
+import SingleChallenge from "../components/Challenge/SingleChallenge";
 import Trophy from "../components/Challenge/Trophy";
 import ConfettiCannon from "react-native-confetti-cannon";
 import dataManager from "../components/DataManager";
 import { UserDataContext } from "../providers/UserDataProvider";
-import { TeamDataContext } from "../providers/TeamDataProvider";
 import StepCounterPedometerIOS from "../components/StepCounter/StepCounterPedometerIOS";
 import StepCounterGoogleFit from "../components/StepCounter/StepCounterGoogleFit";
 import YesterdaysProgressPopUp from "../components/YesterdaysProgressPopUp";
 import TodaysPopUp from "../components/TodaysPopUp";
 import { getDateStringYesterday } from "../constants/Functions";
 
-export default function ChallengeScreen() {
+export default function SingleChallengeScreen() {
   const {
     userData,
-    setNavigationIndex,
     isUserDataLoading,
     navigationIndex,
     useGoogleFit,
+    userChallengeData,
   } = useContext(UserDataContext);
 
-  const { mode, teamName, teamChallengeData } = useContext(TeamDataContext);
-
-  const [teamReachedSummit, setTeamReachedSummit] = useState(false);
+  const [userReachedSummit, setUserReachedSummit] = useState(false);
   const [isTodaysPopUpVisible, setIsTodaysPopUpVisible] = useState(false);
   const [showConfettiCannon, setShowConfettiCannon] = useState(false);
   const [
@@ -40,13 +35,12 @@ export default function ChallengeScreen() {
 
   useEffect(() => {
     let mounted = true;
-    if (!isUserDataLoading && userData.team) {
+    if (!isUserDataLoading) {
       dataManager.getShowYesterdaysProgressPopUp().then((showPopUp) => {
         if (showPopUp) {
           const dateStringYesterday = getDateStringYesterday();
-
           dataManager
-            .getTeamChallengeData(userData.team, dateStringYesterday)
+            .getUserChallengeData(userData.id, dateStringYesterday)
             .then((data) => {
               if (mounted && data === -1) {
                 setDidChallengeExistYesterday(false);
@@ -66,21 +60,21 @@ export default function ChallengeScreen() {
     return () => {
       mounted = false;
     };
-  }, [userData.team, isUserDataLoading]);
+  }, [isUserDataLoading]);
 
   useEffect(() => {
-    if (userData.team && teamChallengeData.progress) {
-      setTeamReachedSummit(teamChallengeData.progress >= 100);
-      setShowConfettiCannon(teamChallengeData.progress >= 100);
+    if (userChallengeData.progress) {
+      setUserReachedSummit(userChallengeData.progress >= 100);
+      setShowConfettiCannon(userChallengeData.progress >= 100);
     } else {
-      setTeamReachedSummit(false);
+      setUserReachedSummit(false);
       setShowConfettiCannon(false);
     }
-  }, [teamChallengeData.progress, userData.team]);
+  }, [userChallengeData.progress]);
 
   useEffect(() => {
     let mounted = true;
-    if (teamReachedSummit && navigationIndex === 0) {
+    if (userReachedSummit) {
       dataManager.getShowReachedSummitPopUp().then((showPopUp) => {
         if (mounted) setIsTodaysPopUpVisible(showPopUp);
       });
@@ -88,44 +82,30 @@ export default function ChallengeScreen() {
     return () => {
       mounted = false;
     };
-  }, [teamReachedSummit]);
+  }, [userReachedSummit]);
 
   return (
     <>
-      <Text style={style.header}>Progress of Team {teamName}</Text>
+      <Text style={style.header}>Progress of {userData.username}</Text>
       <ScrollView>
         <View
           style={{
             paddingBottom: 35,
           }}
         >
-          {teamReachedSummit && <Trophy />}
-          <Challenge />
-          {userData.team && <TeamContributions />}
-          {userData.team ? (
-            Platform.OS === "android" || useGoogleFit ? (
-              <StepCounterGoogleFit />
-            ) : (
-              <StepCounterPedometerIOS />
-            )
+          {userReachedSummit && <Trophy />}
+          <SingleChallenge />
+          {Platform.OS === "android" || useGoogleFit ? (
+            <StepCounterGoogleFit singleUser={true} />
           ) : (
-            <Button
-              mode="contained"
-              style={{
-                margin: 10,
-              }}
-              onPress={() => {
-                setNavigationIndex(1);
-              }}
-            >
-              Select a team
-            </Button>
+            <StepCounterPedometerIOS singleUser={true} />
           )}
         </View>
         {isTodaysPopUpVisible && navigationIndex === 0 && (
           <TodaysPopUp
             isTodaysPopUpVisible={isTodaysPopUpVisible}
             setIsTodaysPopUpVisible={setIsTodaysPopUpVisible}
+            isSingleUser={true}
           />
         )}
         {isYesterdaysProgressPopUpVisible && didChallengeExistYesterday && (
@@ -135,8 +115,9 @@ export default function ChallengeScreen() {
               setIsYesterdaysProgressPopUpVisible
             }
             yesterdaysProgress={yesterdaysProgress}
-            mode={mode}
+            mode={"ABSOLUTE"}
             yesterdaysSteps={yesterdaysSteps}
+            isSingleUser={true}
           />
         )}
       </ScrollView>

@@ -106,7 +106,6 @@ export default function Settings() {
                       username: null,
                       team: null,
                       expoToken: null,
-                      password: null,
                       targetGoal: null,
                       showDeveloperSettings: false,
                     });
@@ -121,7 +120,6 @@ export default function Settings() {
                 username: null,
                 team: null,
                 expoToken: null,
-                password: null,
                 targetGoal: null,
                 showDeveloperSettings: false,
               });

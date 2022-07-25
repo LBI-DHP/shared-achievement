@@ -305,12 +305,15 @@ def manual():
 @app.route('/redirect_uri')
 def redirect_uri():
     d = dict(url_parse.parse_qsl(url_parse.urlsplit(request.url).query))
+    #d = {"code": "my test code"}
     if 'code' in d:
         code = d['code']
-        return code
+        return render_template('redirect_uri.html', code=code)
+        #return code
     else:
-        return jsonify(d)
-    return request.url
+         return "Google fit was not able to provide a authentication code", 500
+        #return  jsonify(d)
+    
 
 
 

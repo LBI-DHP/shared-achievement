@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shared achievement</title>
+    <style>
+        html {
+            font-family: "Roboto", sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            max-width: 450px;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 20px);
+            margin: auto;
+            padding: 10px;
+        }
+
+        body>* {
+            width: 100%;
+            padding: 5px;
+            margin: 5px;
+            box-sizing: border-box;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <p id="text">Google Fit login was successful.<br>
+        <strong>Please copy this code to your clipboard and return to the app: </strong>
+    </p>
+    <input readonly="readonly" type="text" id="code" />
+    <button id="copyButton" onclick="myFunction()">copy</button>
+    <script>
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const code = urlParams.get('code')
+        const copyText = document.getElementById("code");
+        copyText.setAttribute("value", code);
+
+        if (!code) {
+            const text = document.getElementById("text")
+            text.innerHTML = "Google Fit login failed. Please return to the app and try again."
+            copyText.classList.add("hidden")
+            copyButton.classList.add("hidden")
+        }
+
+        function myFunction() {
+
+            /* Select the text field */
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+            /* Copy the text inside the text field */
+            navigator.clipboard.writeText(code);
+
+            /* Alert the copied text */
+            alert("Code copied to clipboard. Please return to the app.");
+        }
+    </script>
+</body>
+
+</html>

@@ -34,7 +34,7 @@ class Team(BaseModel):
 class User(BaseModel, BaseUser):    
     username = CharField(unique=True)
     password = CharField()
-    uniqueDeviceId = CharField(unique=True)
+    uniqueDeviceId = CharField(unique=False)
     email = CharField()
     expoToken = CharField()
     team = ForeignKeyField(Team, backref='members',  null=True)

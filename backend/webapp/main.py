@@ -33,7 +33,7 @@ def create_tables():
     # Use the underlying peewee database object instead of the
     # flask-peewee database wrapper:
     
-    #db.database.drop_tables(models)
+    db.database.drop_tables(models)
     db.database.create_tables(models)    
     
 
@@ -41,7 +41,7 @@ def fill_in_data():
 
     adminUsr = User.get_or_none(User.username == 'admin')
     if adminUsr is None:
-        adminUsr = auth.User(username='admin', email='dimi@uni-bremen.de', admin=True, active=True)
+        adminUsr = auth.User(username='admin', email='dimi@uni-bremen.de', uniqueDeviceId="dimi@uni-bremen.de", admin=True, active=True)
         adminUsr.set_password('admin')
         adminUsr.save()
 
@@ -127,7 +127,7 @@ def fill_in_data():
 if __name__ == '__main__':
     configure_logging()
     logger.log(logging.INFO, "start logger")
-    #create_tables()
+    create_tables()
     fill_in_data()
     print("start shared achievements server server")
     #app.run(debug=True)

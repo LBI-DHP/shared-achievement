@@ -45,9 +45,16 @@ def fill_in_data():
         adminUsr.set_password('admin')
         adminUsr.save()
 
-    # teamLBI = Team(name='LBI',)
-    # teamLBI.progressCalculationMode = TeamProgressCalculationMode.RELATIVE.name
-    # teamLBI.save()
+    teamA = Team(name='Team A')
+    teamA.progressCalculationMode = TeamProgressCalculationMode.RELATIVE.name
+    teamA.hidden = False
+    teamA.save()
+
+
+    teamB = Team(name='Team B')
+    teamB.progressCalculationMode = TeamProgressCalculationMode.ABSOLUTE.name
+    teamB.hidden = False
+    teamB.save()
     
     # teamHB = Team(name='Bremen',)
     # teamHB.progressCalculationMode = TeamProgressCalculationMode.ABSOLUTE.name

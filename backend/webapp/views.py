@@ -41,7 +41,7 @@ def register_user():
     
         
     usr = User.create(**request.json)
-    usr.set_password(request.json['password'])
+    #usr.set_password(request.json['password'])
     usr.active = True
     usr.admin = False
     usr.save()

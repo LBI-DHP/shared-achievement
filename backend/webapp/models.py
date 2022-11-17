@@ -30,6 +30,7 @@ class TeamProgressCalculationMode(Enum):
 class Team(BaseModel):
     name = CharField()
     progressCalculationMode = CharField(default=TeamProgressCalculationMode.ABSOLUTE.name)
+    hidden = BooleanField(default=False)
 
 class User(BaseModel, BaseUser):    
     username = CharField(unique=True)

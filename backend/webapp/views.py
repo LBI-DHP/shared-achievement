@@ -46,9 +46,10 @@ def register_user():
     usr.admin = False
     usr.save()
 
-    res = model_to_dict(usr, recurse=False, exclude=['password',"email"])
-    del res['password']
-    del res['email']
+    #res = model_to_dict(usr, recurse=False, exclude=['password',"email"])
+    res = model_to_dict(usr, recurse=False)
+    #del res['password']
+    #del res['email']
     print(res)
     return jsonify(res) 
     #return json.dumps(model_to_dict(usr, recurse=False, exclude=['password']), default=str, indent=4, sort_keys=True)    

@@ -6,7 +6,7 @@ import playhouse.signals as signals
 from flask_peewee.auth import BaseUser  # provides password helpers..
 from peewee import *
 from app import db
-
+from utils import usr_today, team_today
 
 # TeamChallengeRelationshipDeferred = DeferredThroughModel()
 # UserChallengeRelationshipDeferred = DeferredThroughModel()
@@ -59,8 +59,10 @@ class User(BaseModel, BaseUser):
 
 class UserStudyResponse(BaseModel):
     user = ForeignKeyField(User)
-    consent = BooleanField(default=False)
-    timestamp = DateTimeField(default=datetime.datetime.now())
+    consent = BooleanField(default=False)    
+    server_timestamp = DateTimeField(default=datetime.datetime.now())
+    usr_timestamp  = DateTimeField()
+    team_timestamp  = DateTimeField()
 
 
 class ChallengeStatus(Enum):
@@ -105,7 +107,9 @@ class TeamChallenge(Challenge):
 
 class StepCount(BaseModel):
     steps = IntegerField()
-    timestamp = DateTimeField()
+    server_timestamp = DateTimeField()
+    usr_timestamp  = DateTimeField()
+    team_timestamp  = DateTimeField()
     userChallenge = ForeignKeyField(UserChallenge)
     teamChallenge = ForeignKeyField(TeamChallenge)
     user = ForeignKeyField(User)
@@ -119,14 +123,15 @@ class Notification(BaseModel):
     status = CharField()
     sender = ForeignKeyField(User, null=True)
     receiver = ForeignKeyField(User)
-    timestamp = DateTimeField()    
+    server_timestamp = DateTimeField()
+    usr_timestamp  = DateTimeField()    
     
 
 # class UserNotificationRelationship(db.Model):
 #     sender = ForeignKeyField(User)
 #     receiver = ForeignKeyField(User)
 #     notification =ForeignKeyField(Notification)
-#     timestamp = DateTimeField()
+#     server_timestamp = DateTimeField()
 
 # UserNotificationRelationshipDeferred.set_model(UserNotificationRelationship)
 

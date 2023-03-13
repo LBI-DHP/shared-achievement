@@ -3,7 +3,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 from controller.push_notifications import send_push_notification
 from models import User, Team, UserChallenge, TeamChallenge, ChallengeDifficulty, StepCount
-from utils import usr_today, team_today
+from utils import usr_today, team_today, usr_now, team_now
 
 scheduler = BackgroundScheduler(daemon=True)
 
@@ -39,7 +39,7 @@ scheduler.add_job(schedule_notifications,'cron',hour=18, minute=1)
 #     for user in users:
 #         userChallenge = UserChallenge()
 #         userChallenge.name = f"{user.username}_daily_challenge"
-#         userChallenge.date = datetime.now()
+#         userChallenge.date = usr_now(user.id)
 #         userChallenge.goal = user.targetGoal
 #         userChallenge.progress = 0
 #         userChallenge.user = user
@@ -52,7 +52,7 @@ scheduler.add_job(schedule_notifications,'cron',hour=18, minute=1)
 #         teamChallenge.name = 'Untersberg'
 #         teamChallenge.goal = int(ChallengeDifficulty.NORMAL)
 #         teamChallenge.team = team
-#         teamChallenge.date = datetime.now()
+#         teamChallenge.date = team_now(team.id)
 #         teamChallenge.save()
 
 # scheduler.add_job(schedule_create_new_daily_challenges,'cron',hour=16, minute=52)

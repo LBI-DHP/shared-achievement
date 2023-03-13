@@ -124,7 +124,7 @@ def fill_in_data():
     #         steps.steps = u.targetGoal * 0.1 #int(ChallengeDifficulty.NORMAL) * 0.5
     #         steps.teamChallenge = teamChallenge
     #         steps.userChallenge = userChallenge
-    #         steps.timestamp = datetime.datetime.now()
+    #         steps.server_timestamp = datetime.datetime.now()
     #         steps.save()
 
 

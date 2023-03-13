@@ -139,7 +139,7 @@ def on_user_post_save(sender, instance: User, created):
         team = instance.team
         print(f"num users in team {team.id}: {len(team.members)}")
         try:
-            teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == team) & (TeamChallenge.date == datetime.now())).get())
+            teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == team) & (TeamChallenge.date == team_today(team.id))).get())
             print(teamChallenge.id)            
             teamChallenge = teamChallenge.get()
             updateTeamMembersGoal(teamChallenge=teamChallenge)           

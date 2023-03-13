@@ -26,7 +26,7 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import pandas as pd
 import seaborn as sns
-from utils import usr_today, team_today
+from utils import usr_today, team_today, usr_now, team_now
 
 
 @app.route('/')
@@ -257,7 +257,9 @@ def push_steps():
     steps.team = user.team
     steps.teamChallenge = team_challenge
     steps.userChallenge = user_challenge
-    steps.timestamp = datetime.datetime.now()
+    steps.server_timestamp = datetime.datetime.now()
+    steps.usr_timestamp = usr_now(user.id)
+    steps.team_timestamp = team_now(user.team.id)
     steps.save()
 
     updateUserChallengeProgress(user_challenge)

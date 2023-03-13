@@ -19,6 +19,7 @@ config.json
 */__pycache__/*
 */__pycache__/*
 backend/webapp/__pycache__/*
+backend/webapp/controller/__pycache__/*
 backend/shared_achievements.db
 # macOS
 .DS_Store

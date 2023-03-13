@@ -38,7 +38,8 @@ def send_push_notification(sender_user_id:int, receiver_user_id:int, title:str, 
     msg.type = type
     msg.sender = sender_user_id
     msg.receiver = receiver_user_id
-    msg.timestamp = datetime.now()
+    msg.server_timestamp = datetime.now()    
+    msg.usr_timestamp
     msg.status =  headers['status']
     msg.save()
 

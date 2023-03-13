@@ -1,3 +1,4 @@
+import pytz
 import datetime
 from email.policy import default
 from enum import Enum, IntEnum, unique
@@ -31,6 +32,7 @@ class Team(BaseModel):
     name = CharField()
     progressCalculationMode = CharField(default=TeamProgressCalculationMode.ABSOLUTE.name)
     hidden = BooleanField(default=False)
+    timezone = CharField()
 
 class User(BaseModel, BaseUser):    
     username = CharField(unique=True)
@@ -39,8 +41,9 @@ class User(BaseModel, BaseUser):
     email = CharField()
     expoToken = CharField()
     team = ForeignKeyField(Team, backref='members',  null=True)
+    isSingleUser = BooleanField(default=True)
     join_date = DateTimeField(default=datetime.datetime.now())
-    active = BooleanField(default=True)
+    active = BooleanField(default=True)    
     admin = BooleanField(default=False)
     showDeveloperSettings = BooleanField(default=False)
     device = CharField()
@@ -49,9 +52,10 @@ class User(BaseModel, BaseUser):
     currentActivityLevel = IntegerField()
     targetGoal = IntegerField(default=int(ChallengeDifficulty.NORMAL))
     averageSteps = IntegerField(default=0)    
-    
+    timezone = CharField()
     def __unicode__(self):
         return self.username
+    
 
 class UserStudyResponse(BaseModel):
     user = ForeignKeyField(User)

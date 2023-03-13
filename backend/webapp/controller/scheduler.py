@@ -3,7 +3,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 from controller.push_notifications import send_push_notification
 from models import User, Team, UserChallenge, TeamChallenge, ChallengeDifficulty, StepCount
-
+from utils import usr_today, team_today
 
 scheduler = BackgroundScheduler(daemon=True)
 
@@ -12,7 +12,7 @@ def schedule_notifications():
     
     type = "DAILY_REMINDER"
     for usr in User.select().where(User.id > 1):
-        userChallenge = UserChallenge.get_or_none((UserChallenge.user == usr) & (UserChallenge.date == datetime.date.today()))
+        userChallenge = UserChallenge.get_or_none((UserChallenge.user == usr) & (UserChallenge.date == usr_today(usr.id)))
         if userChallenge is not None:
             steps = StepCount.get_or_none((StepCount.userChallenge == userChallenge))
             if steps is not None:

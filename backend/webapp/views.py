@@ -26,6 +26,8 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import pandas as pd
 import seaborn as sns
+from utils import usr_today, team_today
+
 
 @app.route('/')
 def homepage():
@@ -56,17 +58,18 @@ def register_user():
 
 
 @app.route('/challenge/user/<user_id>', methods=['GET'])
+@auth.login_required
 def get_user_challenge(user_id):
     user_id = int(user_id)    
     user = User.get_or_none(User.id == user_id)
     if user is None:
         return "User does not exist", 404
 
-    userChallenge, created = UserChallenge.get_or_create(user=user_id, date=datetime.date.today())
+    userChallenge, created = UserChallenge.get_or_create(user=user_id, date=usr_today(user.id))
     
     if created:
         userChallenge.name = f"{user.username}_daily_challenge"
-        userChallenge.date = datetime.date.today()
+        userChallenge.date = usr_today(user.id)
         userChallenge.goal = user.targetGoal
         userChallenge.progress = 0
         userChallenge.user = user
@@ -75,6 +78,7 @@ def get_user_challenge(user_id):
     return jsonify(model_to_dict(userChallenge, recurse=False))
 
 @app.route('/challenge/team/<team_id>', methods=['GET'])
+@auth.login_required
 def get_team_challenge(team_id):
     team_id = int(team_id)
     team = Team.get_or_none(Team.id == team_id)
@@ -84,7 +88,7 @@ def get_team_challenge(team_id):
         date_str = request.args.get('date')
         date_time_obj = datetime.datetime.strptime(date_str, '%Y-%m-%d')
     else:
-        date_time_obj = datetime.date.today()
+        date_time_obj = team_today(team.id)
     # teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=date_time_obj)
     teamChallenge = TeamChallenge.get_or_none(team=team_id, date=date_time_obj)
     if teamChallenge is None:
@@ -110,12 +114,13 @@ def get_user_stepcount(user_id, date):
 
 @app.route('/stepcounttoday/user/<user_id>', methods=['GET'])
 def stepcount_today_user(user_id):
-    return get_user_stepcount(user_id=user_id, date=datetime.date.today())
+    today=usr_today(user_id)    
+    return get_user_stepcount(user_id=user_id, date=today)
 
 
 @app.route('/stepcountyesterday/user/<user_id>', methods=['GET'])
 def stepcount_yesterday_user(user_id):
-    yesterday = datetime.date.today() - datetime.timedelta(days=1)
+    yesterday = usr_today(user_id) - datetime.timedelta(days=1)
     return get_user_stepcount(user_id=user_id, date=yesterday)
 
 def get_team_stepcount(team_id, date):
@@ -134,17 +139,17 @@ def get_team_stepcount(team_id, date):
 
 @app.route('/stepcounttoday/team/<team_id>', methods=['GET'])
 def stepcount_today_team(team_id):
-    return get_team_stepcount(team_id=team_id, date=datetime.date.today())
+    return get_team_stepcount(team_id=team_id, date=team_today(team_id))
 
 @app.route('/stepcountyesterday/team/<team_id>', methods=['GET'])
 def stepcount_yesterday_team(team_id):
-    yesterday = datetime.date.today() - datetime.timedelta(days=1)
+    yesterday = team_today(team_id) - datetime.timedelta(days=1)
     return get_team_stepcount(team_id=team_id, date=yesterday)
 
 
 @app.route('/teamstepstoday/<team_id>', methods=['get'])
 def teamprogresstoday(team_id):    
-    teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=datetime.date.today())
+    teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=team_today(team_id))
     updateTeamMembersGoal(teamChallenge=teamChallenge)
     updateTeamChallengeProgress(teamChallenge=teamChallenge)
     res = []
@@ -183,14 +188,13 @@ def teamprogresstoday(team_id):
 #     return json.dumps(members, default=str, indent=4, sort_keys=True)    
 
 @app.route('/send_user_message', methods=['POST'])
-# @auth.login_required
+@auth.login_required
 def send_user_message():
-
     return send_push_notification(request.json['sender'], request.json['receiver'], request.json['title'], request.json['body'], request.json['type'])
 
 
 @app.route('/push_steps', methods=['POST'])
-# @auth.login_required
+@auth.login_required
 def push_steps():
     
     print('push_steps')
@@ -199,10 +203,10 @@ def push_steps():
     if user is None:
         return "User does not exist", 404
 
-    userChallenge, created = UserChallenge.get_or_create(user=user.id, date=datetime.date.today())
+    userChallenge, created = UserChallenge.get_or_create(user=user.id, date=usr_today(User.id))
     if created:
         userChallenge.name = f"{user.username}_daily_challenge"
-        userChallenge.date = datetime.date.today()
+        userChallenge.date = usr_today(User.id)
         userChallenge.goal = user.targetGoal
         userChallenge.progress = 0 # int(request.json['steps']) / user.targetGoal
         userChallenge.user = user
@@ -210,11 +214,11 @@ def push_steps():
 
     
         
-    teamChallenge, created = TeamChallenge.get_or_create(team=user.team, date=datetime.date.today())
+    teamChallenge, created = TeamChallenge.get_or_create(team=user.team, date=team_today(user.team.id))
     if created:
         teamChallenge.name = 'Untersberg'
         teamChallenge.team = user.team
-        teamChallenge.date = datetime.date.today()
+        teamChallenge.date = team_today(user.team.id)
         teamChallenge.save()
     
     updateTeamMembersGoal(teamChallenge=teamChallenge)
@@ -234,8 +238,8 @@ def push_steps():
         ).join(UserChallenge, on=(UserChallenge.user == User.id)
         ).where(
             (User.id == user.id)
-            & (TeamChallenge.date == datetime.date.today())
-            & (UserChallenge.date == datetime.date.today())
+            & (TeamChallenge.date == usr_today(user.id))
+            & (UserChallenge.date == team_today(user.team.id))
         )
     print(query.sql())
     print(list(query.dicts()))
@@ -262,6 +266,7 @@ def push_steps():
     
 
 @app.route('/streaks/team/<team_id>')
+@auth.login_required
 def team_streaks(team_id):
     team = Team.get_or_none(Team.id == team_id)
     if team is None:
@@ -354,3 +359,4 @@ def all_links():
         #     links.append((url, rule.endpoint))
     print(links)
     return jsonify(links)
+    

@@ -30,7 +30,7 @@ for m in models:
     if m is User:        
         api.register(User, UserResource, auth=user_auth, allowed_methods=['GET', 'PUT', 'POST', 'DELETE', 'PATCH'])
     else:
-        api.register(m, allowed_methods=['GET', 'PUT', 'POST', 'DELETE', 'PATCH'])
+        api.register(m, auth=user_auth, allowed_methods=['GET', 'PUT', 'POST', 'DELETE', 'PATCH'])
     print(f"api registered {m}")
 
 

@@ -8,6 +8,7 @@ from playhouse.shortcuts import model_to_dict, dict_to_model
 from peewee import fn
 from controller.push_notifications import send_push_notification
 from app import conf
+from utils import usr_today, team_today
 teams_to_update = []
 
 
@@ -69,7 +70,7 @@ def on_save_steps(sender, instance: StepCount, created):
 
     ### Evaluate personal challenge
     ### .....
-    userChallenge = (UserChallenge.select().where((UserChallenge.user == contributor) & (UserChallenge.date == dt.date.today())).get())
+    userChallenge = (UserChallenge.select().where((UserChallenge.user == contributor) & (UserChallenge.date == usr_today(contributor.id))).get())
     # print(userChallenge)
     total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.user == contributor) & (StepCount.userChallenge == userChallenge)).get())
     print(total_steps.total_steps)
@@ -90,7 +91,7 @@ def on_save_steps(sender, instance: StepCount, created):
 
     ### Evaluate team challenge
     ### .....
-    teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == contributor.team) & (TeamChallenge.date == dt.date.today())).get())
+    teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == contributor.team) & (TeamChallenge.date == team_today(contributor.team.id))).get())
     # print ("--------------------S")
     # logger.log(logging.INFO, teamChallenge.members)
     # print ("--------------------E")
@@ -126,7 +127,7 @@ def on_user_post_save(sender, instance: User, created):
         team = teams_to_update.pop()
         print(f"update team challenge for team {team.id}")             
         try:
-            teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == team) & (TeamChallenge.date == dt.date.today())).get())            
+            teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == team) & (TeamChallenge.date == team_today(team.id))).get())            
             print(teamChallenge.id)
             updateTeamMembersGoal(teamChallenge=teamChallenge)           
             logger.log(logging.INFO, f"updated old team {teamChallenge.team} member goal: {teamChallenge.teamMembersGoal}")

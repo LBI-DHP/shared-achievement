@@ -33,7 +33,7 @@ def create_tables():
     # Use the underlying peewee database object instead of the
     # flask-peewee database wrapper:
     
-    #db.database.drop_tables(models)
+    db.database.drop_tables(models)
     db.database.create_tables(models)    
     
 
@@ -41,13 +41,20 @@ def fill_in_data():
 
     adminUsr = User.get_or_none(User.username == 'admin')
     if adminUsr is None:
-        adminUsr = auth.User(username='admin', email='dimi@uni-bremen.de', admin=True, active=True)
+        adminUsr = auth.User(username='admin', email='dimi@uni-bremen.de', uniqueDeviceId="dimi@uni-bremen.de", admin=True, active=True)
         adminUsr.set_password('admin')
         adminUsr.save()
 
-    # teamLBI = Team(name='LBI',)
-    # teamLBI.progressCalculationMode = TeamProgressCalculationMode.RELATIVE.name
-    # teamLBI.save()
+    teamA = Team(name='A')
+    teamA.progressCalculationMode = TeamProgressCalculationMode.ABSOLUTE.name
+    teamA.hidden = False
+    teamA.save()
+
+
+    teamB = Team(name='B')
+    teamB.progressCalculationMode = TeamProgressCalculationMode.ABSOLUTE.name
+    teamB.hidden = False
+    teamB.save()
     
     # teamHB = Team(name='Bremen',)
     # teamHB.progressCalculationMode = TeamProgressCalculationMode.ABSOLUTE.name
@@ -117,7 +124,7 @@ def fill_in_data():
     #         steps.steps = u.targetGoal * 0.1 #int(ChallengeDifficulty.NORMAL) * 0.5
     #         steps.teamChallenge = teamChallenge
     #         steps.userChallenge = userChallenge
-    #         steps.timestamp = datetime.datetime.now()
+    #         steps.server_timestamp = datetime.datetime.now()
     #         steps.save()
 
 
@@ -127,7 +134,7 @@ def fill_in_data():
 if __name__ == '__main__':
     configure_logging()
     logger.log(logging.INFO, "start logger")
-    #create_tables()
+    create_tables()
     fill_in_data()
     print("start shared achievements server server")
     #app.run(debug=True)

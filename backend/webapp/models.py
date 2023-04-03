@@ -1,3 +1,4 @@
+import pytz
 import datetime
 from email.policy import default
 from enum import Enum, IntEnum, unique
@@ -5,7 +6,7 @@ import playhouse.signals as signals
 from flask_peewee.auth import BaseUser  # provides password helpers..
 from peewee import *
 from app import db
-
+from utils import usr_today, team_today
 
 # TeamChallengeRelationshipDeferred = DeferredThroughModel()
 # UserChallengeRelationshipDeferred = DeferredThroughModel()
@@ -30,16 +31,19 @@ class TeamProgressCalculationMode(Enum):
 class Team(BaseModel):
     name = CharField()
     progressCalculationMode = CharField(default=TeamProgressCalculationMode.ABSOLUTE.name)
+    hidden = BooleanField(default=False)
+    timezone = CharField()
 
 class User(BaseModel, BaseUser):    
     username = CharField(unique=True)
     password = CharField()
-    uniqueDeviceId = CharField(unique=True)
+    uniqueDeviceId = CharField(unique=False)
     email = CharField()
     expoToken = CharField()
     team = ForeignKeyField(Team, backref='members',  null=True)
+    isSingleUser = BooleanField(default=True)
     join_date = DateTimeField(default=datetime.datetime.now())
-    active = BooleanField(default=True)
+    active = BooleanField(default=True)    
     admin = BooleanField(default=False)
     showDeveloperSettings = BooleanField(default=False)
     device = CharField()
@@ -48,14 +52,17 @@ class User(BaseModel, BaseUser):
     currentActivityLevel = IntegerField()
     targetGoal = IntegerField(default=int(ChallengeDifficulty.NORMAL))
     averageSteps = IntegerField(default=0)    
-    
+    timezone = CharField()
     def __unicode__(self):
         return self.username
+    
 
 class UserStudyResponse(BaseModel):
     user = ForeignKeyField(User)
-    consent = BooleanField(default=False)
-    timestamp = DateTimeField(default=datetime.datetime.now())
+    consent = BooleanField(default=False)    
+    server_timestamp = DateTimeField(default=datetime.datetime.now())
+    usr_timestamp  = DateTimeField()
+    team_timestamp  = DateTimeField()
 
 
 class ChallengeStatus(Enum):
@@ -100,7 +107,9 @@ class TeamChallenge(Challenge):
 
 class StepCount(BaseModel):
     steps = IntegerField()
-    timestamp = DateTimeField()
+    server_timestamp = DateTimeField()
+    usr_timestamp  = DateTimeField()
+    team_timestamp  = DateTimeField()
     userChallenge = ForeignKeyField(UserChallenge)
     teamChallenge = ForeignKeyField(TeamChallenge)
     user = ForeignKeyField(User)
@@ -114,14 +123,15 @@ class Notification(BaseModel):
     status = CharField()
     sender = ForeignKeyField(User, null=True)
     receiver = ForeignKeyField(User)
-    timestamp = DateTimeField()    
+    server_timestamp = DateTimeField()
+    usr_timestamp  = DateTimeField()    
     
 
 # class UserNotificationRelationship(db.Model):
 #     sender = ForeignKeyField(User)
 #     receiver = ForeignKeyField(User)
 #     notification =ForeignKeyField(Notification)
-#     timestamp = DateTimeField()
+#     server_timestamp = DateTimeField()
 
 # UserNotificationRelationshipDeferred.set_model(UserNotificationRelationship)
 

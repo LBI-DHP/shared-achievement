@@ -102,7 +102,6 @@ export default function ConnectToGoogleFit({ setIsConnectedToGoogleFit }) {
         value={authorizationCode}
         multiline={false}
         placeholder="Authorization Code"
-        autoComplete={false}
         onChangeText={(input) => setAuthorizationCode(input)}
       />
       <Button

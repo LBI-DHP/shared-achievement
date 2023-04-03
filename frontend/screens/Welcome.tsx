@@ -53,7 +53,7 @@ export default function Welcome({ isSingleUser }) {
               label="username"
               value={userName}
               multiline={false}
-              autoComplete={false}
+              // autoComplete={false}
               onChangeText={(text) => setUserName(text)}
               mode="outlined"
             />
@@ -96,7 +96,7 @@ export default function Welcome({ isSingleUser }) {
           mode="outlined"
           value={averageSteps}
           multiline={false}
-          autoComplete={false}
+          // autoComplete={false}
           onFocus={() => {
             setIsKeyboardOpenOnAverageSteps(true);
           }}
@@ -159,7 +159,7 @@ export default function Welcome({ isSingleUser }) {
 
             // if (isSingleUser) {
             //   dataManager.createNewTeam({
-            //     name: newUserData.username + "_" + newUserData.uniqueDeviceId,
+            //     name: newUserData.username + "_team",
             //     progressCalculationMode: "ABSOLUTE",
             //   });
             //   // TODO/To-do/TO-DO create and join that team

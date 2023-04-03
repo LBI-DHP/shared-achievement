@@ -414,6 +414,7 @@ export default class dataManager {
           body: JSON.stringify({
             name: name,
             progressCalculationMode: progressCalculationMode,
+            hidden: true,
           }),
         }
       );

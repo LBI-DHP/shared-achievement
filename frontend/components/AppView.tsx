@@ -20,7 +20,7 @@ export default function AppView() {
     setIsConnectedToGoogleFit,
   } = useContext(UserDataContext);
 
-  const isSingleUser = true;
+  const isSingleUser = false;
 
   if (isUserDataLoading) return <CenteredActivityIndicator />;
   if (userDataLoadingError) return <NoInternetConnection />;

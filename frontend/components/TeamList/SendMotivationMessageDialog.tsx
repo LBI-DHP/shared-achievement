@@ -40,7 +40,6 @@ export default function SendMotivationMessageDialog({
             Send {nameTo} a motivating message:
           </Paragraph>
           <TextInput
-            autoComplete={false}
             value={message}
             multiline={false}
             placeholder="You can do it!"

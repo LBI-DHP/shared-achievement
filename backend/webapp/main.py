@@ -41,7 +41,7 @@ def fill_in_data():
 
     adminUsr = User.get_or_none(User.username == 'admin')
     if adminUsr is None:
-        adminUsr = auth.User(username='admin', email='dimi@uni-bremen.de', uniqueDeviceId="dimi@uni-bremen.de", admin=True, active=True)
+        adminUsr = auth.User(username='admin', email='dimi@uni-bremen.de', uniqueDeviceId="dimi@uni-bremen.de", timezone="UTC", timezone_offset=+2, admin=True, active=True)
         adminUsr.set_password('admin')
         adminUsr.save()
 

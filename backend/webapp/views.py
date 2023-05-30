@@ -65,7 +65,7 @@ def get_user_challenge(user_id):
     if user is None:
         return "User does not exist", 404
 
-    userChallenge, created = UserChallenge.get_or_create(user=user_id, date=usr_today(user.id))
+    userChallenge, created = UserChallenge.get_or_create(user=user_id, date=usr_today(user_id))
     
     if created:
         userChallenge.name = f"{user.username}_daily_challenge"

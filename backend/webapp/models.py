@@ -33,6 +33,7 @@ class Team(BaseModel):
     progressCalculationMode = CharField(default=TeamProgressCalculationMode.ABSOLUTE.name)
     hidden = BooleanField(default=False)
     timezone = CharField()
+    timezone_offset = IntegerField(default=0)
 
 class User(BaseModel, BaseUser):    
     username = CharField(unique=True)
@@ -53,6 +54,7 @@ class User(BaseModel, BaseUser):
     targetGoal = IntegerField(default=int(ChallengeDifficulty.NORMAL))
     averageSteps = IntegerField(default=0)    
     timezone = CharField()
+    timezone_offset = IntegerField(default=0)
     def __unicode__(self):
         return self.username
     

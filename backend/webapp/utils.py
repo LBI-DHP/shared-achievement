@@ -1,24 +1,30 @@
-import pytz
 import datetime
-from models import *
 
 
 def usr_now(user_id):
+    from models import User
     usr = User.get_by_id(user_id)
     usr_now = datetime.datetime.now(usr.timezone)
     return usr_now
 
 def team_now(team_id):
+    from models import Team
     team = Team.get_by_id()
     team_now = datetime.datetime.now(team.timezone)
     return team_now
 
 def usr_today(user_id):
+    from models import User
     usr = User.get_by_id(user_id)
-    usr_today = datetime.datetime.now(usr.timezone).date()
-    return usr_today
+    tz = datetime.timezone(offset=datetime.timedelta(days=0, seconds=0,hours=usr.timezone_offset), name=usr.timezone)
+    #tz =datetime.tzinfo.tzname(usr.timezone)
+    print(tz)
+    date = datetime.datetime.now(tz=tz).date()
+    return date
 
 def team_today(team_id):
-    team = Team.get_by_id()
-    team_today = datetime.datetime.now(team.timezone).date()
-    return team_today
+    from models import Team
+    team = Team.get_by_id()    
+    tz = datetime.timezone(offset=datetime.timedelta(days=0, seconds=0,hours=team.timezone_offset), name=team.timezone)
+    date = datetime.datetime.now(tz=tz).date()
+    return date

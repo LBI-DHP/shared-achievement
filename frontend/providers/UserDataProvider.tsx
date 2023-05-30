@@ -13,7 +13,7 @@ export const UserDataContext = React.createContext({
     expoToken: null,
     targetGoal: null,
     showDeveloperSettings: false,
-    uniqueDeviceId: null,
+    // uniqueDeviceId: null,
   },
   setUserData: ({}) => {},
   navigationIndex: 0,
@@ -36,7 +36,7 @@ export const UserDataProvider = (props) => {
     expoToken: null,
     targetGoal: null,
     showDeveloperSettings: false,
-    uniqueDeviceId: null,
+    // uniqueDeviceId: null,
   });
 
   const [navigationIndex, setNavigationIndex] = useState(0);

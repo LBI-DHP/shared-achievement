@@ -42,7 +42,6 @@ export default function Settings() {
     <View style={style.container}>
       <Text style={style.subheading}>Settings</Text>
       <TextInput
-        autoComplete={false}
         value={newUserName}
         multiline={false}
         placeholder="user name"

@@ -8,7 +8,7 @@ def usr_now(user_id):
 
 def team_now(team_id):
     from models import Team
-    team = Team.get_by_id()
+    team = Team.get_by_id(team_id)
     team_now = datetime.datetime.now(team.timezone)
     return team_now
 

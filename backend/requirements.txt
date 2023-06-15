@@ -28,6 +28,7 @@ environs==9.5.0
 executing==0.8.2
 Flask==2.0.3
 Flask-Admin==1.6.0
+flask-httpauth
 Flask-Bootstrap @ git+https://github.com/shoeffner/flask-bootstrap@f1ec8c678fd9068dcfbc3e918e8a42de482e9bef
 Flask-Login==0.5.0
 flask-peewee==3.0.4

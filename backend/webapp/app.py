@@ -16,7 +16,7 @@ env.read_env()
 conf.DATABASE['name'] = env('DB_NAME')
 conf.DATABASE['user'] = env('DB_USER')
 conf.DATABASE['password'] = env('DB_PASS')
-
+conf
 
 # app.config.from_object('settings')
 # app.config.from_object('config.Configuration')

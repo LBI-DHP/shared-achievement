@@ -10,8 +10,8 @@ from models import models
 
 
 admin = Admin(app, auth)
-auth.register_admin(admin)
-for m in models:
-    admin.register(m, ModelAdmin)
+# auth.register_admin(admin)
+# for m in models:
+#     admin.register(m, ModelAdmin)
 # or you could admin.register(User, ModelAdmin) -- you would also register
 # any other models here.

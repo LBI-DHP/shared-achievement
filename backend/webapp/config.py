@@ -11,3 +11,4 @@ class Configuration(object):
     DEBUG = True
     SECRET_KEY = 'kjkWLIO6vv'
     MIN_STEPS_TO_PUSH_NOTIFICATION = 1000
+    APPLICATION_ROOT = '/sa'

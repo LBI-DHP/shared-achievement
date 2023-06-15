@@ -40,10 +40,23 @@ def create_tables():
 def fill_in_data():
 
     adminUsr = User.get_or_none(User.username == 'admin')
+    
     if adminUsr is None:
-        adminUsr = auth.User(username='admin', email='dimi@uni-bremen.de', uniqueDeviceId="dimi@uni-bremen.de", timezone="UTC", timezone_offset=+2, admin=True, active=True)
+        adminUsr = User(username='admin', email='dimi@uni-bremen.de', uniqueDeviceId="dimi@uni-bremen.de", timezone="UTC", timezone_offset=+2, admin=True, active=True)
         adminUsr.set_password('admin')
         adminUsr.save()
+
+    print("--------")
+    token = adminUsr.generate_auth_token()
+    print(token)
+    res = User.verify_auth_token(token)
+    print(res)
+    token2 = token + "XXX"
+    res = User.verify_auth_token(token2)
+    print(res)
+    print("--------")
+
+    
 
     teamA = Team(name='A')
     teamA.progressCalculationMode = TeamProgressCalculationMode.ABSOLUTE.name

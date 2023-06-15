@@ -5,9 +5,9 @@ from enum import Enum, IntEnum, unique
 import playhouse.signals as signals
 from flask_peewee.auth import BaseUser  # provides password helpers..
 from peewee import *
-from app import db
+from app import db, app
 from utils import usr_today, team_today
-
+from itsdangerous import *
 # TeamChallengeRelationshipDeferred = DeferredThroughModel()
 # UserChallengeRelationshipDeferred = DeferredThroughModel()
 # TeamAchievementRelationshipDeferred = DeferredThroughModel()
@@ -55,8 +55,33 @@ class User(BaseModel, BaseUser):
     averageSteps = IntegerField(default=0)    
     timezone = CharField()
     timezone_offset = IntegerField(default=0)
+    
     def __unicode__(self):
         return self.username
+    
+
+    def generate_auth_token(self):
+        s = Serializer(
+               secret_key=app.config['SECRET_KEY'],
+               #salt=self.username               
+               )
+        
+        return s.dumps(self.id)
+    
+
+    @staticmethod
+    def verify_auth_token(token):
+        s = Serializer(app.config['SECRET_KEY'])        
+        try:
+            data = s.loads(token)
+        except SignatureExpired:
+            print("signature Expired")
+            return None  # valid token, but expired
+        except BadSignature:
+            print("Bad signature")
+            return None  # invalid token
+        user = User.get_or_none(User.id == data)
+        return user
     
 
 class UserStudyResponse(BaseModel):

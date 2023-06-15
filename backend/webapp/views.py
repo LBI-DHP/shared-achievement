@@ -34,6 +34,20 @@ def homepage():
     return "hello shared achievements"
 
 
+# token endpoint
+@app.route('/token/<user_id>', methods=['GET'])
+@auth.login_required
+def get_auth_token(user_id):       
+    user = User.get_or_none(User.id == user_id)
+    if user is None:
+        return "User does not exist", 404
+    
+    token = user.generate_auth_token()
+    return jsonify({ 
+        'token': token        
+     })
+
+
 @app.route('/register', methods=['POST'])
 def register_user():
     existingUsr = (User.select(fn.Count(User.id).alias('count_ids')).where(User.username == request.json['username']).get())
@@ -113,12 +127,14 @@ def get_user_stepcount(user_id, date):
 
 
 @app.route('/stepcounttoday/user/<user_id>', methods=['GET'])
+@auth.login_required
 def stepcount_today_user(user_id):
     today=usr_today(user_id)    
     return get_user_stepcount(user_id=user_id, date=today)
 
 
 @app.route('/stepcountyesterday/user/<user_id>', methods=['GET'])
+@auth.login_required
 def stepcount_yesterday_user(user_id):
     yesterday = usr_today(user_id) - datetime.timedelta(days=1)
     return get_user_stepcount(user_id=user_id, date=yesterday)
@@ -138,16 +154,19 @@ def get_team_stepcount(team_id, date):
     return jsonify(res)
 
 @app.route('/stepcounttoday/team/<team_id>', methods=['GET'])
+@auth.login_required
 def stepcount_today_team(team_id):
     return get_team_stepcount(team_id=team_id, date=team_today(team_id))
 
 @app.route('/stepcountyesterday/team/<team_id>', methods=['GET'])
+@auth.login_required
 def stepcount_yesterday_team(team_id):
     yesterday = team_today(team_id) - datetime.timedelta(days=1)
     return get_team_stepcount(team_id=team_id, date=yesterday)
 
 
 @app.route('/teamstepstoday/<team_id>', methods=['get'])
+@auth.login_required
 def teamprogresstoday(team_id):    
     teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=team_today(team_id))
     updateTeamMembersGoal(teamChallenge=teamChallenge)

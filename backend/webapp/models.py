@@ -2,7 +2,7 @@ import pytz
 import datetime
 from email.policy import default
 from enum import Enum, IntEnum, unique
-import playhouse.signals as signals
+
 from flask_peewee.auth import BaseUser  # provides password helpers..
 from peewee import *
 from app import db, app
@@ -20,7 +20,7 @@ class ChallengeDifficulty(IntEnum):
     HARD = 15000,
     EXPERT = 20000
 
-class BaseModel(signals.Model):
+class BaseModel(Model):
      class Meta:
         database = db.database
 

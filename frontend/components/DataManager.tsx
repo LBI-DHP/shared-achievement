@@ -168,13 +168,14 @@ export default class dataManager {
     try {
       const response = await fetch(
         configJSON.serverConfig.root +
-          "/api/user/?uniqueDeviceId=" +
-          uniqueDeviceId,
+        "/api/user/?uniqueDeviceId=" +
+        uniqueDeviceId,
         {
           method: "GET",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
+            Authorization: "Basic " + configJSON.serverConfig.authorization,
           },
         }
       );
@@ -205,6 +206,7 @@ export default class dataManager {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
+            Authorization: "Basic " + configJSON.serverConfig.authorization,
           },
         }
       );
@@ -267,7 +269,8 @@ export default class dataManager {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-            Authorization: "Basic " + base64.encode("admin" + ":" + "admin"),
+            Authorization: "Basic " + configJSON.serverConfig.authorization,
+            // Authorization: "Basic " + base64.encode("admin" + ":" + "admin"),
             // base64.encode(userData.username + ":" + userData.password),
           },
           body: JSON.stringify(userData),
@@ -304,13 +307,14 @@ export default class dataManager {
     try {
       const response = await fetch(
         configJSON.serverConfig.root +
-          "/challenge/user/" +
-          completeRequestString,
+        "/challenge/user/" +
+        completeRequestString,
         {
           method: "GET",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
+            Authorization: "Basic " + configJSON.serverConfig.authorization,
           },
         }
       );
@@ -339,6 +343,7 @@ export default class dataManager {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
+            Authorization: "Basic " + configJSON.serverConfig.authorization,
           },
           body: JSON.stringify({
             user_id: userid,
@@ -378,6 +383,7 @@ export default class dataManager {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
+            Authorization: "Basic " + configJSON.serverConfig.authorization,
           },
           body: JSON.stringify({
             sender: senderUserID,
@@ -440,6 +446,7 @@ export default class dataManager {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
+            Authorization: "Basic " + configJSON.serverConfig.authorization,
           },
         }
       );
@@ -469,6 +476,7 @@ export default class dataManager {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
+            Authorization: "Basic " + configJSON.serverConfig.authorization,
           },
         }
       );
@@ -487,8 +495,8 @@ export default class dataManager {
                 a.userProgress < b.userProgress
                   ? 1
                   : b.userProgress < a.userProgress
-                  ? -1
-                  : 0
+                    ? -1
+                    : 0
               );
             }
           return responseJSON;
@@ -511,6 +519,7 @@ export default class dataManager {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
+            Authorization: "Basic " + configJSON.serverConfig.authorization,
           },
         }
       );
@@ -536,13 +545,14 @@ export default class dataManager {
     try {
       const response = await fetch(
         configJSON.serverConfig.root +
-          "/challenge/team/" +
-          completeRequestString,
+        "/challenge/team/" +
+        completeRequestString,
         {
           method: "GET",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
+            Authorization: "Basic " + configJSON.serverConfig.authorization,
           },
         }
       );

@@ -123,6 +123,8 @@ export default function Welcome({ isSingleUser }) {
             userName.length < 2 || averageSteps === null || averageSteps < 100
           }
           onPress={() => {
+            var date = new Date();
+            var offsetInHours = (date.getTimezoneOffset()*-1) / 60;
             const newUserData = {
               ...userData,
               username: userName,
@@ -131,8 +133,10 @@ export default function Welcome({ isSingleUser }) {
               operatingSystem: Device.osName,
               operatingSystemVersion: Device.osVersion,
               averageSteps: averageSteps,
+              timezone: "UTC",
+              timezone_offset: offsetInHours,//"+2",
             };
-
+            console.log("offsetInHours",offsetInHours);
             setError("");
 
             dataManager.registerUser(newUserData).then((data) => {

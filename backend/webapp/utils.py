@@ -11,7 +11,7 @@ def team_now(team_id):
     from models import Team
     team = Team.get_by_id(team_id)
     tz = datetime.timezone(offset=datetime.timedelta(days=0, seconds=0,hours=team.timezone_offset), name=team.timezone)
-    team_now = datetime.datetime.now(team.tz)
+    team_now = datetime.datetime.now(tz)
     return team_now
 
 def usr_today(user_id):

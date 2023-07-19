@@ -3,7 +3,6 @@ import { View, Text, Keyboard, Platform } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { style } from "../constants/Styles";
 import dataManager from "../components/DataManager";
-import configJSON from "../config.json";
 import * as WebBrowser from "expo-web-browser";
 
 export default function ConnectToGoogleFit({ setIsConnectedToGoogleFit }) {
@@ -26,13 +25,14 @@ export default function ConnectToGoogleFit({ setIsConnectedToGoogleFit }) {
   }, []);
 
   const redirectToGoogleLogin = async () => {
+    const scope = ["https://www.googleapis.com/auth/fitness.activity.read"];
     WebBrowser.openBrowserAsync(
       "https://accounts.google.com/o/oauth2/v2/auth?scope=" +
-        configJSON.googleConfig.scope +
-        "&access_type=offline&response_type=code&redirect_uri=" +
-        configJSON.googleConfig.redirectUri +
-        "&client_id=" +
-        configJSON.googleConfig.clientID
+      scope +
+      "&access_type=offline&response_type=code&redirect_uri=" +
+      process.env.EXPO_PUBLIC_GOOGLE_REDIRECT_URI +
+      "&client_id=" +
+      process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID
     );
   };
 
@@ -42,10 +42,10 @@ export default function ConnectToGoogleFit({ setIsConnectedToGoogleFit }) {
         method: "POST",
         body: JSON.stringify({
           code: authorizationCode,
-          client_id: configJSON.googleConfig.clientID,
-          client_secret: configJSON.googleConfig.clientSecret,
+          client_id: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
+          client_secret: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_SECRET,
           grant_type: "authorization_code",
-          redirect_uri: configJSON.googleConfig.redirectUri,
+          redirect_uri: process.env.EXPO_PUBLIC_GOOGLE_REDIRECT_URI,
         }),
       });
       const tokenResponseJSON = await tokenResponse.json();

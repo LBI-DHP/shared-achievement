@@ -3,7 +3,7 @@ views imports app, auth, and models, but none of these import views
 """
 import io
 from asyncio.log import logger
-#from crypt import methods
+from crypt import methods
 from http.client import HTTPResponse
 import imp
 import logging

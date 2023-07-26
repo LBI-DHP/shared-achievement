@@ -3,7 +3,7 @@ views imports app, auth, and models, but none of these import views
 """
 import io
 from asyncio.log import logger
-from crypt import methods
+#from crypt import methods
 from http.client import HTTPResponse
 import imp
 import logging
@@ -108,7 +108,7 @@ def get_team_challenge(team_id):
     if teamChallenge is None:
         return "Team challenge does not exist", 400
     updateTeamMembersGoal(teamChallenge=teamChallenge)
-    updateTeamMembersGoal(teamChallenge=teamChallenge)
+    updateTeamChallengeProgress(teamChallenge=teamChallenge)    
     
     return jsonify(model_to_dict(teamChallenge, recurse=False))
 

@@ -39,6 +39,7 @@ flask-template==0.4.4
 fonttools==4.29.0
 fsspec==2022.1.0
 gTTS==2.2.3
+gunicorn
 httplib2==0.20.4
 idna==3.3
 imageio==2.15.0

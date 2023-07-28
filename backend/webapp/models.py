@@ -8,6 +8,10 @@ from peewee import *
 from app import db, app
 from utils import usr_today, team_today
 from itsdangerous import *
+
+
+from playhouse.signals import Model as SignalsModel # Important for @post_saveSignals
+
 # TeamChallengeRelationshipDeferred = DeferredThroughModel()
 # UserChallengeRelationshipDeferred = DeferredThroughModel()
 # TeamAchievementRelationshipDeferred = DeferredThroughModel()
@@ -20,7 +24,7 @@ class ChallengeDifficulty(IntEnum):
     HARD = 15000,
     EXPERT = 20000
 
-class BaseModel(Model):
+class BaseModel(SignalsModel):
      class Meta:
         database = db.database
 
@@ -110,6 +114,12 @@ class Challenge(BaseModel): # Abstract class for UserChallenge and TeamChallenge
 class UserChallenge(Challenge):
     date = DateField()    
     user = ForeignKeyField(User)
+
+    name = CharField()
+    goal = IntegerField(default=int(ChallengeDifficulty.NORMAL)) # base Goal in steps
+    total_steps = IntegerField(default=0) #  number of steps contributed to this challenge
+    progress = IntegerField(default=0) # progress in percent
+    status = CharField(default=ChallengeStatus.NOT_STARTED.name)
 
 # class UserChallengeRelationship(BaseModel):
 #     user = ForeignKeyField(User)

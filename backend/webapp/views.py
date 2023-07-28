@@ -21,6 +21,7 @@ import json
 import datetime
 from controller.push_notifications import send_push_notification
 from controller.challenge_controller import updateTeamChallengeProgress, updateTeamMembersGoal, updateUserChallengeProgress
+
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -108,7 +109,7 @@ def get_team_challenge(team_id):
     if teamChallenge is None:
         return "Team challenge does not exist", 400
     updateTeamMembersGoal(teamChallenge=teamChallenge)
-    updateTeamMembersGoal(teamChallenge=teamChallenge)
+    
     
     return jsonify(model_to_dict(teamChallenge, recurse=False))
 
@@ -226,24 +227,27 @@ def push_steps():
     if created:
         userChallenge.name = f"{user.username}_daily_challenge"
         userChallenge.date = usr_today(User.id)
-        userChallenge.goal = user.targetGoal
+        userChallenge.goal = user.targetGoal        
         userChallenge.progress = 0 # int(request.json['steps']) / user.targetGoal
-        userChallenge.user = user
+        userChallenge.user = user    
         userChallenge.save()
-
     
+    if user.team is None:
+        #print("Team none for user")
+        team = Team(name=f'{user.username}_team')
+        team.progressCalculationMode = TeamProgressCalculationMode.ABSOLUTE.name
+        team.hidden = False
+        team.save()
+        user.team = team
+        user.save()
         
     teamChallenge, created = TeamChallenge.get_or_create(team=user.team, date=team_today(user.team.id))
     if created:
         teamChallenge.name = 'Untersberg'
         teamChallenge.team = user.team
-        teamChallenge.date = team_today(user.team.id)
+        teamChallenge.date = team_today(user.team.id)        
         teamChallenge.save()
     
-    updateTeamMembersGoal(teamChallenge=teamChallenge)
-    updateTeamChallengeProgress(teamChallenge=teamChallenge)
-        
-
 
     query = User.select(
         User.id.alias('user_id'), 
@@ -280,8 +284,12 @@ def push_steps():
     steps.usr_timestamp = usr_now(user.id)
     steps.team_timestamp = team_now(user.team.id)
     steps.save()
+    
 
     updateUserChallengeProgress(user_challenge)
+    
+    updateTeamMembersGoal(teamChallenge=team_challenge)
+    updateTeamChallengeProgress(teamChallenge=team_challenge)
     
     return Response(json.dumps(model_to_dict(steps, recurse=False), default=str, indent=4, sort_keys=True), mimetype='application/json')    
     

@@ -7,7 +7,7 @@ from playhouse.signals import post_save, pre_save
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from peewee import fn
 from controller.push_notifications import send_push_notification
-from app import conf
+from app import conf, db
 from utils import usr_today, team_today
 teams_to_update = []
 
@@ -27,14 +27,16 @@ def updateTeamChallengeProgress(teamChallenge:TeamChallenge):
 
 
 def updateUserChallengeProgress(userChallenge:UserChallenge):
+    print('---updateUserChallengeProgress')
     total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.userChallenge == userChallenge)).get())
+    print(total_steps)
     userChallenge.total_steps = total_steps.total_steps
-    userChallenge.progress = round(float(total_steps.total_steps / userChallenge.user.targetGoal)  * 100)
+    userChallenge.progress = int(round(float(userChallenge.total_steps / userChallenge.user.targetGoal)  * 100))
     userChallenge.save()
 
 def updateTeamMembersGoal(teamChallenge:TeamChallenge):    
     sumGoal = 0            
-    for member in teamChallenge.team.members:
+    for member in teamChallenge.team.members:        
         sumGoal += member.targetGoal
     teamChallenge.teamMembersGoal = sumGoal
     teamChallenge.goal = sumGoal
@@ -42,7 +44,8 @@ def updateTeamMembersGoal(teamChallenge:TeamChallenge):
 
 @post_save(sender=StepCount)
 def on_save_steps(sender, instance: StepCount, created):
-
+    print("-----save steps----")
+    print("save steps")
     
     logger.log(logging.INFO, f"post save hook for {type(sender)} {created=} user {instance.user} team:{instance.team}")
     contributor = User.get_by_id(instance.user)
@@ -73,9 +76,24 @@ def on_save_steps(sender, instance: StepCount, created):
     userChallenge = (UserChallenge.select().where((UserChallenge.user == contributor) & (UserChallenge.date == usr_today(contributor.id))).get())
     # print(userChallenge)
     total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.user == contributor) & (StepCount.userChallenge == userChallenge)).get())
+    
+    userChallenge.total_steps = total_steps.total_steps
+    progress =  round( (float(total_steps.total_steps) / max(float(userChallenge.goal), 1.0) ) * 100)
+    userChallenge.status = ChallengeStatus.IN_PROGRESS.name
+
+    userChallenge.progress = progress
+    # if progress > 0:
+        
+    # elif userChallenge.progress >= 100:
+    #     userChallenge.status = ChallengeStatus.FINISHED.name
+    
+    print("-----UC TOTAL STEPS------")
     print(total_steps.total_steps)
-    userChallenge.total_steps = total_steps.total_steps 
-    userChallenge.progress = round( (float(total_steps.total_steps) / max(float(userChallenge.goal), 1.0) ) * 100)
+    print("-----UC TOTAL Progress------")
+    print(progress)
+    print("-----UC Status------")
+    print(userChallenge.status)
+
     userChallenge.save()
 
     # if userChallenge.status != ChallengeStatus.FINISHED.name and userChallenge.progress >= 100:
@@ -91,30 +109,48 @@ def on_save_steps(sender, instance: StepCount, created):
 
     ### Evaluate team challenge
     ### .....
-    teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == contributor.team) & (TeamChallenge.date == team_today(contributor.team.id))).get())
+    
+    
+    #teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == contributor.team) & (TeamChallenge.date == team_today(contributor.team.id))).get())
+    teamChallenge = TeamChallenge.select().where(TeamChallenge.team == contributor.team, TeamChallenge.date == team_today(contributor.team.id)).get()
+    print("-----TC------")
+    #print(teamChallenge.name)
+    teamChallenge.status = ChallengeStatus.IN_PROGRESS.name
     # print ("--------------------S")
     # logger.log(logging.INFO, teamChallenge.members)
     # print ("--------------------E")
-    total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.teamChallenge == teamChallenge)).get())    
-    if total_steps.total_steps is None:
-        total_steps.total_steps = 0
-    teamChallenge.total_steps = total_steps.total_steps
-    updateTeamMembersGoal(teamChallenge=teamChallenge)
-    updateTeamChallengeProgress(teamChallenge=teamChallenge)
+    total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.teamChallenge == teamChallenge)).get())
 
     
-    # if teamChallenge.status != ChallengeStatus.FINISHED.name and teamChallenge.progress >= 100:
-    #     teamChallenge.status = ChallengeStatus.FINISHED.name
-    #     msg_title = "Team Challenge Completed"
-    #     msg_body = f"""Awesome, your team reached the summit!!! Keep your spirit up."""
-    #     send_push_notification(sender_user_id=1, receiver_user_id=contributor.id, title=msg_title, body=msg_body, type=msg_type)
-    # else:
-    #     teamChallenge.status = ChallengeStatus.IN_PROGRESS.name
-    # teamChallenge.save()
+    # if total_steps.total_steps is None:
+    #     total_steps.total_steps = 0
+    teamChallenge.total_steps = total_steps.total_steps
+    
+    #teamChallenge.save()
+    teamChallenge.update()
+    print("-----TC TOTAL STEPS------")
+    print(teamChallenge.total_steps)
+    print(teamChallenge.status)
+    
+        
+
+        # updateTeamMembersGoal(teamChallenge=teamChallenge)
+        # updateTeamChallengeProgress(teamChallenge=teamChallenge)
+
+        
+        # if teamChallenge.status != ChallengeStatus.FINISHED.name and teamChallenge.progress >= 100:
+        #     teamChallenge.status = ChallengeStatus.FINISHED.name
+        #     msg_title = "Team Challenge Completed"
+        #     msg_body = f"""Awesome, your team reached the summit!!! Keep your spirit up."""
+        #     send_push_notification(sender_user_id=1, receiver_user_id=contributor.id, title=msg_title, body=msg_body, type=msg_type)
+        # else:
+        #     teamChallenge.status = ChallengeStatus.IN_PROGRESS.name
+        # teamChallenge.save()
 
 
 @pre_save(sender=User)
 def on_user_pre_save(sender, instance: User, created):
+    print("on_user_pre_save")
     if instance.team is not None:
         teams_to_update.append(instance.team)
     print(f"{teams_to_update=}")
@@ -122,6 +158,7 @@ def on_user_pre_save(sender, instance: User, created):
     
 @post_save(sender=User)
 def on_user_post_save(sender, instance: User, created):
+    print("on_user_post_save")
     # update challenge of old team
     while len(teams_to_update):
         team = teams_to_update.pop()

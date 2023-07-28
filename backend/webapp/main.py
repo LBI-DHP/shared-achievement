@@ -58,14 +58,14 @@ def fill_in_data():
 
     
 
-    teamA = Team(name='A')
+    teamA = Team(name='Absolute')
     teamA.progressCalculationMode = TeamProgressCalculationMode.ABSOLUTE.name
     teamA.hidden = False
     teamA.save()
 
 
-    teamB = Team(name='B')
-    teamB.progressCalculationMode = TeamProgressCalculationMode.ABSOLUTE.name
+    teamB = Team(name='Relative')
+    teamB.progressCalculationMode = TeamProgressCalculationMode.RELATIVE.name
     teamB.hidden = False
     teamB.save()
     
@@ -95,9 +95,10 @@ def fill_in_data():
     # challengeKlockerin = TeamChallenge()
     # challengeKlockerin.name = 'Klockerin'
     # challengeKlockerin.goal = int(ChallengeDifficulty.EASY)
-    # challengeKlockerin.team = teamHB
+    # challengeKlockerin.team = teamB
     # challengeKlockerin.date = datetime.datetime.now()
     # challengeKlockerin.save()
+
 
     # tcr = TeamChallengeRelationship()
     # tcr.challenge = challengeUntersberg
@@ -142,9 +143,7 @@ def fill_in_data():
 
 
 
-
-
-if __name__ == '__main__':
+def start_server():
     configure_logging()
     logger.log(logging.INFO, "start logger")
     create_tables()
@@ -154,3 +153,6 @@ if __name__ == '__main__':
     app.run(port=11883)
 
     #app.run(host="0.0.0.0", port=11883)
+
+if __name__ == '__main__':
+    start_server()

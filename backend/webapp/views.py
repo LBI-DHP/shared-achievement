@@ -109,8 +109,8 @@ def get_team_challenge(team_id):
     if teamChallenge is None:
         return "Team challenge does not exist", 400
     updateTeamMembersGoal(teamChallenge=teamChallenge)
-    
-    
+    updateTeamChallengeProgress(teamChallenge=teamChallenge)    
+
     return jsonify(model_to_dict(teamChallenge, recurse=False))
 
 def get_user_stepcount(user_id, date):

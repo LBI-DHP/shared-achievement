@@ -115,61 +115,16 @@ def on_save_steps(sender, instance: StepCount, created):
 
     userChallenge.save()
 
-    # if userChallenge.status != ChallengeStatus.FINISHED.name and userChallenge.progress >= 100:
-    #     userChallenge.status = ChallengeStatus.FINISHED.name
-    #     userChallenge.save()
-    #     # msg_title = "Personal Challenge achieved"
-    #     # msg_body = f"""Awesome, you did it today!!! Keep your spirit up."""
-    #     # send_push_notification(sender_user_id=1, receiver_user_id=contributor.id, title=msg_title, body=msg_body, type=msg_type)
-    # else:    
-    #     userChallenge.status = ChallengeStatus.IN_PROGRESS.name
-    #     userChallenge.save()
+    if userChallenge.status != ChallengeStatus.FINISHED.name and userChallenge.progress >= 100:
+        userChallenge.status = ChallengeStatus.FINISHED.name
+        userChallenge.save()
+        msg_title = "Personal Challenge achieved"
+        msg_body = f"""Awesome, you did it today!!! Keep your spirit up."""
+        send_push_notification(sender_user_id=1, receiver_user_id=contributor.id, title=msg_title, body=msg_body, type=msg_type)
+    
     
 
-    ### Evaluate team challenge
-    ### .....
     
-    # with db.database.atomic() as txn:
-    #     pass
-    # teamChallenge = (TeamChallenge.select().where((TeamChallenge.team == contributor.team) & (TeamChallenge.date == team_today(contributor.team.id))).get())
-    # print("-----TC------")
-    # #print(teamChallenge.name)
-    
-    # # print ("--------------------S")
-    # # logger.log(logging.INFO, teamChallenge.members)
-    # # print ("--------------------E")
-    # total_steps = (StepCount.select(fn.SUM(StepCount.steps).alias('total_steps')).where((StepCount.teamChallenge == teamChallenge)).get())
-
-    
-    # # if total_steps.total_steps is None:
-    # #     total_steps.total_steps = 0
-    # teamChallenge.total_steps = total_steps.total_steps
-    # teamChallenge.status = ChallengeStatus.IN_PROGRESS.name
-    
-    # # teamChallenge.update({'total_steps': total_steps.total_steps,
-    # #                       'status': ChallengeStatus.IN_PROGRESS.name})
-    
-    # teamChallenge.save()
-    
-    # print("-----TC TOTAL STEPS------")
-    # print(total_steps.total_steps)
-    # print(teamChallenge.total_steps)
-    # print(teamChallenge.status)
-        
-        #teamChallenge.save()    
-
-        # updateTeamMembersGoal(teamChallenge=teamChallenge)
-        # updateTeamChallengeProgress(teamChallenge=teamChallenge)
-
-        
-        # if teamChallenge.status != ChallengeStatus.FINISHED.name and teamChallenge.progress >= 100:
-        #     teamChallenge.status = ChallengeStatus.FINISHED.name
-        #     msg_title = "Team Challenge Completed"
-        #     msg_body = f"""Awesome, your team reached the summit!!! Keep your spirit up."""
-        #     send_push_notification(sender_user_id=1, receiver_user_id=contributor.id, title=msg_title, body=msg_body, type=msg_type)
-        # else:
-        #     teamChallenge.status = ChallengeStatus.IN_PROGRESS.name
-        # teamChallenge.save()
 
 
 @pre_save(sender=User)

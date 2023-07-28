@@ -110,16 +110,12 @@ class Challenge(BaseModel): # Abstract class for UserChallenge and TeamChallenge
     total_steps = IntegerField(default=0) #  number of steps contributed to this challenge
     progress = IntegerField(default=0) # progress in percent
     status = CharField(default=ChallengeStatus.NOT_STARTED.name)
+    
 
 class UserChallenge(Challenge):
     date = DateField()    
     user = ForeignKeyField(User)
 
-    name = CharField()
-    goal = IntegerField(default=int(ChallengeDifficulty.NORMAL)) # base Goal in steps
-    total_steps = IntegerField(default=0) #  number of steps contributed to this challenge
-    progress = IntegerField(default=0) # progress in percent
-    status = CharField(default=ChallengeStatus.NOT_STARTED.name)
 
 # class UserChallengeRelationship(BaseModel):
 #     user = ForeignKeyField(User)
@@ -152,6 +148,10 @@ class StepCount(BaseModel):
     user = ForeignKeyField(User)
     team = ForeignKeyField(Team)
 
+
+class NotificationMessageType(Enum):    
+    STEPS_CONTRIBUTION = 1
+    FINISHED_CHALLENGE = 2
 
 class Notification(BaseModel):
     title = CharField()

@@ -20,7 +20,7 @@ from achievements import *
 import json
 import datetime
 from controller.push_notifications import send_push_notification
-from controller.challenge_controller import updateTeamChallengeProgress, updateTeamMembersGoal, updateUserChallengeProgress
+from controller.challenge_controller import updateTeamChallengeProgress, updateTeamMembersGoal, updateUserChallengeProgress, updateTeamChallengeSteps
 
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -248,48 +248,24 @@ def push_steps():
         teamChallenge.date = team_today(user.team.id)        
         teamChallenge.save()
     
-
-    query = User.select(
-        User.id.alias('user_id'), 
-        User.username.alias('user_name'), 
-        User.team.alias('team_id'),
-        TeamChallenge.id.alias('team_challenge_id'),
-        UserChallenge.id.alias('user_challenge_id'),
-        TeamChallenge.date.alias('team_challenge_date'),
-        UserChallenge.date.alias('user_challenge_date'),
-        ).join(TeamChallenge, on=(TeamChallenge.team == User.team)
-        ).join(UserChallenge, on=(UserChallenge.user == User.id)
-        ).where(
-            (User.id == user.id)
-            & (TeamChallenge.date == usr_today(user.id))
-            & (UserChallenge.date == team_today(user.team.id))
-        )
-    print(query.sql())
-    print(list(query.dicts()))
-    # return json.dumps(list(query.dicts()), default=str)
-    team_challenge_id = query.dicts()[0]['team_challenge_id']
-    user_challenge_id = query.dicts()[0]['user_challenge_id']
-    print(f"{team_challenge_id=}, {user_challenge_id=}")
-    
-    team_challenge = TeamChallenge.get_by_id(team_challenge_id)
-    user_challenge = UserChallenge.get_by_id(user_challenge_id)
     
     steps =  StepCount()
     steps.steps = request.json['steps']
     steps.user = user
     steps.team = user.team
-    steps.teamChallenge = team_challenge
-    steps.userChallenge = user_challenge
+    steps.teamChallenge = teamChallenge
+    steps.userChallenge = userChallenge
     steps.server_timestamp = datetime.datetime.now()
     steps.usr_timestamp = usr_now(user.id)
     steps.team_timestamp = team_now(user.team.id)
     steps.save()
     
 
-    updateUserChallengeProgress(user_challenge)
+    updateUserChallengeProgress(userChallenge)
     
-    updateTeamMembersGoal(teamChallenge=team_challenge)
-    updateTeamChallengeProgress(teamChallenge=team_challenge)
+    updateTeamChallengeSteps(teamChallenge=teamChallenge)
+    updateTeamMembersGoal(teamChallenge=teamChallenge)
+    updateTeamChallengeProgress(teamChallenge=teamChallenge, contributor=user)
     
     return Response(json.dumps(model_to_dict(steps, recurse=False), default=str, indent=4, sort_keys=True), mimetype='application/json')    
     

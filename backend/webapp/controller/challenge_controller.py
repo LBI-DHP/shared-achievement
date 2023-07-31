@@ -120,6 +120,7 @@ def on_save_steps(sender, instance: StepCount, created):
         userChallenge.save()
         msg_title = "Personal Challenge achieved"
         msg_body = f"""Awesome, you did it today!!! Keep your spirit up."""
+        msg_type = NotificationMessageType.STEPS_CONTRIBUTION.name
         send_push_notification(sender_user_id=1, receiver_user_id=contributor.id, title=msg_title, body=msg_body, type=msg_type)
     
     

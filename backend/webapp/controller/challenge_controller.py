@@ -31,7 +31,7 @@ def updateTeamChallengeProgress(teamChallenge:TeamChallenge, contributor:User=No
         teamChallenge.progress = sumProgress / len(teamChallenge.team.members)
     
     if teamChallenge.progress > 0:
-        teamChallenge.status = ChallengeStatus.IN_PROGRESS
+        teamChallenge.status = ChallengeStatus.IN_PROGRESS.name
     
     if teamChallenge.status != ChallengeStatus.FINISHED.name and teamChallenge.progress >= 100:
             teamChallenge.status = ChallengeStatus.FINISHED.name

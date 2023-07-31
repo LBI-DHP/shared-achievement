@@ -104,10 +104,10 @@ def get_team_challenge(team_id):
         date_time_obj = datetime.datetime.strptime(date_str, '%Y-%m-%d')
     else:
         date_time_obj = team_today(team.id)
-    # teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=date_time_obj)
-    teamChallenge = TeamChallenge.get_or_none(team=team_id, date=date_time_obj)
-    if teamChallenge is None:
-        return "Team challenge does not exist", 400
+    teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=date_time_obj)
+    # teamChallenge = TeamChallenge.get_or_none(team=team_id, date=date_time_obj)
+    # if teamChallenge is None:
+    #     return "Team challenge does not exist", 400
     updateTeamMembersGoal(teamChallenge=teamChallenge)
     updateTeamChallengeProgress(teamChallenge=teamChallenge)    
 
@@ -143,7 +143,7 @@ def stepcount_yesterday_user(user_id):
 def get_team_stepcount(team_id, date):
     teamChallenge, created = TeamChallenge.get_or_create(team=team_id, date=date)    
     updateTeamMembersGoal(teamChallenge=teamChallenge)
-
+    updateTeamChallengeProgress(teamChallenge=teamChallenge) 
     if created:        
         res = {'totalSteps': 0}
         return jsonify(res)

@@ -1,5 +1,4 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import configJSON from "../config.json";
 import base64 from "react-native-base64";
 import * as SecureStore from "expo-secure-store";
 
@@ -67,6 +66,12 @@ export default class dataManager {
   };
 
   static getUserId = async () => {
+    console.log(process.env);
+    console.log("apiUrl", process.env.EXPO_PUBLIC_API_URL);
+    console.log("apiUrl", process.env.EXPO_PUBLIC_API_URL);
+    console.log("apiUrl", process.env.EXPO_PUBLIC_API_URL);
+    console.log("apiUrl", process.env.EXPO_PUBLIC_API_URL);
+    console.log("apiUrl", process.env.EXPO_PUBLIC_API_URL);
     let id = await SecureStore.getItemAsync("id");
     console.log("userID", id);
     return id;
@@ -167,7 +172,7 @@ export default class dataManager {
   static getUserDataByUniqueDeviceId = async (uniqueDeviceId) => {
     try {
       const response = await fetch(
-        configJSON.serverConfig.root +
+        process.env.EXPO_PUBLIC_API_URL +
         "/api/user/?uniqueDeviceId=" +
         uniqueDeviceId,
         {
@@ -175,7 +180,7 @@ export default class dataManager {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-            Authorization: "Basic " + configJSON.serverConfig.authorization,
+            Authorization: "Basic " + process.env.EXPO_PUBLIC_AUTHORIZATION,
           },
         }
       );
@@ -200,13 +205,13 @@ export default class dataManager {
   static getUserData = async (userid) => {
     try {
       const response = await fetch(
-        configJSON.serverConfig.root + "/api/user/" + userid + "/",
+        process.env.EXPO_PUBLIC_API_URL + "/api/user/" + userid + "/",
         {
           method: "GET",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-            Authorization: "Basic " + configJSON.serverConfig.authorization,
+            Authorization: "Basic " + process.env.EXPO_PUBLIC_AUTHORIZATION,
           },
         }
       );
@@ -229,7 +234,7 @@ export default class dataManager {
 
   static registerUser = async (userData) => {
     try {
-      const response = await fetch(configJSON.serverConfig.root + "/register", {
+      const response = await fetch(process.env.EXPO_PUBLIC_API_URL + "/register", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -263,13 +268,13 @@ export default class dataManager {
   static updateUserData = async (userData) => {
     try {
       const response = await fetch(
-        configJSON.serverConfig.root + "/api/user/" + userData.id + "/",
+        process.env.EXPO_PUBLIC_API_URL + "/api/user/" + userData.id + "/",
         {
           method: "PUT",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-            Authorization: "Basic " + configJSON.serverConfig.authorization,
+            Authorization: "Basic " + process.env.EXPO_PUBLIC_AUTHORIZATION,
             // Authorization: "Basic " + base64.encode("admin" + ":" + "admin"),
             // base64.encode(userData.username + ":" + userData.password),
           },
@@ -306,7 +311,7 @@ export default class dataManager {
 
     try {
       const response = await fetch(
-        configJSON.serverConfig.root +
+        process.env.EXPO_PUBLIC_API_URL +
         "/challenge/user/" +
         completeRequestString,
         {
@@ -314,7 +319,7 @@ export default class dataManager {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-            Authorization: "Basic " + configJSON.serverConfig.authorization,
+            Authorization: "Basic " + process.env.EXPO_PUBLIC_AUTHORIZATION,
           },
         }
       );
@@ -337,13 +342,13 @@ export default class dataManager {
   static pushSteps = async (userid, newSteps) => {
     try {
       const response = await fetch(
-        configJSON.serverConfig.root + "/push_steps",
+        process.env.EXPO_PUBLIC_API_URL + "/push_steps",
         {
           method: "POST",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-            Authorization: "Basic " + configJSON.serverConfig.authorization,
+            Authorization: "Basic " + process.env.EXPO_PUBLIC_AUTHORIZATION,
           },
           body: JSON.stringify({
             user_id: userid,
@@ -377,13 +382,13 @@ export default class dataManager {
   ) => {
     try {
       const response = await fetch(
-        configJSON.serverConfig.root + "/send_user_message/",
+        process.env.EXPO_PUBLIC_API_URL + "/send_user_message/",
         {
           method: "POST",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-            Authorization: "Basic " + configJSON.serverConfig.authorization,
+            Authorization: "Basic " + process.env.EXPO_PUBLIC_AUTHORIZATION,
           },
           body: JSON.stringify({
             sender: senderUserID,
@@ -410,7 +415,7 @@ export default class dataManager {
   static createNewTeam = async ({ name, progressCalculationMode }) => {
     try {
       const response = await fetch(
-        configJSON.serverConfig.root + "/admin/team/add",
+        process.env.EXPO_PUBLIC_API_URL + "/admin/team/add",
         {
           method: "POST",
           headers: {
@@ -440,13 +445,13 @@ export default class dataManager {
   static getAllTeams = async () => {
     try {
       const response = await fetch(
-        configJSON.serverConfig.root + "/api/team/",
+        process.env.EXPO_PUBLIC_API_URL + "/api/team/",
         {
           method: "GET",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-            Authorization: "Basic " + configJSON.serverConfig.authorization,
+            Authorization: "Basic " + process.env.EXPO_PUBLIC_AUTHORIZATION,
           },
         }
       );
@@ -470,13 +475,13 @@ export default class dataManager {
   static getTeamMembersAndStepCountOfToday = async (teamid, mode) => {
     try {
       const response = await fetch(
-        configJSON.serverConfig.root + "/teamstepstoday/" + teamid,
+        process.env.EXPO_PUBLIC_API_URL + "/teamstepstoday/" + teamid,
         {
           method: "GET",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-            Authorization: "Basic " + configJSON.serverConfig.authorization,
+            Authorization: "Basic " + process.env.EXPO_PUBLIC_AUTHORIZATION,
           },
         }
       );
@@ -513,13 +518,13 @@ export default class dataManager {
   static getTeamData = async (teamid) => {
     try {
       const response = await fetch(
-        configJSON.serverConfig.root + "/api/team/" + teamid + "/",
+        process.env.EXPO_PUBLIC_API_URL + "/api/team/" + teamid + "/",
         {
           method: "GET",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-            Authorization: "Basic " + configJSON.serverConfig.authorization,
+            Authorization: "Basic " + process.env.EXPO_PUBLIC_AUTHORIZATION,
           },
         }
       );
@@ -544,7 +549,7 @@ export default class dataManager {
 
     try {
       const response = await fetch(
-        configJSON.serverConfig.root +
+        process.env.EXPO_PUBLIC_API_URL +
         "/challenge/team/" +
         completeRequestString,
         {
@@ -552,7 +557,7 @@ export default class dataManager {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-            Authorization: "Basic " + configJSON.serverConfig.authorization,
+            Authorization: "Basic " + process.env.EXPO_PUBLIC_AUTHORIZATION,
           },
         }
       );

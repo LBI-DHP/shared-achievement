@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Feather } from "@expo/vector-icons";
 import { View, TouchableOpacity } from "react-native";
-import configJSON from "../../config.json";
 import { Text } from "../Themed";
 import dataManager from "../DataManager";
 import { UserDataContext } from "../../providers/UserDataProvider";
@@ -142,8 +141,8 @@ export default function StepCounterGoogleFit({ singleUser = false }) {
           {
             method: "POST",
             body: JSON.stringify({
-              client_id: configJSON.googleConfig.clientID,
-              client_secret: configJSON.googleConfig.clientSecret,
+              client_id: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
+              client_secret: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_SECRET,
               grant_type: "refresh_token",
               refresh_token: googleAuthInfo.refresh_token,
             }),

@@ -1,6 +1,8 @@
 # frontend
+android/
 node_modules/
 .expo/
+.vscode/
 dist/
 npm-debug.*
 *.jks
@@ -13,6 +15,7 @@ web-build/
 config.json
 
 # backend
+.vscode/
 *.env
 *.pyc
 */venv/*

@@ -26,6 +26,8 @@ npm install
 
 ## Run the project
 
+Make sure you have the `.env` file that contains the environment variables needed to run the project. Request this file from other developers in your team. This file is not stored in the git repo as it contains sensitive values.
+
 To run the project in **development** mode, navigate to the project directory and run the following expo command:
 
 ```bash
@@ -50,14 +52,16 @@ Setup:
 
 - Install the latest EAS CLI
   `npm install -g eas-cli`
-- Login to your Expo account
+- Login to the LBI Expo account
   `eas login`
   verify with:
   `eas whoami`
 - Configure the project
   `eas build:configure`
-- Run a build, e.g. for android
-  `eas build --platform android`
+- If values in the `.env` file changed, make sure to update the corresponding secrets at: https://expo.dev/accounts/lbidhp/projects/shared-achievement/secrets
+- Run a build
+  `eas build`
+  
   Credentials get generated or reused on a project basis, view them at the [expo.dev](expo.dev) site under your project under "Credentials". The keystore .jks file can be donloaded there if needed.
 
 ## Expo-cli has not yet been tested against Node.js v17.0.1.

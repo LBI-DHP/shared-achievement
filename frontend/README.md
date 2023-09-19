@@ -33,6 +33,11 @@ To run the project in **development** mode, navigate to the project directory an
 ```bash
 expo start
 ```
+If the `.env` variable is not properly read (in the logs `apiUrl undefined`) use
+```bash
+dotenv run expo start
+```
+This will ensure the `.env` variables are loaded.
 
 To run the project in **production** mode, navigate to the project directory and run the following expo command:
 

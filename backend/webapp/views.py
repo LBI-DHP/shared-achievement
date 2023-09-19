@@ -75,7 +75,16 @@ def register_user():
 @app.route('/challenge/user/<user_id>', methods=['GET'])
 @auth.login_required
 def get_user_challenge(user_id):
-    user_id = int(user_id)    
+    print(f"{user_id=}")
+    # if user_id=='null':
+    #     return "User does not exist", 404
+    
+    try:
+        user_id = int(user_id)
+    except Exception as e:
+        #print(e)
+        return "User does not exist", 404
+              
     user = User.get_or_none(User.id == user_id)
     if user is None:
         return "User does not exist", 404

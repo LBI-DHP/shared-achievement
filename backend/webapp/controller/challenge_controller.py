@@ -38,7 +38,8 @@ def updateTeamChallengeProgress(teamChallenge:TeamChallenge, contributor:User=No
             msg_title = "Team Challenge Completed"
             msg_body = f"""Awesome, your team reached the summit!!! Keep your spirit up."""
             msg_type = NotificationMessageType.FINISHED_CHALLENGE.name
-            send_push_notification(sender_user_id=1, receiver_user_id=contributor.id, title=msg_title, body=msg_body, type=msg_type)
+            if contributor is not None:
+                send_push_notification(sender_user_id=1, receiver_user_id=contributor.id, title=msg_title, body=msg_body, type=msg_type)
 
     teamChallenge.save()
 

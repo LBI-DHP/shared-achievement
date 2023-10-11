@@ -4,6 +4,7 @@ import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import { Platform } from "react-native";
 import { UpdateContext } from "./UpdateProvider";
+import Constants from "expo-constants";
 
 export const UserDataContext = React.createContext({
   userData: {
@@ -15,15 +16,15 @@ export const UserDataContext = React.createContext({
     showDeveloperSettings: false,
     // uniqueDeviceId: null,
   },
-  setUserData: ({}) => {},
+  setUserData: ({ }) => { },
   navigationIndex: 0,
-  setNavigationIndex: ({}) => {},
+  setNavigationIndex: ({ }) => { },
   isUserDataLoading: true,
   userDataLoadingError: false,
   useGoogleFit: false,
-  setUseGoogleFit: ({}) => {},
+  setUseGoogleFit: ({ }) => { },
   isConnectedToGoogleFit: false,
-  setIsConnectedToGoogleFit: ({}) => {},
+  setIsConnectedToGoogleFit: ({ }) => { },
   userChallengeData: { progress: 0, totalSteps: 0, goal: 0 },
   isUserChallengeDataLoading: true,
 });
@@ -82,6 +83,7 @@ export const UserDataProvider = (props) => {
   const createNewUser = (mounted) => {
     registerForPushNotificationsAsync()
       .then((token) => {
+        if (token.data) token = token.data;
         if (mounted)
           setUserData({
             ...userData,
@@ -114,6 +116,13 @@ export const UserDataProvider = (props) => {
                 } else if (data === null) {
                   createNewUser(mounted);
                 } else {
+                  if (Platform.OS === "ios") {
+                    // if a newer version of the app is installed via TestFlight,
+                    // the user data is saved (including the ExpoPushToken),
+                    // but not the permission settings,
+                    // so permission to send push notifications must be granted again
+                    registerForPushNotificationsAsync();
+                  }
                   setUserData(data);
                   setIsUserDataLoading(false);
                 }
@@ -200,7 +209,18 @@ export const UserDataProvider = (props) => {
 };
 
 async function registerForPushNotificationsAsync() {
+
   let token;
+
+  if (Platform.OS === "android") {
+    Notifications.setNotificationChannelAsync("default", {
+      name: "default",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: "#FF231F7C",
+    });
+  }
+
   if (Device.isDevice) {
     const { status: existingStatus } =
       await Notifications.getPermissionsAsync();
@@ -213,19 +233,14 @@ async function registerForPushNotificationsAsync() {
       alert("Failed to get push token for push notification!");
       return;
     }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
+    // Learn more about projectId:
+    // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
+    token = await Notifications.getExpoPushTokenAsync({
+      projectId: Constants.expoConfig.extra.eas.projectId
+    });
     console.log(token);
   } else {
     alert("Must use physical device for Push Notifications");
-  }
-
-  if (Platform.OS === "android") {
-    Notifications.setNotificationChannelAsync("default", {
-      name: "default",
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: "#FF231F7C",
-    });
   }
 
   return token;

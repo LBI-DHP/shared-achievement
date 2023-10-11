@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { UserDataContext } from "../providers/UserDataProvider";
 import dataManager from "../components/DataManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 
 export default function Settings() {
   const {
@@ -94,35 +95,17 @@ export default function Settings() {
         style={{ marginTop: 10 }}
         mode="contained"
         onPress={() => {
-          if (isConnectedToGoogleFit) {
-            dataManager
-              .disconnectFromGoogleFit(googleAccessToken)
-              .then((worked) => {
-                if (worked) {
-                  AsyncStorage.clear().then(() => {
-                    setUserData({
-                      id: null,
-                      username: null,
-                      team: null,
-                      expoToken: null,
-                      targetGoal: null,
-                      showDeveloperSettings: false,
-                    });
-                    setIsConnectedToGoogleFit(false);
-                  });
-                } else setGoogleFitError(true);
-              });
-          } else
-            AsyncStorage.clear().then(() => {
-              setUserData({
-                id: null,
-                username: null,
-                team: null,
-                expoToken: null,
-                targetGoal: null,
-                showDeveloperSettings: false,
-              });
+          SecureStore.deleteItemAsync("id");
+          AsyncStorage.clear().then(() => {
+            setUserData({
+              id: null,
+              username: null,
+              team: null,
+              expoToken: null,
+              targetGoal: null,
+              showDeveloperSettings: false,
             });
+          });
         }}
       >
         Clear local storage

@@ -13,6 +13,7 @@ npm-debug.*
 *.orig.*
 web-build/
 config.json
+frontend/google-services.json
 
 # backend
 .vscode/

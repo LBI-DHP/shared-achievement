@@ -31,7 +31,7 @@ Make sure you have the `.env` file that contains the environment variables neede
 To run the project in **development** mode, navigate to the project directory and run the following expo command:
 
 ```bash
-expo start
+npx expo start
 ```
 If the `.env` variable is not properly read (in the logs `apiUrl undefined`) use
 ```bash
@@ -42,7 +42,7 @@ This will ensure the `.env` variables are loaded.
 To run the project in **production** mode, navigate to the project directory and run the following expo command:
 
 ```bash
-expo start --no-dev --minify
+npx expo start --no-dev --minify
 ```
 
 The expo-cli should pop up and you are ready to go.

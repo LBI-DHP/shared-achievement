@@ -3,11 +3,11 @@ import { AppState } from "react-native";
 
 export const UpdateContext = React.createContext({
   stepsPushedIndicator: false,
-  setStepsPushedIndicator: ({}) => {},
+  setStepsPushedIndicator: ({ }) => { },
   apiReloadIndicator: false,
-  setApiReloadIndicator: ({}) => {},
+  setApiReloadIndicator: ({ }) => { },
   midnightIndicator: false,
-  setMidnightIndicator: ({}) => {},
+  setMidnightIndicator: ({ }) => { },
   appHasComeToForeground: false,
 });
 
@@ -23,25 +23,26 @@ export const UpdateProvider = (props) => {
   const appState = useRef(AppState.currentState);
 
   useEffect(() => {
-    AppState.addEventListener("change", _handleAppStateChange);
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        setAppHasComeToForeground(true);
+        setApiReloadIndicator(!apiReloadIndicator);
+        console.log("App has come to the foreground!");
+      } else {
+        setAppHasComeToForeground(false);
+      }
+
+      appState.current = nextAppState;
+    });
+
     return () => {
-      AppState.removeEventListener("change", _handleAppStateChange);
+      subscription.remove();
     };
   }, []);
 
-  const _handleAppStateChange = (nextAppState) => {
-    if (
-      appState.current.match(/inactive|background/) &&
-      nextAppState === "active"
-    ) {
-      setAppHasComeToForeground(true);
-      setApiReloadIndicator(!apiReloadIndicator);
-      console.log("App has come to the foreground!");
-    } else {
-      setAppHasComeToForeground(false);
-    }
-    appState.current = nextAppState;
-  };
 
   useEffect(() => {
     let mounted = true;

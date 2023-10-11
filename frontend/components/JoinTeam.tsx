@@ -27,7 +27,14 @@ export default function JoinOrCreateTeam() {
           setErrorOnLoadTeams(
             "🚨 Internal Server Error: Please try again or contact the administrator."
           );
-        else setAllTeams(response);
+          else {
+            const allVisibleTeams = [];
+            response.forEach(team => {
+              if (!team.hidden) allVisibleTeams.push(team);
+            });
+            setAllTeams(allVisibleTeams);
+  
+          }
         setIsLoading(false);
       }
     });

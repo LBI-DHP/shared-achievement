@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet, View, Text, useWindowDimensions } from "react-native";
-import Untersberg from "./Untersberg";
-import UntersbergHidden from "./UntersbergHidden";
+//import Untersberg from "./Untersberg";
+//import UntersbergHidden from "./UntersbergHidden";
+import DonutChart from "./DonutChart";
 import Clouds from "./Clouds";
 import FlagTop from "./FlagTop";
 import { UserDataContext } from "../../providers/UserDataProvider";
@@ -79,12 +80,12 @@ export default function Challenge() {
           alignItems: "center",
         }}
       >
-        <UntersbergHidden
+        {/* <UntersbergHidden
           svgWidth={untersbergSvgWidth}
           svgHeight={untersbergSvgHeight}
           svgViewBoxWidth={untersbergSvgViewBoxWidth}
           svgViewBoxHeight={untersbergSvgViewBoxHeight}
-        />
+        /> */}
         <View style={style.containerAbsolute}>
           <Text style={style.bigText}>?</Text>
           <Text style={style.smallText}>
@@ -97,22 +98,8 @@ export default function Challenge() {
 
   return (
     <View style={style.container}>
-      <Clouds
-        svgWidth={untersbergSvgWidth}
-        svgHeight={untersbergSvgHeight / 3.5}
-        svgViewBoxWidth={untersbergSvgViewBoxWidth}
-        svgViewBoxHeight={untersbergSvgViewBoxHeight / 3.5}
-      />
-      <FlagTop
-        svgWidth={untersbergSvgWidth}
-        svgHeight={flagSvgHeight}
-        svgViewBoxWidth={untersbergSvgViewBoxWidth}
-        svgViewBoxHeight={flagSvgViewBoxHeight}
-        progressPercent={teamRelativeStepCountToday}
-        teamAbsoluteStepGoal={teamAbsoluteStepGoal}
-        mode={mode}
-      />
-      <Untersberg
+      <DonutChart></DonutChart>
+      {/* <Untersberg
         svgWidth={untersbergSvgWidth}
         svgHeight={untersbergSvgHeight}
         svgViewBoxWidth={untersbergSvgViewBoxWidth}
@@ -121,14 +108,14 @@ export default function Challenge() {
         progressPercent={teamRelativeStepCountToday}
         mode={mode}
         teamAbsoluteStepCountToday={teamAbsoluteStepCountToday}
-      />
+      /> */}
     </View>
   );
 }
 
 const style = StyleSheet.create({
   container: {
-    paddingTop: 10,
+    paddingTop: 200,
     alignItems: "center",
     backgroundColor: "#99bfcf",
     justifyContent: "flex-end",

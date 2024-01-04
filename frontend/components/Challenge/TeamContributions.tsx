@@ -16,6 +16,16 @@ export default function TeamContributions() {
   const elementBoarder = 1;
   const elementMargin = 5;
   let elementSpaces = (elementBoarder + elementMargin) * 2;
+  const colors = ["#CC6677", "#332288", "#DDCC77", "#44AA99"];
+
+  function hexToRgba(hex, alpha) {
+    hex = hex.replace(/^#/, '');
+    const bigint = parseInt(hex, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
 
   useEffect(() => {
     if (teamMembersAndStepCountOfToday.length !== 0) {
@@ -59,28 +69,17 @@ export default function TeamContributions() {
         return (
           <View
             style={
-              member.username !== userData.username
-                ? {
-                    margin: elementMargin,
-                    flexDirection: "column",
-                    padding: elementPadding,
-                    paddingBottom: 0,
-                    borderWidth: elementBoarder,
-                    borderColor: "#7ebdd8",
-                    borderRadius: 5,
-                    width: elementWidth,
-                  }
-                : {
-                    margin: elementMargin,
-                    flexDirection: "column",
-                    padding: elementPadding - 1,
-                    paddingBottom: 0,
-                    borderWidth: elementBoarder + 1,
-                    borderColor: "#7ebdd8",
-                    backgroundColor: "#e6f7ff",
-                    borderRadius: 5,
-                    width: elementWidth,
-                  }
+              {
+                margin: elementMargin,
+                flexDirection: "column",
+                padding: elementPadding - 1,
+                paddingBottom: 0,
+                borderWidth: elementBoarder + 1,
+                borderColor: member.color,
+                backgroundColor: hexToRgba(member.color, 0.1),
+                borderRadius: 5,
+                width: elementWidth,
+              }
             }
             key={member.username}
           >
@@ -90,7 +89,7 @@ export default function TeamContributions() {
                   flexDirection: "row",
                 }}
               >
-                <Text style={{ fontWeight: "bold" }}>
+                <Text style={{ fontWeight: "bold", }}>
                   {mode === "ABSOLUTE"
                     ? member.sumSteps
                     : Math.round(member.userProgress * 100)}

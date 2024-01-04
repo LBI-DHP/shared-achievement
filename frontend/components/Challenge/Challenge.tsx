@@ -78,12 +78,6 @@ export default function Challenge() {
           alignItems: "center",
         }}
       >
-        {/* <UntersbergHidden
-          svgWidth={untersbergSvgWidth}
-          svgHeight={untersbergSvgHeight}
-          svgViewBoxWidth={untersbergSvgViewBoxWidth}
-          svgViewBoxHeight={untersbergSvgViewBoxHeight}
-        /> */}
         <View style={style.containerAbsolute}>
           <Text style={style.bigText}>?</Text>
           <Text style={style.smallText}>
@@ -99,17 +93,8 @@ export default function Challenge() {
       <DonutChart svgWidth={untersbergSvgWidth}
         teamAbsoluteStepGoal={teamAbsoluteStepGoal}
         teamAbsoluteStepCountToday={teamAbsoluteStepCountToday}
-        teamMembersAndStepCountOfToday={teamMembersAndStepCountOfToday}></DonutChart>
-      {/* <Untersberg
-        svgWidth={untersbergSvgWidth}
-        svgHeight={untersbergSvgHeight}
-        svgViewBoxWidth={untersbergSvgViewBoxWidth}
-        svgViewBoxHeight={untersbergSvgViewBoxHeight}
-        progressPosition={progressPosition}
-        progressPercent={teamRelativeStepCountToday}
-        mode={mode}
-        teamAbsoluteStepCountToday={teamAbsoluteStepCountToday}
-      /> */}
+        teamMembersAndStepCountOfToday={teamMembersAndStepCountOfToday}>
+      </DonutChart>
     </View>
   );
 }
@@ -118,7 +103,6 @@ const style = StyleSheet.create({
   container: {
     padding: 10,
     alignItems: "center",
-    backgroundColor: "lightgrey",
     justifyContent: "flex-end",
     marginBottom: 10,
   },

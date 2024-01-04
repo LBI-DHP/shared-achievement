@@ -22,12 +22,13 @@ export default function TeamChartAbsolute({
             <Text style={{ fontWeight: "normal" }}>(me) </Text>
           )}
         </Text>
-        <Text style={{ color: "#ffae00", fontSize: 15, fontWeight: "bold" }}>
+        <Text style={{ color: member.color, fontSize: 15, fontWeight: "bold" }}>
           {member.sumSteps} steps
         </Text>
       </View>
       {member.username !== currentUserName && (
         <Button
+          style={{ backgroundColor: member.color }}
           onPress={() => {
             setSelectedUser({
               username: member.username,

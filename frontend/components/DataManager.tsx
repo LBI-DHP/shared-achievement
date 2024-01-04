@@ -492,9 +492,27 @@ export default class dataManager {
           const responseJSON = await response.json();
           if (responseJSON !== null)
             if (mode === "ABSOLUTE") {
-              responseJSON.sort((a, b) =>
-                a.sumSteps < b.sumSteps ? 1 : b.sumSteps < a.sumSteps ? -1 : 0
-              );
+
+              //TO-DO: add this in the backend
+              const usernameColors = {
+                "Eva": "#CC6677",  
+                "EvaExpo": "#CC6677",  
+                "riccardo_hci": "#332288",  
+                "LukasDo": "#DDCC77",  
+                "camellia": "#44AA99"  
+              };
+              
+              // Sorting function
+              const sortBySumSteps = (a, b) => b.sumSteps - a.sumSteps;
+            
+              // Color assignment function
+              const assignColor = user => usernameColors[user] || '#000000';
+              
+              // Apply sorting and color assignment
+              responseJSON.sort(sortBySumSteps).forEach(user => {
+                user.color = assignColor(user.username);
+              });
+
             } else {
               responseJSON.sort((a, b) =>
                 a.userProgress < b.userProgress

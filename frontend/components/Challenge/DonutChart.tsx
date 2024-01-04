@@ -13,14 +13,11 @@ const DonutChart = (props) => {
     const circleCircumference = 2 * Math.PI * radius;
 
     const data = [];
-    const colors = ["#ffa500", "#00ff7f", "#00bfff", "#ff1493"];
-    const fakeSteps = [5003, 2344, 2042, 7001];
 
     teamMembersAndStepCountOfToday.forEach((member, i) => {
         data.push({
-            color: colors[i],
-            percentage: calculatePercentage(fakeSteps[i]),
-            //percentage: calculatePercentage(member.sumSteps),
+            color: member.color,
+            percentage: calculatePercentage(member.sumSteps),
         });
 
     });
@@ -30,11 +27,17 @@ const DonutChart = (props) => {
     }
 
     function calculateStrokeDashoffset(percentage) {
-        return circleCircumference - (circleCircumference * percentage) / 100;
+        const result = circleCircumference - (circleCircumference * percentage) / 100;
+        return Number.isFinite(result) ? result : 0;
     }
+
 
     function calculateAngle(percentage) {
         return (percentage / 100) * 360;
+    }
+
+    function formatNumberWithDot(number) {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
     return (
@@ -46,7 +49,7 @@ const DonutChart = (props) => {
                             cx="50%"
                             cy="50%"
                             r={radius}
-                            stroke="#F1F6F9"
+                            stroke="#DDDDDD"
                             fill="transparent"
                             strokeWidth="25"
                         />
@@ -70,7 +73,9 @@ const DonutChart = (props) => {
                         ))}
                     </G>
                 </Svg>
-                <Text style={styles.label1}>{teamAbsoluteStepCountToday + "/" + teamAbsoluteStepGoal}</Text>
+                <Text style={styles.label1}>
+                    {formatNumberWithDot(teamAbsoluteStepCountToday) + " / " + formatNumberWithDot(teamAbsoluteStepGoal)}
+                </Text>
                 <Text style={styles.label2}>{"steps"}</Text>
             </View>
         </View>
@@ -81,6 +86,7 @@ export default DonutChart;
 
 const styles = StyleSheet.create({
     container: {
+        paddingTop: 10,
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
@@ -97,7 +103,7 @@ const styles = StyleSheet.create({
         color: "#082032",
     },
     label2: {
-        paddingTop: 30,
+        paddingTop: 40,
         position: "absolute",
         textAlign: "center",
         fontWeight: "700",

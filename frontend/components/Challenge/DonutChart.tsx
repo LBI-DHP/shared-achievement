@@ -1,95 +1,107 @@
-// code from: 
-// https://dev.to/franciscomendes10866/how-to-create-a-dynamic-donut-pie-chart-using-react-native-svg-1j70
-
 import React from 'react';
 import { View, StyleSheet, Text } from "react-native";
 import Svg, { G, Circle } from "react-native-svg";
 
-const DonutChart = () => {
-  const radius = 70;
-  const circleCircumference = 2 * Math.PI * radius;
+const DonutChart = (props) => {
+    const {
+        teamAbsoluteStepGoal,
+        teamAbsoluteStepCountToday,
+        teamMembersAndStepCountOfToday,
+    } = props;
 
-  const expired = 2;
-  const nonExpired = 4;
-  const total = expired + nonExpired;
+    const radius = 70;
+    const circleCircumference = 2 * Math.PI * radius;
 
-  const data = [];
+    const data = [];
+    const colors = ["#ffa500", "#00ff7f", "#00bfff", "#ff1493"];
+    const fakeSteps = [5003, 2344, 2042, 7001];
 
-  for (let i = 1; i <= expired; i++) {
-    data.push({
-      color: "#F0A500",
+    teamMembersAndStepCountOfToday.forEach((member, i) => {
+        data.push({
+            color: colors[i],
+            percentage: calculatePercentage(fakeSteps[i]),
+            //percentage: calculatePercentage(member.sumSteps),
+        });
+
     });
-  }
 
-  for (let i = 1; i <= nonExpired; i++) {
-    data.push({ color: "#334756" });
-  }
+    function calculatePercentage(sumSteps) {
+        return (sumSteps / teamAbsoluteStepGoal) * 100 || 0.0001;
+    }
 
-  const percentage = (1 / total) * 100;
-  const strokeDashoffset =
-    circleCircumference - (circleCircumference * percentage) / 100;
+    function calculateStrokeDashoffset(percentage) {
+        return circleCircumference - (circleCircumference * percentage) / 100;
+    }
 
-  const angle = (1 / total) * 360;
-  const sliceSpacing = total === 1 ? 0 : 4;
+    function calculateAngle(percentage) {
+        return (percentage / 100) * 360;
+    }
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.graphWrapper}>
-        <Svg height="160" width="160" viewBox="0 0 180 180">
-          <G rotation={-90} originX="90" originY="90">
-            { total === 0 ? (
-              <Circle
-                cx="50%"
-                cy="50%"
-                r={radius}
-                stroke="#F1F6F9"
-                fill="transparent"
-                strokeWidth="40"
-              />
-             ) : (
-               data.map((element, index) => (
-                <Circle
-                  key={index}
-                  cx="50%"
-                  cy="50%"
-                  r={radius}
-                  stroke={element.color}
-                  fill="transparent"
-                  strokeWidth="40"
-                  strokeDasharray={circleCircumference}
-                  strokeDashoffset={strokeDashoffset + sliceSpacing}
-                  rotation={angle * index}
-                  originX="90"
-                  originY="90"
-                />
-              ))
-             )}
-          </G>
-        </Svg>
-        <Text style={styles.label}>{total}</Text>
-      </View>
-    </View>
-  );
+    return (
+        <View style={styles.container}>
+            <View style={styles.graphWrapper}>
+                <Svg height="250" width="250" viewBox="0 0 180 180">
+                    <G rotation={-90} originX="90" originY="90">
+                        <Circle
+                            cx="50%"
+                            cy="50%"
+                            r={radius}
+                            stroke="#F1F6F9"
+                            fill="transparent"
+                            strokeWidth="25"
+                        />
+                        {data.map((element, index) => (
+                            <Circle
+                                key={index}
+                                cx="50%"
+                                cy="50%"
+                                r={radius}
+                                stroke={element.color}
+                                fill="transparent"
+                                strokeWidth="25"
+                                strokeDasharray={circleCircumference}
+                                strokeDashoffset={calculateStrokeDashoffset(element.percentage)}
+                                rotation={calculateAngle(
+                                    data.slice(0, index).reduce((sum, el) => sum + el.percentage, 0)
+                                )}
+                                originX="90"
+                                originY="90"
+                            />
+                        ))}
+                    </G>
+                </Svg>
+                <Text style={styles.label1}>{teamAbsoluteStepCountToday + "/" + teamAbsoluteStepGoal}</Text>
+                <Text style={styles.label2}>{"steps"}</Text>
+            </View>
+        </View>
+    );
 };
 
 export default DonutChart;
 
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  graphWrapper: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  label: {
-    position: "absolute",
-    textAlign: "center",
-    fontWeight: "700",
-    fontSize: 24,
-    color: "#082032",
-  },
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    graphWrapper: {
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    label1: {
+        position: "absolute",
+        textAlign: "center",
+        fontWeight: "700",
+        fontSize: 15,
+        color: "#082032",
+    },
+    label2: {
+        paddingTop: 30,
+        position: "absolute",
+        textAlign: "center",
+        fontWeight: "700",
+        fontSize: 15,
+        color: "#082032",
+    },
 });

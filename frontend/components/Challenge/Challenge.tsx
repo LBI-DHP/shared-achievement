@@ -1,21 +1,19 @@
 import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet, View, Text, useWindowDimensions } from "react-native";
-//import Untersberg from "./Untersberg";
-//import UntersbergHidden from "./UntersbergHidden";
 import DonutChart from "./DonutChart";
-import Clouds from "./Clouds";
-import FlagTop from "./FlagTop";
 import { UserDataContext } from "../../providers/UserDataProvider";
 import { TeamDataContext } from "../../providers/TeamDataProvider";
 
 export default function Challenge() {
   const { userData, isUserDataLoading } = useContext(UserDataContext);
-  const { mode, teamChallengeData } = useContext(TeamDataContext);
+  const { mode, teamChallengeData, teamMembersAndStepCountOfToday,
+    isTeamMembersAndStepCountOfTodayLoading } = useContext(TeamDataContext);
   const [teamRelativeStepCountToday, setTeamRelativeStepCountToday] =
     useState(0);
   const [teamAbsoluteStepCountToday, setTeamAbsoluteStepCountToday] =
     useState(0);
   const [teamAbsoluteStepGoal, setTeamAbsoluteStepGoal] = useState(0);
+
 
   useEffect(() => {
     if (!isUserDataLoading && userData.team) {
@@ -98,7 +96,10 @@ export default function Challenge() {
 
   return (
     <View style={style.container}>
-      <DonutChart></DonutChart>
+      <DonutChart svgWidth={untersbergSvgWidth}
+        teamAbsoluteStepGoal={teamAbsoluteStepGoal}
+        teamAbsoluteStepCountToday={teamAbsoluteStepCountToday}
+        teamMembersAndStepCountOfToday={teamMembersAndStepCountOfToday}></DonutChart>
       {/* <Untersberg
         svgWidth={untersbergSvgWidth}
         svgHeight={untersbergSvgHeight}
@@ -115,9 +116,9 @@ export default function Challenge() {
 
 const style = StyleSheet.create({
   container: {
-    paddingTop: 200,
+    padding: 10,
     alignItems: "center",
-    backgroundColor: "#99bfcf",
+    backgroundColor: "lightgrey",
     justifyContent: "flex-end",
     marginBottom: 10,
   },

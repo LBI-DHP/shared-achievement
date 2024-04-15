@@ -2,7 +2,28 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import base64 from "react-native-base64";
 import * as SecureStore from "expo-secure-store";
 
+const stepsEva = 9023;
+const stepsRiccardo = 7421;
+const stepsLukas = 8472;
+const stepsCamellia = 8321;
+
+const stepsAll = stepsEva + stepsRiccardo + stepsLukas + stepsCamellia;
+const setCurrentPlayer = "riccardo_hci";
+
+
 export default class dataManager {
+  static currentPlayer = setCurrentPlayer;
+  static currentPlayerNewSteps = 3201;
+
+  static getCurrentPlayerSteps = (name) => {
+    if (name == "EvaExpo") return stepsEva;
+    if (name == "LukasDo") return stepsLukas;
+    if (name == "riccardo_hci") return stepsRiccardo;
+    if (name == "camellia") return stepsCamellia;
+  }
+
+  static currentPlayerSteps = dataManager.getCurrentPlayerSteps(setCurrentPlayer);
+
   static mapResponseUserDataToUserData = (responseUserData) => {
     return {
       uniqueDeviceId: responseUserData.uniqueDeviceId,
@@ -472,7 +493,7 @@ export default class dataManager {
     }
   };
 
-  static getTeamMembersAndStepCountOfToday = async (teamid, mode) => {
+  static getTeamMembersAndStepCountOfToday = async (teamid, mode, contributed = false) => {
     try {
       const response = await fetch(
         process.env.EXPO_PUBLIC_API_URL + "/teamstepstoday/" + teamid,
@@ -489,25 +510,24 @@ export default class dataManager {
       if (response.ok) {
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.indexOf("application/json") !== -1) {
-          const responseJSON = await response.json();
+          let responseJSON = await response.json();
           if (responseJSON !== null)
             if (mode === "ABSOLUTE") {
 
               //TO-DO: add this in the backend
               const usernameColors = {
-                "Eva": "#CC6677",  
-                "EvaExpo": "#CC6677",  
-                "riccardo_hci": "#332288",  
-                "LukasDo": "#DDCC77",  
-                "camellia": "#44AA99"  
+                "Eva": "#332288",
+                "EvaExpo": "#332288",
+                "riccardo_hci": "#44AA99",
+                "LukasDo": "#CC6677",
+                "camellia": "#DDCC77"
               };
-              
               // Sorting function
               const sortBySumSteps = (a, b) => b.sumSteps - a.sumSteps;
-            
+
               // Color assignment function
               const assignColor = user => usernameColors[user] || '#000000';
-              
+
               // Apply sorting and color assignment
               responseJSON.sort(sortBySumSteps).forEach(user => {
                 user.color = assignColor(user.username);
@@ -522,6 +542,10 @@ export default class dataManager {
                     : 0
               );
             }
+          responseJSON = dataManager.updateUserProgress("EvaExpo", stepsEva, responseJSON, stepsAll, contributed);
+          responseJSON = dataManager.updateUserProgress("riccardo_hci", stepsRiccardo, responseJSON, stepsAll, contributed);
+          responseJSON = dataManager.updateUserProgress("LukasDo", stepsLukas, responseJSON, stepsAll, contributed);
+          responseJSON = dataManager.updateUserProgress("camellia", stepsCamellia, responseJSON, stepsAll, contributed);
           return responseJSON;
         }
       }
@@ -532,6 +556,25 @@ export default class dataManager {
       console.log("done with get team members and steps request");
     }
   };
+
+  static updateUserProgress = (username, steps, data, stepsAll, contributed) => {
+    // Find the index of the object with the matching username
+    const index = data.findIndex(user => user.username === username);
+
+    // If the username exists in the array, update the userProgress
+    if (index !== -1) {
+      if (contributed == true && username == this.currentPlayer) {
+        data[index].userProgress = ((steps + dataManager.currentPlayerNewSteps) / data[index].targetGoal) * 100;
+        data[index].sumSteps = (steps + dataManager.currentPlayerNewSteps);
+        data[index].teamProgress = (stepsAll + dataManager.currentPlayerNewSteps / 36300) * 100;
+      } else {
+        data[index].userProgress = (steps / data[index].targetGoal) * 100;
+        data[index].sumSteps = steps;
+        data[index].teamProgress = (stepsAll / 36300) * 100;
+      }
+    }
+    return data;
+  }
 
   static getTeamData = async (teamid) => {
     try {
@@ -561,7 +604,7 @@ export default class dataManager {
       console.log("done with get team data request");
     }
   };
-  static getTeamChallengeData = async (teamid, date = "") => {
+  static getTeamChallengeData = async (teamid, date = "", contributed = false) => {
     let completeRequestString = teamid;
     if (date.length !== 0) completeRequestString += "?date=" + date;
 
@@ -584,6 +627,15 @@ export default class dataManager {
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.indexOf("application/json") !== -1) {
           const responseJSON = await response.json();
+
+          if(contributed) {
+            responseJSON.total_steps = stepsAll + dataManager.currentPlayerNewSteps;
+            responseJSON.progress = ((stepsAll+ dataManager.currentPlayerNewSteps) / 36300) * 100;
+          }else {
+            responseJSON.total_steps = stepsAll;
+            responseJSON.progress = (stepsAll / 36300) * 100;
+          }
+          
           return responseJSON;
         }
       } else if (response.status === 400) {

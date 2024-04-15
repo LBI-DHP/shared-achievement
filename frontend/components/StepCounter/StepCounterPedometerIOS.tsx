@@ -30,94 +30,18 @@ export default function StepCounterPedometerIOS({ singleUser = false }) {
   const [isApiLoading, setIsApiLoading] = useState(true);
   const [isPedometerLoading, setIsPedometerLoading] = useState(true);
 
-  let _subscription;
-
   useEffect(() => {
-    let mounted = true;
-    if (appHasComeToForeground) {
-      _unsubscribe();
-      _subscribe(mounted);
-    }
-    return () => {
-      mounted = false;
-      _unsubscribe();
-    };
-  }, [appHasComeToForeground, midnightIndicator]);
-
-  useEffect(() => {
-    let mounted = true;
-    if (appHasComeToForeground) {
-      setIsApiLoading(true);
-      dataManager.getUserChallengeData(userData.id).then((data) => {
-        if (mounted) {
-          let userStepCount = data.total_steps;
-          if (userStepCount === undefined) userStepCount = 0;
-          const stepsNew = stepCountToday - userStepCount;
-          if (stepsNew > 0) setNewSteps(stepCountToday - userStepCount);
-          else setNewSteps(0);
-          setContributedSteps(userStepCount);
-          if (data.goal) setGoalSteps(data.goal);
-          setIsApiLoading(false);
-        }
-      });
-    }
-    return () => {
-      mounted = false;
-    };
-  }, [stepCountToday, appHasComeToForeground, midnightIndicator]);
-
-  const _subscribe = (mounted) => {
-    setIsPedometerLoading(true);
-
-    // reset Sate for watchStepCount variables
-    setCurrentStepCount(0);
+    setStepCountToday(dataManager.currentPlayerSteps + dataManager.currentPlayerNewSteps);
     setCurrentStepCountAdded(0);
-    // callback  is invoked when new step count data is available
-    _subscription = Pedometer.watchStepCount((result) => {
-      if (mounted) {
-        setCurrentStepCount(result.steps);
-      }
-    });
-
-    // Returns whether the pedometer is enabled on the device
-    Pedometer.isAvailableAsync().then(
-      (result) => {
-        if (result === true) {
-          const end = new Date();
-          const start = new Date();
-          start.setHours(0, 0, 0, 0);
-
-          Pedometer.getStepCountAsync(start, end).then(
-            (result) => {
-              if (mounted) {
-                setStepCountToday(result.steps);
-                setIsPedometerAvailable(true);
-                setIsPedometerLoading(false);
-              }
-            },
-            (error) => {
-              setIsPedometerAvailable(false);
-              console.log(error);
-            }
-          );
-        }
-      },
-      (error) => {
-        setIsPedometerAvailable(false);
-        console.log(error);
-      }
-    );
-  };
-
-  const _unsubscribe = () => {
-    _subscription && _subscription.remove();
-    _subscription = null;
-  };
+    setNewSteps(dataManager.currentPlayerNewSteps);
+    setIsApiLoading(false);
+  }, [])
 
   const resetStepsAfterContribution = () => {
-    setContributedSteps(stepCountToday + currentStepCount);
+    setStepCountToday(0);
+    setContributedSteps(0);
     setNewSteps(0);
-    setCurrentStepCountAdded(currentStepCount);
+    setCurrentStepCountAdded(0);
     setStepsPushedIndicator(!stepsPushedIndicator);
   };
 
@@ -144,7 +68,7 @@ export default function StepCounterPedometerIOS({ singleUser = false }) {
         )}
         <ContributeButton
           isErrorStepCounter={!isPedometerAvailable && !isPedometerLoading}
-          isLoadingStepCounter={isApiLoading || isPedometerLoading}
+          isLoadingStepCounter={isApiLoading}
           newSteps={newSteps + (currentStepCount - currentStepCountAdded)}
           resetStepsAfterContribution={() => resetStepsAfterContribution()}
         />

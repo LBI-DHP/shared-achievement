@@ -29,10 +29,18 @@ export default function ContributeButton({
     );
   }, [newSteps, isLoading, isLoadingStepCounter]);
 
+  const usernameColors = {
+    "Eva": "#332288",
+    "EvaExpo": "#332288",
+    "riccardo_hci": "#44AA99",
+    "LukasDo": "#CC6677",
+    "camellia": "#DDCC77"
+  };
+  
   return (
     <>
       <LinearGradient
-        colors={isDisabled ? ["#6d6d6d", "#6d6d6d"] : ["#3f5c7c", "#558dad"]}
+        colors={isDisabled ? ["#6d6d6d", "#6d6d6d"] : ["#44AA99", "#369182"]}
         style={stepCounterStyles.contributeStepsButtonColor}
       >
         <TouchableOpacity

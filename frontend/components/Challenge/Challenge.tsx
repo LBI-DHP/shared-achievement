@@ -14,13 +14,14 @@ export default function Challenge() {
     useState(0);
   const [teamAbsoluteStepGoal, setTeamAbsoluteStepGoal] = useState(0);
 
+  const [update, setUpdate] = useState(false);
+
 
   useEffect(() => {
-    if (!isUserDataLoading && userData.team) {
-      setTeamRelativeStepCountToday(teamChallengeData.progress / 100);
-      setTeamAbsoluteStepCountToday(teamChallengeData.totalSteps);
-      setTeamAbsoluteStepGoal(teamChallengeData.teamMembersGoal);
-    }
+    setUpdate(!update);
+    setTeamRelativeStepCountToday(teamChallengeData.progress / 100);
+    setTeamAbsoluteStepCountToday(teamChallengeData.totalSteps);
+    setTeamAbsoluteStepGoal(teamChallengeData.teamMembersGoal);
   }, [
     teamChallengeData.totalSteps,
     teamChallengeData.progress,
@@ -93,7 +94,8 @@ export default function Challenge() {
       <DonutChart svgWidth={untersbergSvgWidth}
         teamAbsoluteStepGoal={teamAbsoluteStepGoal}
         teamAbsoluteStepCountToday={teamAbsoluteStepCountToday}
-        teamMembersAndStepCountOfToday={teamMembersAndStepCountOfToday}>
+        teamMembersAndStepCountOfToday={teamMembersAndStepCountOfToday}
+        update={update}>
       </DonutChart>
     </View>
   );

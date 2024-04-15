@@ -1,4 +1,5 @@
 import React from 'react';
+import { useEffect } from 'react';
 import { View, StyleSheet, Text } from "react-native";
 import Svg, { G, Circle } from "react-native-svg";
 
@@ -7,6 +8,7 @@ const DonutChart = (props) => {
         teamAbsoluteStepGoal,
         teamAbsoluteStepCountToday,
         teamMembersAndStepCountOfToday,
+        update
     } = props;
 
     const radius = 70;
@@ -14,12 +16,21 @@ const DonutChart = (props) => {
 
     const data = [];
 
+    useEffect(() => {
+        teamMembersAndStepCountOfToday.forEach((member, i) => {
+            data.push({
+                color: member.color,
+                percentage: calculatePercentage(member.sumSteps),
+            });
+        });
+    }, [update]);
+
     teamMembersAndStepCountOfToday.forEach((member, i) => {
+
         data.push({
             color: member.color,
             percentage: calculatePercentage(member.sumSteps),
         });
-
     });
 
     function calculatePercentage(sumSteps) {

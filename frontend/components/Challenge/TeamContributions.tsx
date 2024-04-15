@@ -113,9 +113,7 @@ export default function TeamContributions() {
                     color: "black",
                   }}
                 >
-                  {member.username === userData.username
-                    ? member.username + " (me)"
-                    : member.username}
+                  {member.username}
                 </Text>
               </ScrollView>
             </View>

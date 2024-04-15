@@ -50,14 +50,14 @@ export const TeamDataProvider = (props) => {
     let mounted = true;
     if (userData.team && mode) {
       dataManager
-        .getTeamMembersAndStepCountOfToday(userData.team, mode)
+        .getTeamMembersAndStepCountOfToday(userData.team, mode, stepsPushedIndicator)
         .then((data) => {
           if (mounted && data) setTeamMembersAndStepCountOfToday(data);
         })
         .finally(() => setIsTeamMembersAndStepCountOfTodayLoading(false));
 
       dataManager
-        .getTeamChallengeData(userData.team)
+        .getTeamChallengeData(userData.team, "", stepsPushedIndicator)
         .then((data) => {
           if (mounted && data) {
             if (!data.progress || isNaN(data.progress) || data.progress < 0)

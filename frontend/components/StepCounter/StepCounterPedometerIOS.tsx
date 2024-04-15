@@ -34,10 +34,10 @@ export default function StepCounterPedometerIOS({ singleUser = false }) {
 
   useEffect(() => {
     let mounted = true;
-    if (appHasComeToForeground) {
+    //if (appHasComeToForeground) {
       _unsubscribe();
       _subscribe(mounted);
-    }
+    //}
     return () => {
       mounted = false;
       _unsubscribe();
@@ -46,7 +46,7 @@ export default function StepCounterPedometerIOS({ singleUser = false }) {
 
   useEffect(() => {
     let mounted = true;
-    if (appHasComeToForeground) {
+    //if (appHasComeToForeground) {
       setIsApiLoading(true);
       dataManager.getUserChallengeData(userData.id).then((data) => {
         if (mounted) {
@@ -60,7 +60,7 @@ export default function StepCounterPedometerIOS({ singleUser = false }) {
           setIsApiLoading(false);
         }
       });
-    }
+    //}
     return () => {
       mounted = false;
     };

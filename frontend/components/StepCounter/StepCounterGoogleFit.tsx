@@ -101,7 +101,7 @@ export default function StepCounterGoogleFit({ singleUser = false }) {
       currentDateTime.getHours() === 0 && currentDateTime.getMinutes() === 0;
 
     if (
-      appHasComeToForeground &&
+      //appHasComeToForeground &&
       googleAuthInfo.access_token !== null &&
       isShortlyAfterMidnight
     )

@@ -192,8 +192,8 @@ export default function StepCounterGoogleFit({ singleUser = false }) {
     }
     const isTokenValid =
       googleAuthInfo.requested_at_timestamp +
-        googleAuthInfo.expires_in * 1000 -
-        new Date().valueOf() >
+      googleAuthInfo.expires_in * 1000 -
+      new Date().valueOf() >
       2000;
 
     if (!isTokenValid || tryToGetNewToken) getNewToken(mounted);
@@ -327,7 +327,7 @@ export default function StepCounterGoogleFit({ singleUser = false }) {
             {googleAuthInfo.refresh_token && (
               <Button
                 style={{ marginTop: 10 }}
-                mode="contained"
+                mode="outlined"
                 onPress={() => {
                   setTryToGetNewToken(true);
                   syncStepsFromGoogleFit(true);

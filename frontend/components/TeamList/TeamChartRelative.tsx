@@ -39,7 +39,7 @@ export default function TeamChartRelative({
               });
               showDialog();
             }}
-            mode="contained"
+            mode="outlined"
           >
             motivate
           </Button>

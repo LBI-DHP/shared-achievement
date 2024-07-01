@@ -110,7 +110,7 @@ export default function ChallengeScreen() {
             )
           ) : (
             <Button
-              mode="contained"
+              mode="outlined"
               style={{
                 margin: 10,
               }}

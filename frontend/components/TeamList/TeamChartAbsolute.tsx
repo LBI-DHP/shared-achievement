@@ -35,7 +35,7 @@ export default function TeamChartAbsolute({
             });
             showDialog();
           }}
-          mode="contained"
+          mode="outlined"
         >
           motivate
         </Button>

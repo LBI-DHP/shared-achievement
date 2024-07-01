@@ -3,7 +3,6 @@ import {
   View,
   ScrollView,
   Text,
-  TouchableOpacity,
   Platform,
   Keyboard,
 } from "react-native";
@@ -59,38 +58,6 @@ export default function Welcome({ isSingleUser }) {
             />
           </>
         )}
-        <Text style={style.subheading}>How should we count your steps?</Text>
-        <Text>
-          Using the iPhone pedometer does not require any setup, but if you want
-          to connect other devices for step counting (e.g. a smartwatch), you
-          need to connect them via Google Fit.
-        </Text>
-        <View style={style.selectButtonGroup}>
-          <TouchableOpacity
-            onPress={() => {
-              setIsGoogleFitSelected(false);
-            }}
-            style={
-              isGoogleFitSelected
-                ? style.selectButtonInactive
-                : style.selectButton
-            }
-          >
-            <Text style={style.selectButtonText}>iPhone Pedometer</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setIsGoogleFitSelected(true);
-            }}
-            style={
-              isGoogleFitSelected
-                ? style.selectButton
-                : style.selectButtonInactive
-            }
-          >
-            <Text style={style.selectButtonText}>Google Fit</Text>
-          </TouchableOpacity>
-        </View>
         <TextInput
           label="Average steps per day*"
           mode="outlined"
@@ -107,24 +74,24 @@ export default function Welcome({ isSingleUser }) {
         />
         {isGoogleFitSelected || Platform.OS === "android" ? (
           <Text style={{ margin: 5 }}>
-            * please check this in Google Fit (already connected to all the
+            * please check this in Health Connect (already connected to all the
             devices you want to use for step counting)
           </Text>
         ) : (
           <Text style={{ margin: 5 }}>
-            * please check this in Apple Health (without other devices connected
-            for step counting)
+            * please check this in Apple Health (already connected to all the
+            devices you want to use for step counting)
           </Text>
         )}
         <Button
           style={{ marginTop: 20 }}
-          mode="contained"
+          mode="outlined"
           disabled={
             userName.length < 2 || averageSteps === null || averageSteps < 100
           }
           onPress={() => {
             var date = new Date();
-            var offsetInHours = (date.getTimezoneOffset()*-1) / 60;
+            var offsetInHours = (date.getTimezoneOffset() * -1) / 60;
             const newUserData = {
               ...userData,
               username: userName,
@@ -136,7 +103,8 @@ export default function Welcome({ isSingleUser }) {
               timezone: "UTC",
               timezone_offset: offsetInHours,//"+2",
             };
-            console.log("offsetInHours",offsetInHours);
+            console.log(newUserData);
+            console.log("offsetInHours", offsetInHours);
             setError("");
 
             dataManager.registerUser(newUserData).then((data) => {

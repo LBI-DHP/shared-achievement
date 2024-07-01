@@ -84,7 +84,7 @@ export default function ConnectToGoogleFit({ setIsConnectedToGoogleFit }) {
             Google Fit data on physical activity.
           </Text>
           <Button
-            mode="contained"
+            mode="outlined"
             onPress={() => {
               redirectToGoogleLogin();
             }}
@@ -106,7 +106,7 @@ export default function ConnectToGoogleFit({ setIsConnectedToGoogleFit }) {
       />
       <Button
         disabled={authorizationCode.length < 1}
-        mode="contained"
+        mode="outlined"
         onPress={() => {
           setError("");
           getFirstToken();

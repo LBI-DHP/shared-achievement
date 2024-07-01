@@ -50,7 +50,7 @@ export default function Settings() {
       />
       <Button
         disabled={!isUserNameChanged}
-        mode="contained"
+        mode="outlined"
         onPress={() => {
           setUserNameError("");
           const newUserData = {
@@ -78,7 +78,7 @@ export default function Settings() {
       {isConnectedToGoogleFit && (
         <Button
           style={{ marginTop: 10 }}
-          mode="contained"
+
           onPress={() => {
             dataManager
               .disconnectFromGoogleFit(googleAccessToken)
@@ -93,7 +93,7 @@ export default function Settings() {
       )}
       <Button
         style={{ marginTop: 10 }}
-        mode="contained"
+
         onPress={() => {
           SecureStore.deleteItemAsync("id");
           AsyncStorage.clear().then(() => {

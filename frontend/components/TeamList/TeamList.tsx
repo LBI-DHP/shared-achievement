@@ -74,7 +74,7 @@ export default function TeamList() {
         onPress={() => {
           showDialog();
         }}
-        mode="contained"
+        mode="outlined"
       >
         motivate all team members
       </Button>

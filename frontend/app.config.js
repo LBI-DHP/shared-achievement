@@ -1,9 +1,14 @@
 export default ({ config }) => {
-    return {
-      ...config,
-      android: {
-        ...config.android,
-        googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
-      }
-    };
+  return {
+    ...config,
+    android: {
+      ...config.android,
+      googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
+    },
+    plugins: [
+      "expo-asset",
+      "expo-font",
+      "expo-secure-store"
+    ]
   };
+};

@@ -14,6 +14,7 @@ import StepCounterGoogleFit from "../components/StepCounter/StepCounterGoogleFit
 import YesterdaysProgressPopUp from "../components/YesterdaysProgressPopUp";
 import TodaysPopUp from "../components/TodaysPopUp";
 import { getDateStringYesterday } from "../constants/Functions";
+import CButton from "../components/Challenge/CButton";
 
 export default function ChallengeScreen() {
   const {
@@ -103,11 +104,7 @@ export default function ChallengeScreen() {
           <Challenge />
           {userData.team && <TeamContributions />}
           {userData.team ? (
-            Platform.OS === "android" || useGoogleFit ? (
-              <StepCounterGoogleFit />
-            ) : (
-              <StepCounterPedometerIOS />
-            )
+            <CButton></CButton>
           ) : (
             <Button
               mode="outlined"

@@ -4,7 +4,7 @@ import Navigation from "./SABottomNavigation";
 import NavigationSettingsON from "./SABottomNavigationSettingsON";
 import SingleChallenge from "../screens/SingleChallenge";
 import WelcomeScreen from "../screens/Welcome";
-import ConnectToGoogleFit from "./ConnectToGoogleFit";
+// import ConnectToGoogleFit from "./ConnectToGoogleFit";
 import { UserDataContext } from "../providers/UserDataProvider";
 import { Platform } from "react-native";
 import CenteredActivityIndicator from "./CenteredActivityIndicator";
@@ -26,17 +26,17 @@ export default function AppView() {
   if (userDataLoadingError) return <NoInternetConnection />;
 
   if (!userData.username) return <WelcomeScreen isSingleUser={isSingleUser} />;
-  else if (
-    (Platform.OS === "android" || useGoogleFit) &&
-    !isConnectedToGoogleFit
-  )
-    return (
-      <ConnectToGoogleFit
-        setIsConnectedToGoogleFit={(data) => {
-          setIsConnectedToGoogleFit(data);
-        }}
-      />
-    );
+  // else if (
+  //   (Platform.OS === "android" || useGoogleFit) &&
+  //   !isConnectedToGoogleFit
+  // )
+  //   return (
+  //     <ConnectToGoogleFit
+  //       setIsConnectedToGoogleFit={(data) => {
+  //         setIsConnectedToGoogleFit(data);
+  //       }}
+  //     />
+  //   );
   else if (userData.showDeveloperSettings) {
     return (
       <>

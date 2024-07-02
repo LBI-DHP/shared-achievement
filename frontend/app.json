@@ -24,7 +24,11 @@
       "bundleIdentifier": "at.ac.lbg.dhp.shared-achievement"
     },
     "android": {
+      "permissions": [
+        "android.permission.health.READ_STEPS"
+      ],
       "package": "at.ac.lbg.dhp.shared_achievement",
+      "googleServicesFile": "./google-services.json",
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
@@ -35,6 +39,20 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      "./androidManifestPlugin.js",
+      "react-native-health-connect",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "buildToolsVersion": "34.0.0",
+            "minSdkVersion": 26
+          }
+        }
+      ],
+      "react-native-health",
       [
         "expo-notifications",
         {

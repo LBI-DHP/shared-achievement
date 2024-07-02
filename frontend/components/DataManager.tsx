@@ -68,10 +68,6 @@ export default class dataManager {
   static getUserId = async () => {
     console.log(process.env);
     console.log("apiUrl", process.env.EXPO_PUBLIC_API_URL);
-    console.log("apiUrl", process.env.EXPO_PUBLIC_API_URL);
-    console.log("apiUrl", process.env.EXPO_PUBLIC_API_URL);
-    console.log("apiUrl", process.env.EXPO_PUBLIC_API_URL);
-    console.log("apiUrl", process.env.EXPO_PUBLIC_API_URL);
     let id = await SecureStore.getItemAsync("id");
     console.log("userID", id);
     return id;

@@ -209,38 +209,43 @@ export const UserDataProvider = (props) => {
 };
 
 async function registerForPushNotificationsAsync() {
-
+  
   let token;
 
-  if (Platform.OS === "android") {
-    Notifications.setNotificationChannelAsync("default", {
-      name: "default",
+  if (Platform.OS === 'android') {
+    await Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
       importance: Notifications.AndroidImportance.MAX,
       vibrationPattern: [0, 250, 250, 250],
-      lightColor: "#FF231F7C",
+      lightColor: '#FF231F7C',
     });
   }
 
+  console.log("Is device:", Device.isDevice); 
+
   if (Device.isDevice) {
-    const { status: existingStatus } =
-      await Notifications.getPermissionsAsync();
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
-    if (existingStatus !== "granted") {
+
+    if (existingStatus !== 'granted') {
       const { status } = await Notifications.requestPermissionsAsync();
       finalStatus = status;
     }
-    if (finalStatus !== "granted") {
-      alert("Failed to get push token for push notification!");
+
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
       return;
     }
-    // Learn more about projectId:
-    // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
-    token = await Notifications.getExpoPushTokenAsync({
-      projectId: Constants.expoConfig.extra.eas.projectId
-    });
-    console.log(token);
+    console.log("finalStatus:" + finalStatus, existingStatus);
+    console.log("projectId:" + Constants.expoConfig.extra.eas.projectId);
+
+    token = (await Notifications.getExpoPushTokenAsync({
+      projectId: Constants.expoConfig.extra.eas.projectId,
+    })).data;
+    
+    console.log("token:" + token);
   } else {
-    alert("Must use physical device for Push Notifications");
+    alert('Must use physical device for Push Notifications');
   }
 
   return token;

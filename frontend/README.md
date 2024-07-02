@@ -87,7 +87,7 @@ npx expo prebuild --clean
 ## Build APK 
 
 ```bash
-eas build -platform android
+eas build -p android --profile preview 
 ```
 
 ## Build iOS

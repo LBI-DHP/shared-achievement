@@ -2,7 +2,7 @@
   "expo": {
     "name": "shared-achievement",
     "slug": "shared-achievement",
-    "version": "1.0.20",
+    "version": "1.0.21",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "shared-achievement",
@@ -67,6 +67,6 @@
         "projectId": "b97ed554-6391-44ca-86f8-c171d7f1dc50"
       }
     },
-    "runtimeVersion": "1.0.20"
+    "runtimeVersion": "1.0.21"
   }
 }

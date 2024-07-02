@@ -21,10 +21,6 @@ export const UserDataContext = React.createContext({
   setNavigationIndex: ({ }) => { },
   isUserDataLoading: true,
   userDataLoadingError: false,
-  useGoogleFit: false,
-  setUseGoogleFit: ({ }) => { },
-  isConnectedToGoogleFit: false,
-  setIsConnectedToGoogleFit: ({ }) => { },
   userChallengeData: { progress: 0, totalSteps: 0, goal: 0 },
   isUserChallengeDataLoading: true,
 });
@@ -44,8 +40,6 @@ export const UserDataProvider = (props) => {
   const [notification, setNotification] = useState(null);
   const [isUserDataLoading, setIsUserDataLoading] = useState(true);
   const [userDataLoadingError, setUserDataLoadingError] = useState(false);
-  const [useGoogleFit, setUseGoogleFit] = useState(false);
-  const [isConnectedToGoogleFit, setIsConnectedToGoogleFit] = useState(false);
 
   const [userChallengeData, setUserChallengeData] = useState({
     progress: 0,
@@ -70,16 +64,6 @@ export const UserDataProvider = (props) => {
     }),
   });
 
-  useEffect(() => {
-    let mounted = true;
-    dataManager.getGoogleAuthInfo().then((authInfo) => {
-      if (authInfo != null && mounted) setIsConnectedToGoogleFit(true);
-    });
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
   const createNewUser = (mounted) => {
     registerForPushNotificationsAsync()
       .then((token) => {
@@ -101,9 +85,6 @@ export const UserDataProvider = (props) => {
   useEffect(() => {
     let mounted = true;
     if (userData.id === null) {
-      dataManager.getUseGoogleFit().then((use) => {
-        if (mounted) setUseGoogleFit(use);
-      });
       dataManager
         .getUserId()
         .then((id) => {
@@ -195,10 +176,6 @@ export const UserDataProvider = (props) => {
         setNavigationIndex,
         isUserDataLoading,
         userDataLoadingError,
-        useGoogleFit,
-        setUseGoogleFit,
-        isConnectedToGoogleFit,
-        setIsConnectedToGoogleFit,
         userChallengeData,
         isUserChallengeDataLoading,
       }}

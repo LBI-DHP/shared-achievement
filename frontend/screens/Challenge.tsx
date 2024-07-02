@@ -9,8 +9,6 @@ import ConfettiCannon from "react-native-confetti-cannon";
 import dataManager from "../components/DataManager";
 import { UserDataContext } from "../providers/UserDataProvider";
 import { TeamDataContext } from "../providers/TeamDataProvider";
-import StepCounterPedometerIOS from "../components/StepCounter/StepCounterPedometerIOS";
-import StepCounterGoogleFit from "../components/StepCounter/StepCounterGoogleFit";
 import YesterdaysProgressPopUp from "../components/YesterdaysProgressPopUp";
 import TodaysPopUp from "../components/TodaysPopUp";
 import { getDateStringYesterday } from "../constants/Functions";
@@ -22,7 +20,6 @@ export default function ChallengeScreen() {
     setNavigationIndex,
     isUserDataLoading,
     navigationIndex,
-    useGoogleFit,
   } = useContext(UserDataContext);
 
   const { mode, teamName, teamChallengeData } = useContext(TeamDataContext);

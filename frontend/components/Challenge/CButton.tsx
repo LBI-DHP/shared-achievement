@@ -3,9 +3,8 @@
 import React, { useState, useContext, useEffect } from "react";
 import dataManager from "../DataManager";
 import { Text, View, TouchableOpacity } from "react-native";
-import { style as stepCounterStyles } from "../StepCounter/StepCounterStyles";
 import { LinearGradient } from "expo-linear-gradient";
-
+import { StyleSheet } from "react-native";
 import { UserDataContext } from "../../providers/UserDataProvider";
 import { UpdateContext } from "../../providers/UpdateProvider";
 
@@ -64,11 +63,11 @@ export default function CButton({
         <>
             <LinearGradient
                 colors={isDisabled ? ["#6d6d6d", "#6d6d6d"] : ["#3f5c7c", "#558dad"]}
-                style={stepCounterStyles.contributeStepsButtonColor}
+                style={style.contributeStepsButtonColor}
             >
                 <TouchableOpacity
                     disabled={isDisabled}
-                    style={stepCounterStyles.contributeStepsButton}
+                    style={style.contributeStepsButton}
                     onPress={() => {
                         if (!isLoading) {
                             setIsLoading(true);
@@ -83,14 +82,48 @@ export default function CButton({
                     }}
                 >
                     <View>
-                        <Text style={stepCounterStyles.buttonText}>Contribute</Text>
-                        <Text style={stepCounterStyles.buttonStepsNumberText}>
+                        <Text style={style.buttonText}>Contribute</Text>
+                        <Text style={style.buttonStepsNumberText}>
                             {newSteps !== 0 ? newSteps : 0}
                         </Text>
-                        <Text style={stepCounterStyles.buttonText}>new steps</Text>
+                        <Text style={style.buttonText}>new steps</Text>
                     </View>
                 </TouchableOpacity>
             </LinearGradient>
         </>
     );
 }
+
+
+const style = StyleSheet.create({
+    contributeStepsButton: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    contributeStepsButtonColor: {
+      borderRadius: 5,
+      margin: 10,
+      padding: 10,
+    },
+    icons: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingRight: 10,
+    },
+    buttonText: {
+      color: "white",
+      textAlign: "center",
+      textTransform: "uppercase",
+      fontSize: 15,
+      fontWeight: "bold",
+    },
+    buttonStepsNumberText: {
+      color: "white",
+      textAlign: "center",
+      textTransform: "uppercase",
+      fontSize: 30,
+      fontWeight: "bold",
+    },
+  });
+  

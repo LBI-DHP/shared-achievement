@@ -13,13 +13,12 @@ import { UserDataContext } from "../providers/UserDataProvider";
 import * as Device from "expo-device";
 
 export default function Welcome({ isSingleUser }) {
-  const { userData, setUserData, setUseGoogleFit } =
+  const { userData, setUserData } =
     useContext(UserDataContext);
   const [userName, setUserName] = useState("");
   const [averageSteps, setAverageSteps] = useState(null);
 
   const [error, setError] = useState("");
-  const [isGoogleFitSelected, setIsGoogleFitSelected] = useState(false);
   const [isKeyboardOpenOnAverageSteps, setIsKeyboardOpenOnAverageSteps] =
     useState(false);
 
@@ -72,7 +71,7 @@ export default function Welcome({ isSingleUser }) {
             setAverageSteps(number);
           }}
         />
-        {isGoogleFitSelected || Platform.OS === "android" ? (
+        { Platform.OS === "android" ? (
           <Text style={{ margin: 5 }}>
             * please check this in Health Connect (already connected to all the
             devices you want to use for step counting)
@@ -120,12 +119,6 @@ export default function Welcome({ isSingleUser }) {
                 );
               } else {
                 setUserData(data);
-                setUseGoogleFit(
-                  isGoogleFitSelected || Platform.OS === "android"
-                );
-                dataManager.setUseGoogleFit(
-                  isGoogleFitSelected || Platform.OS === "android"
-                );
               }
             });
 

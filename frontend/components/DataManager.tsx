@@ -40,31 +40,6 @@ export default class dataManager {
     }
   };
 
-  static disconnectFromGoogleFit = async (googleAccessToken) => {
-    let worked = await fetch(
-      "https://oauth2.googleapis.com/revoke?token=" + googleAccessToken,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      }
-    )
-      .then((response) => {
-        if (response.status) {
-          dataManager.deleteGoogleAuthInfo();
-          return true;
-        } else {
-          return false;
-        }
-      })
-      .catch(() => {
-        return false;
-      });
-
-    return worked;
-  };
-
   static getUserId = async () => {
     console.log(process.env);
     console.log("apiUrl", process.env.EXPO_PUBLIC_API_URL);
@@ -81,22 +56,6 @@ export default class dataManager {
     } finally {
       console.log("User ID (", id, ") was set in secure storage");
     }
-  };
-
-  static setUseGoogleFit = async (useGoogleFit) => {
-    try {
-      await AsyncStorage.setItem("useGoogleFit", useGoogleFit.toString());
-    } catch (e) {
-      console.log(e);
-    } finally {
-      console.log("Use Google Fit ", useGoogleFit, " was set in local storage");
-    }
-  };
-
-  static getUseGoogleFit = async () => {
-    let useGoogleFit = await AsyncStorage.getItem("useGoogleFit");
-    console.log("useGoogleFit", useGoogleFit);
-    return useGoogleFit === "true";
   };
 
   static getShowReachedSummitPopUp = async () => {

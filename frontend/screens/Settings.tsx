@@ -12,32 +12,15 @@ export default function Settings() {
   const {
     userData,
     setUserData,
-    isConnectedToGoogleFit,
-    setIsConnectedToGoogleFit,
   } = useContext(UserDataContext);
   const [userNameError, setUserNameError] = useState("");
-  const [googleFitError, setGoogleFitError] = useState(false);
   const [isUserNameChanged, setIsUserNameChanged] = useState(false);
   const [newUserName, setNewUserName] = useState(userData.username);
-  const [googleAccessToken, setGoogleAccessToken] = useState(null);
 
   useEffect(() => {
     if (newUserName === userData.username) setIsUserNameChanged(false);
     else setIsUserNameChanged(true);
   }, [userData.username, newUserName]);
-
-  useEffect(() => {
-    let mounted = true;
-    dataManager.getGoogleAuthInfo().then((authInfo) => {
-      if (authInfo != null && authInfo.access_token) {
-        if (mounted) setGoogleAccessToken(authInfo.access_token);
-      }
-    });
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
 
   return (
     <View style={style.container}>
@@ -75,22 +58,6 @@ export default function Settings() {
       {userNameError.length > 0 && (
         <Text style={{ marginTop: 2 }}>{userNameError}</Text>
       )}
-      {isConnectedToGoogleFit && (
-        <Button
-          style={{ marginTop: 10 }}
-
-          onPress={() => {
-            dataManager
-              .disconnectFromGoogleFit(googleAccessToken)
-              .then((worked) => {
-                if (worked) setIsConnectedToGoogleFit(false);
-                else setGoogleFitError(true);
-              });
-          }}
-        >
-          Disconnect App from Google Fit
-        </Button>
-      )}
       <Button
         style={{ marginTop: 10 }}
 
@@ -110,13 +77,6 @@ export default function Settings() {
       >
         Clear local storage
       </Button>
-
-      {googleFitError && (
-        <Text style={{ paddingTop: 10 }}>
-          🚨 Error: Could not disconnect from Google Fit. Please check the
-          internet connection.
-        </Text>
-      )}
     </View>
   );
 }

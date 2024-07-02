@@ -6,18 +6,16 @@ import Trophy from "../components/Challenge/Trophy";
 import ConfettiCannon from "react-native-confetti-cannon";
 import dataManager from "../components/DataManager";
 import { UserDataContext } from "../providers/UserDataProvider";
-import StepCounterPedometerIOS from "../components/StepCounter/StepCounterPedometerIOS";
-import StepCounterGoogleFit from "../components/StepCounter/StepCounterGoogleFit";
 import YesterdaysProgressPopUp from "../components/YesterdaysProgressPopUp";
 import TodaysPopUp from "../components/TodaysPopUp";
 import { getDateStringYesterday } from "../constants/Functions";
+import CButton from "../components/Challenge/CButton";
 
 export default function SingleChallengeScreen() {
   const {
     userData,
     isUserDataLoading,
     navigationIndex,
-    useGoogleFit,
     userChallengeData,
   } = useContext(UserDataContext);
 
@@ -95,11 +93,7 @@ export default function SingleChallengeScreen() {
         >
           {userReachedSummit && <Trophy />}
           <SingleChallenge />
-          {Platform.OS === "android" || useGoogleFit ? (
-            <StepCounterGoogleFit singleUser={true} />
-          ) : (
-            <StepCounterPedometerIOS singleUser={true} />
-          )}
+          <CButton></CButton>
         </View>
         {isTodaysPopUpVisible && navigationIndex === 0 && (
           <TodaysPopUp

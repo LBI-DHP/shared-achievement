@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import { StyleSheet, View, Text, useWindowDimensions } from "react-native";
+import { StyleSheet, View, useWindowDimensions } from "react-native";
 import Untersberg from "./Untersberg";
 import Clouds from "./Clouds";
 import FlagTop from "./FlagTop";
 import { UserDataContext } from "../../providers/UserDataProvider";
-import ConnectToGoogleFit from "../ConnectToGoogleFit";
 
 export default function Challenge() {
   const {

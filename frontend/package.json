@@ -1,13 +1,14 @@
 {
   "name": "shared-achievement",
-  "version": "1.0.0",
+  "version": "1.0.20",
   "scripts": {
     "start": "expo start --dev-client",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest --watchAll"
+    "test": "jest --watchAll",
+    "eas-build-pre-install": "echo $GOOGLE_SERVICES_FILE | base64 --decode > ./google-services.json"
   },
   "jest": {
     "preset": "jest-expo"

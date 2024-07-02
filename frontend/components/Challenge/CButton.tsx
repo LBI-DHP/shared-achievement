@@ -1,6 +1,6 @@
 // https://snack.expo.dev/@yoobit0616/pedometer-functional
 
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import dataManager from "../DataManager";
 import { Text, View, TouchableOpacity } from "react-native";
 import { style as stepCounterStyles } from "../StepCounter/StepCounterStyles";
@@ -12,12 +12,12 @@ import { UpdateContext } from "../../providers/UpdateProvider";
 import useHealthData from "../../hooks/useHealthData";
 
 export default function CButton({
-    //   isLoadingStepCounter,
-    //   isErrorStepCounter,
-    //   newSteps,
-    //   resetStepsAfterContribution,
 }) {
     const { steps } = useHealthData();
+    const [newSteps, setNewSteps] = useState(0);
+    const [goalSteps, setGoalSteps] = useState(null);
+    const [contributedSteps, setContributedSteps] = useState(0);
+    const [isApiLoading, setIsApiLoading] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const { userData } = useContext(UserDataContext);
     const { stepsPushedIndicator, setStepsPushedIndicator } =
@@ -26,11 +26,39 @@ export default function CButton({
     const [isDisabled, setIsDisabled] = useState(true);
     const [error, setError] = useState("");
 
-    //   useEffect(() => {
-    //     setIsDisabled(
-    //       newSteps === 0 || isLoading || isLoadingStepCounter || isErrorStepCounter
-    //     );
-    //   }, [newSteps, isLoading, isLoadingStepCounter]);
+    useEffect(() => {
+        let mounted = true;
+        if (steps !== null && steps !== 0) {
+            setIsApiLoading(true);
+            dataManager.getUserChallengeData(userData.id).then((data) => {
+                if (mounted) {
+                    let userStepCount = data.total_steps;
+                    if (userStepCount === undefined) userStepCount = 0;
+                    const stepsNew = steps - userStepCount;
+                    if (stepsNew > 0) setNewSteps(steps - userStepCount);
+                    setContributedSteps(userStepCount);
+                    if (data.goal) setGoalSteps(data.goal);
+                    setIsApiLoading(false);
+                }
+            });
+        }
+        return () => {
+            mounted = false;
+        };
+    }, [steps]);
+
+    useEffect(() => {
+        setIsDisabled(
+            newSteps === 0 || isLoading
+        );
+    }, [newSteps, isLoading]);
+
+
+    const resetStepsAfterContribution = () => {
+        setContributedSteps(steps);
+        setNewSteps(0);
+        setStepsPushedIndicator(!stepsPushedIndicator);
+    };
 
     return (
         <>
@@ -44,9 +72,9 @@ export default function CButton({
                     onPress={() => {
                         if (!isLoading) {
                             setIsLoading(true);
-                            dataManager.pushSteps(userData.id, 0).then((worked) => { // 0 = newSteps
+                            dataManager.pushSteps(userData.id, newSteps).then((worked) => {
                                 if (worked) {
-                                    //   resetStepsAfterContribution();
+                                    resetStepsAfterContribution();
                                     setStepsPushedIndicator(!stepsPushedIndicator);
                                 } else setError("true");
                                 setIsLoading(false);
@@ -57,8 +85,7 @@ export default function CButton({
                     <View>
                         <Text style={stepCounterStyles.buttonText}>Contribute</Text>
                         <Text style={stepCounterStyles.buttonStepsNumberText}>
-                            {steps}
-                            {/* {newSteps !== 0 ? newSteps : 0} */}
+                            {newSteps !== 0 ? newSteps : 0}
                         </Text>
                         <Text style={stepCounterStyles.buttonText}>new steps</Text>
                     </View>

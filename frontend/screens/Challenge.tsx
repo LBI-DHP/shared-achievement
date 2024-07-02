@@ -12,7 +12,7 @@ import { TeamDataContext } from "../providers/TeamDataProvider";
 import YesterdaysProgressPopUp from "../components/YesterdaysProgressPopUp";
 import TodaysPopUp from "../components/TodaysPopUp";
 import { getDateStringYesterday } from "../constants/Functions";
-import CButton from "../components/Challenge/CButton";
+import ContributeButton from "../components/Challenge/ContributeButton";
 
 export default function ChallengeScreen() {
   const {
@@ -101,7 +101,7 @@ export default function ChallengeScreen() {
           <Challenge />
           {userData.team && <TeamContributions />}
           {userData.team ? (
-            <CButton></CButton>
+            <ContributeButton></ContributeButton>
           ) : (
             <Button
               mode="outlined"

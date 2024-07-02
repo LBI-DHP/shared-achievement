@@ -9,7 +9,7 @@ import { UserDataContext } from "../providers/UserDataProvider";
 import YesterdaysProgressPopUp from "../components/YesterdaysProgressPopUp";
 import TodaysPopUp from "../components/TodaysPopUp";
 import { getDateStringYesterday } from "../constants/Functions";
-import CButton from "../components/Challenge/CButton";
+import ContributeButton from "../components/Challenge/ContributeButton";
 
 export default function SingleChallengeScreen() {
   const {
@@ -93,7 +93,7 @@ export default function SingleChallengeScreen() {
         >
           {userReachedSummit && <Trophy />}
           <SingleChallenge />
-          <CButton></CButton>
+          <ContributeButton></ContributeButton>
         </View>
         {isTodaysPopUpVisible && navigationIndex === 0 && (
           <TodaysPopUp

@@ -10,7 +10,7 @@ import { UpdateContext } from "../../providers/UpdateProvider";
 
 import useHealthData from "../../hooks/useHealthData";
 
-export default function CButton({
+export default function ContributeButton({
 }) {
     const { steps } = useHealthData();
     const [newSteps, setNewSteps] = useState(0);
@@ -48,9 +48,9 @@ export default function CButton({
 
     useEffect(() => {
         setIsDisabled(
-            newSteps === 0 || isLoading
+            newSteps === 0 || isLoading || isApiLoading
         );
-    }, [newSteps, isLoading]);
+    }, [newSteps, isLoading, isApiLoading]);
 
 
     const resetStepsAfterContribution = () => {

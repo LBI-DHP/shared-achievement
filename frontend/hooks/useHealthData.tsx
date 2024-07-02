@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Platform } from 'react-native';
-
 import {
   initialize,
   requestPermission,
@@ -14,8 +13,33 @@ import AppleHealthKit, {
   HealthKitPermissions,
 } from "react-native-health";
 
+import { AppState } from "react-native";
+
 const useHealthData = () => {
   const [steps, setSteps] = useState(0);
+  const appState = useRef(AppState.currentState);
+  const [appHasComeToForeground, setAppHasComeToForeground] = useState(true);
+
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        setAppHasComeToForeground(true);
+
+      } else {
+        setAppHasComeToForeground(false);
+      }
+
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   // ============== android ============== 
 
@@ -73,7 +97,7 @@ const useHealthData = () => {
     };
 
     getHealthData();
-  }, [androidPermissions]);
+  }, [androidPermissions, appHasComeToForeground]);
 
   // ============== ios ============== 
 
@@ -122,7 +146,7 @@ const useHealthData = () => {
       }
       setSteps(results.value);
     });
-  }, [hasPermissions]);
+  }, [hasPermissions, appHasComeToForeground]);
 
   return { steps };
 
